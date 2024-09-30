@@ -16,8 +16,7 @@ public/hot
 public_html/storage
 public_html/hot
 
-bootstrap/cache/packages.php
-bootstrap/cache/services.php
+/bootstrap/
 storage/*.key
 .env
 Homestead.yaml
