@@ -101,16 +101,15 @@
                 })
 
                 var typed = new Typed('.typed-words', {
-                    strings: ["footprint."," footprint."],
+                    strings: ["footprint."],
                     typeSpeed: 80,
                     backSpeed: 80,
-                    backDelay: 4000,
+                    backDelay: 3000,
                     startDelay: 1000,
                     loop: true,
                     showCursor: true,
                     preStringTyped: (arrayPos, self) => {
                         arrayPos++;
-                        console.log(arrayPos);
                         $('.slides img').removeClass('active');
                         $('.slides img[data-id="'+arrayPos+'"]').addClass('active');
                     }
