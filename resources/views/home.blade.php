@@ -1,4 +1,12 @@
 @extends('layouts.main')
+@section('css')
+    <style>
+        .hero .slides img{
+            width: 100%;
+            height: inherit;
+        }
+    </style>
+@stop
 @section('content')
     <div class="hero">
         <div class="container">
@@ -6,22 +14,16 @@
                 <div class="col-lg-7">
                     <div class="intro-wrap">
                         <h1 class="mb-5"><span class="d-block">Calculate your commuting </span> carbon <span class="typed-words"></span></h1>
-
                         <div class="row">
                             <div class="col-12">
                                 <form class="form">
                                     <div class="row mb-2">
                                         <div class="col-sm-12 col-md-6 mb-3 mb-lg-0 col-lg-4">
                                             <select name="" id="" class="form-control custom-select">
-                                                <option value="">Destination</option>
-                                                <option value="">Peru</option>
-                                                <option value="">Japan</option>
-                                                <option value="">Thailand</option>
-                                                <option value="">Brazil</option>
-                                                <option value="">United States</option>
-                                                <option value="">Israel</option>
-                                                <option value="">China</option>
-                                                <option value="">Russia</option>
+                                                <option value="">DCU</option>
+                                                <option value="">DCU</option>
+                                                <option value="">DCU</option>
+                                                <option value="">DCU</option>                                                
                                             </select>
                                         </div>
                                         <div class="col-sm-12 col-md-6 mb-3 mb-lg-0 col-lg-5">
@@ -34,7 +36,7 @@
                                     </div>    
                                     <div class="row align-items-center">
                                         <div class="col-sm-12 col-md-6 mb-3 mb-lg-0 col-lg-4">
-                                            <input type="submit" class="btn btn-primary btn-block" value="Search">
+                                            <input type="submit" class="btn btn-primary btn-block" value="Calculate">
                                         </div>
                                         {{-- <div class="col-lg-8">
                                             <label class="control control--checkbox mt-3">

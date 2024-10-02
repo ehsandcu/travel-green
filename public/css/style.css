@@ -717,7 +717,9 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4 {
   .media-1 h3 {
     font-size: 20px; }
     .media-1 h3 a {
-      color: #000000; }
+      color: #000000; 
+      text-decoration: none;
+    }
   .media-1 .price {
     font-size: 15px;
     color: #1A374D;

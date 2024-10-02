@@ -38,10 +38,10 @@
             <nav class="site-nav">
                 <div class="container">
                     <div class="site-navigation">
-                        <a href="{{ url('/')}}" class="logo m-0 text-decoration-none">Green Travel <span class="text-primary">.</span></a>
+                        <a href="{{ route('home')}}" class="logo m-0 text-decoration-none">Green Travel <span class="text-primary">.</span></a>
         
                         <ul class="js-clone-nav d-none d-lg-inline-block text-left site-menu float-end">
-                            <li class="active"><a href="{{ url('/')}}">Home</a></li>
+                            <li class="active"><a href="{{ route('home') }}">Home</a></li>
                             <li class="has-children">
                                 <a href="#">Dropdown</a>
                                 <ul class="dropdown">
@@ -58,9 +58,9 @@
                                     <li><a href="#">Menu Three</a></li>
                                 </ul>
                             </li>
-                            <li><a href="services.html">Services</a></li>
-                            <li><a href="about.html">About</a></li>
-                            <li><a href="contact.html">Contact Us</a></li>
+                            <li><a href="{{ route('service.index') }}">Services</a></li>
+                            <li><a href="{{ route('about.us') }}">About</a></li>
+                            <li><a href="{{ route('contact.us') }}">Contact Us</a></li>
                         </ul>        
                         <a href="#" class="burger ml-auto float-right site-menu-toggle js-menu-toggle d-inline-block d-lg-none light" data-toggle="collapse" data-target="#main-navbar">
                             <span></span>

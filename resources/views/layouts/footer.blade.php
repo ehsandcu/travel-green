@@ -25,10 +25,10 @@
                             <div class="widget">
                                 <h3 class="heading">Pages</h3>
                                 <ul class="links list-unstyled">
-                                    <li><a href="{{ url('/')}}">Home</a></li>
-                                    <li><a href="{{ url('/')}}">Services</a></li>
-                                    <li><a href="{{ url('/')}}">About</a></li>
-                                    <li><a href="{{ url('/')}}">Contact</a></li>
+                                    <li><a href="{{ route('home') }}">Home</a></li>
+                                    <li><a href="{{ route('service.index') }}">Services</a></li>
+                                    <li><a href="{{ route('about.us') }}">About</a></li>
+                                    <li><a href="{{ route('contact.us') }}">Contact</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -73,7 +73,7 @@
         <div id="overlayer"></div>
         <div class="loader">
             <div class="spinner-border" role="status">
-                <span class="sr-only">Loading...</span>
+                <span class="visually-hidden">Loading...</span>
             </div>
         </div>
         
