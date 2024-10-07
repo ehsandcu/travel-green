@@ -19,20 +19,26 @@
                                 <form class="form">
                                     <div class="row mb-2">
                                         <div class="col-sm-12 col-md-6 mb-3 mb-lg-0 col-lg-4">
-                                            <select name="" id="" class="form-control custom-select">
-                                                <option value="">DCU</option>
-                                                <option value="">DCU</option>
-                                                <option value="">DCU</option>
-                                                <option value="">DCU</option>                                                
-                                            </select>
+                                            <label for="transport-method">Transport Method</label>                                            
+                                            <select id="transport-method" class="form-control custom-select">
+                                                <option value="0.1645">Petrol Car</option>
+                                                <option value="0.16984">Diesel Car</option>
+                                                <option value="0.0514">Electric Car</option>
+                                                <option value="0.11367">Motorbike</option>
+                                                <option value="0.02861">Train</option>
+                                                <option value="0">Bicycle</option>
+                                                <option value="0.10846">Bus</option>
+                                                <option value="0">Walking</option>
+                                              </select>
                                         </div>
                                         <div class="col-sm-12 col-md-6 mb-3 mb-lg-0 col-lg-5">
-                                            <input type="text" class="form-control" name="daterange">
+                                            <label for="transport-method">Distance to Work(km)</label>
+                                            <input type="number" class="form-control" name=""  placeholder="Distance to Work">
                                         </div>
-                                        <div class="col-sm-12 col-md-6 mb-3 mb-lg-0 col-lg-3">
-                                            <input type="text" class="form-control" placeholder="# of People">
+                                        <div class="col-sm-12 col-md-6 mb-3 mb-lg-0 col-lg-3">                                            
+                                            <label for="transport-method">Work Days per Week</label>
+                                            <input type="text" class="form-control" placeholder="Work Days">
                                         </div>
-
                                     </div>    
                                     <div class="row align-items-center">
                                         <div class="col-sm-12 col-md-6 mb-3 mb-lg-0 col-lg-4">
