@@ -71,8 +71,12 @@
                             <li class="{{ request()->routeIs('contact.us') ? 'active' : '' }}">
                                 <a href="{{ route('contact.us') }}">Contact Us</a>
                             </li>
-                            <li>   
-                                <a href="{{ route('login')}}" class="btn btn-primary btn-block">Login</a>    
+                            <li> 
+                                @if(auth()->user())
+                                    <a href="{{ route('logout')}}" class="btn btn-primary btn-block">Logout</a>    
+                                @else
+                                    <a href="{{ route('login')}}" class="btn btn-primary btn-block">Login</a>    
+                                @endif  
                             </li>
                         </ul>  
                         <a href="#" class="burger ml-auto float-right site-menu-toggle js-menu-toggle d-inline-block d-lg-none light" data-toggle="collapse" data-target="#main-navbar">

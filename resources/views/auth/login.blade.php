@@ -6,6 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>Green Travel | Login</title>
     <link rel="shortcut icon" href="{{ asset('favicon.png') }}">
     <link rel="stylesheet" href="{{ asset('assets/login/css/core.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/login/css/backend.css?v=1.0.0') }}" />
@@ -31,7 +32,7 @@
             font-size: 12px;
             font-weight: 400;
             margin: 0;
-            padding: 24px 0 0;
+            /* padding: 24px 0 0; */
             align-items: center;
             justify-content: center;
             width: 380px;
@@ -281,21 +282,21 @@
                                 </form>
                                 <!-- Toggles -->
                                 <div
-                                    class="pt-10 pb-10 forgot-password animated preFadeInLeft fadeInLeft forget-pswd-btn">
-                                    <p class="has-text-centered">
+                                    class="forgot-password animated preFadeInLeft fadeInLeft forget-pswd-btn">
+                                    <p class="has-text-right">
                                         <a href="javascript:void(0)">Forgot password?</a>
                                     </p>
                                 </div>
                             </div>
                         </div>
-                        <div class="divider-wrapper m-auto">
+                        <div class="divider-wrapper m-auto pb-2">
                             <span class="divider">OR</span>
                         </div>
-                        <div class="columns justify-content-md-center">
+                        <div class="columns justify-content-md-center pt-10 has-text-centered">
                             <div class="column is-5">
-                                <button type="button" class="login-with-google-btn" >
+                                <a href="{{ route('google.redirect') }}" class="btn login-with-google-btn" >
                                     Sign in with Google
-                                </button>
+                                </a>
                             </div>
                         </div>
                     </div>
