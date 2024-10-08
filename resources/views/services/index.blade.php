@@ -17,7 +17,7 @@
       <div class="row">
         <div class="col-6 col-md-6 col-lg-3">
           <div class="media-1">
-            <a href="#" class="d-block mb-3"><img src="images/hero-slider-1.jpg" alt="Image" class="img-fluid"></a>
+            <a href="#" class="d-block mb-3"><img src="{{ asset('images/hero-slider-1.jpg') }}" alt="Image" class="img-fluid"></a>
             <div class="d-flex">
               <div>
                 <h3><a href="#">Lorem ipsum</a></h3>
@@ -28,7 +28,7 @@
         </div>
         <div class="col-6 col-md-6 col-lg-3">
           <div class="media-1">
-            <a href="#" class="d-block mb-3"><img src="images/hero-slider-2.jpg" alt="Image" class="img-fluid"></a>
+            <a href="#" class="d-block mb-3"><img src="{{ asset('images/hero-slider-2.jpg') }}" alt="Image" class="img-fluid"></a>
             <div class="d-flex">
               <div>
                 <h3><a href="#">Lorem ipsum</a></h3>
@@ -39,7 +39,7 @@
         </div>
         <div class="col-6 col-md-6 col-lg-3">
           <div class="media-1">
-            <a href="#" class="d-block mb-3"><img src="images/hero-slider-1.jpg" alt="Image" class="img-fluid"></a>
+            <a href="#" class="d-block mb-3"><img src="{{ asset('images/hero-slider-1.jpg') }}" alt="Image" class="img-fluid"></a>
             <div class="d-flex">
               <div>
                 <h3><a href="#">Lorem ipsum</a></h3>
@@ -50,7 +50,7 @@
         </div>
         <div class="col-6 col-md-6 col-lg-3">
           <div class="media-1">
-            <a href="#" class="d-block mb-3"><img src="images/hero-slider-2.jpg" alt="Image" class="img-fluid"></a>
+            <a href="#" class="d-block mb-3"><img src="{{ asset('images/hero-slider-2.jpg') }}" alt="Image" class="img-fluid"></a>
             <div class="d-flex">
               <div>
                 <h3><a href="#">Lorem ipsum</a></h3>
