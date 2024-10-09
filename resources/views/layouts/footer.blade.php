@@ -5,7 +5,7 @@
                     <div class="row">
                         <div class="col-md-6 col-lg-4">
                             <div class="widget">
-                                <h3 class="heading">About Green Travel</h3>
+                                <h3 class="heading">About Travel Green</h3>
                                 <p>Calculate to measure your commute's impact on the environment.</p>
                             </div>
                             <div class="widget">

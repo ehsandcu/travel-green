@@ -29,6 +29,7 @@ Route::get('/google/callback', [GoogleLoginController::class, 'handleGoogleCallb
 
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/user/info', [UserController::class, 'userInfo'])->name('user.info');
+    Route::post('update/user/info', [UserController::class, 'updateUserInfo'])->name('update.user.info');
     Route::group(['middleware' => ['check.user.info']], function () {
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     });
