@@ -19,13 +19,19 @@
         <div class="container">
             <div class="row">
                 <div class="col-12">
-                    <form class="row g-3">                        
+                    <form method="POST" action="{{ route('update.user.info') }}" class="row g-3"> 
+                        @csrf                       
                         <div class="col-12">
                             <label for="userType" class="form-label">Type</label>
-                            <select id="userType" class="form-select form-control">
-                                <option value="#" selected>Choose...</option>
-                                <option>...</option>
+                            <select id="userType" name="user_type" class="form-select form-control @error('user_type') is-invalid @enderror" required>
+                                <option value="" selected>Choose...</option>
+                                @foreach (\App\Lib\UserType::TYPES as $typeKey => $userType)
+                                    <option value="{{ $typeKey }}">{{ $userType }}</option>
+                                @endforeach
                             </select>
+                            @error('user_type')
+                                <div class="text-danger">{{ $errors->first('user_type') }}</div>
+                            @enderror
                         </div>                        
                         
                         <div class="col-12">
