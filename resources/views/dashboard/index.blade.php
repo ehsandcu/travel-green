@@ -10,13 +10,35 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="d-sm-flex justify-content-between">
-                                <div id="map" style="width: 100%; height: 900px;"></div>                            
+                                <div id="map" style="width: 100%; height: 700px;"></div>                            
                             </div>                            
                         </div>              
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+    <div class="row">
+        <div class="col-12 grid-margin">
+            <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Calculate Carbon Emission</h4>                  
+                  <form class="row g-3">                    
+                    <div class="col-md-6">
+                      <label for="inputAddress" class="form-label">Address</label>
+                      <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+                    </div>
+                    <div class="col-md-6">
+                      <label for="inputAddress2" class="form-label">Address 2</label>
+                      <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
+                    </div> 
+                    <div class="col-md-12 mt-3 text-right">
+                        <button type="button" class="btn btn-info btn-rounded btn-fw">Calculate</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+          </div>
     </div>
 @stop
 @section('dashboard-script')
