@@ -18,6 +18,7 @@ return [
         'client_id' => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'redirect' => env('GOOGLE_REDIRECT_URL'),
+        'google_map_key' => env('GOOGLE_MAP_API_KEY','AIzaSyBOlrsn9hYvLz1n5Lux3FDpczkYYbhGf9c'), //google map api is my client paid Api
     ],
 
     'mailgun' => [

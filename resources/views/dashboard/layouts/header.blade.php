@@ -8,6 +8,7 @@
   
     <link rel="stylesheet" href="{{ asset('assets/dashboard/css/vertical-layout-light/style.css') }}">
     <link rel="shortcut icon" href="images/favicon.png" />
+    @yield('dashboard-css')
   </head>
   <body>
     <div class="container-scroller">

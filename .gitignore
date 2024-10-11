@@ -19,6 +19,7 @@ public_html/hot
 /bootstrap/
 storage/*.key
 .env
+composer.lock
 Homestead.yaml
 Homestead.json
 /.vagrant
