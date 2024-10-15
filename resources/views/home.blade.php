@@ -32,15 +32,10 @@
                                         <div class="col-sm-12 col-md-6 mb-3 mb-lg-0 col-lg-4">
                                             <label for="transport_method">Transport Method</label>                                            
                                             <select id="transport_method" class="form-control custom-select">
-                                                <option value="0.1645">Petrol Car</option>
-                                                <option value="0.16984">Diesel Car</option>
-                                                <option value="0.0514">Electric Car</option>
-                                                <option value="0.11367">Motorbike</option>
-                                                <option value="0.02861">Train</option>
-                                                <option value="0">Bicycle</option>
-                                                <option value="0.10846">Bus</option>
-                                                <option value="0">Walking</option>
-                                              </select>
+                                                @foreach (\App\Lib\TransportMode::MODES as $modeVal => $mode)
+                                                    <option value="{{ $modeVal }}">{{ $mode }}</option>                                                    
+                                                @endforeach                                                
+                                            </select>
                                         </div>
                                         <div class="col-sm-12 col-md-6 mb-3 mb-lg-0 col-lg-5">
                                             <label for="work_distance">Distance to Work(km)</label>

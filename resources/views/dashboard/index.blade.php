@@ -1,4 +1,20 @@
 @extends('dashboard.layouts.main')
+@section('dashboard-css')
+    <style>
+        #floating-panel {
+            background-color: #fff;
+            border: 1px solid #999;
+            font-family: Roboto, "sans-serif";
+            left: 20%;
+            line-height: 30px;
+            padding: 5px 5px 5px 10px;
+            position: absolute;
+            text-align: center;
+            top: 10px;
+            z-index: 5;
+        }
+    </style>
+@stop
 @section('dashboard_content')
     <div class="row">    
         <div class="col-lg-12 d-flex grid-margin stretch-card">
@@ -10,6 +26,15 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="d-sm-flex justify-content-between">
+                                <div id="floating-panel">
+                                    <b>Mode of Travel: </b>
+                                    <select id="travel_mode">
+                                      <option value="DRIVING">Driving</option>
+                                      <option value="WALKING">Walking</option>
+                                      <option value="BICYCLING">Bicycling</option>
+                                      <option value="TRANSIT">Transit</option>
+                                    </select>
+                                  </div>
                                 <div id="map" style="width: 100%; height: 700px;"></div>                            
                             </div>                            
                         </div>              
@@ -22,44 +47,90 @@
         <div class="col-12 grid-margin">
             <div class="card">
                 <div class="card-body">
-                  <h4 class="card-title">Calculate Carbon Emission</h4>                  
-                  <form class="row g-3">                    
-                    <div class="col-md-6">
-                      <label for="inputAddress" class="form-label">Address</label>
-                      <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
-                    </div>
-                    <div class="col-md-6">
-                      <label for="inputAddress2" class="form-label">Address 2</label>
-                      <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
-                    </div> 
-                    <div class="col-md-12 mt-3 text-right">
-                        <button type="button" class="btn btn-info btn-rounded btn-fw">Calculate</button>
-                    </div>
-                  </form>
+                    <h4 class="card-title">Calculate Carbon Emission</h4>                  
+                    <form> 
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="starting_address" class="form-label">Starting Address</label>
+                                    <input type="text" class="form-control" id="starting_address" placeholder="1234 Main St" required>
+                                    <input type="hidden" name="starting_latitude" value="">
+                                    <input type="hidden" name="starting_longitude" value="">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="destination_address" class="form-label">Destination Address</label>
+                                    <input type="text" class="form-control" id="destination_address" placeholder="1234 Main St" required>
+                                    <input type="hidden" name="destination_latitude" value="">
+                                    <input type="hidden" name="destination_longitude" value="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-group">                        
+                                    <label for="transport-mode" class="form-label">Transport Mode</label>
+                                    <select class="transport-mode w-100" id="transport-mode" required>
+                                        @foreach (\App\Lib\TransportMode::MODES as $modeVal => $mode)
+                                            <option value="{{ $modeVal }}">{{ $mode }}</option>                                                    
+                                        @endforeach    
+                                    </select>
+                                </div>                        
+                            </div> 
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="work-days" class="form-label">Work Days per week</label>
+                                    <input type="number" id="work-days" class="form-control" min="1" value="1" placeholder="Work Days" required>
+                                </div>
+                            </div>
+                        </div> 
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="route_distance" class="form-label">Distance (km)</label>
+                                    <input type="text" id="route_distance" class="form-control" value="" placeholder="Distance" required readonly>
+                                </div>
+                        </div>                
+                        <div class="col-md-12 mt-3 text-right">
+                            <button type="button" class="btn btn-info btn-rounded btn-fw">Calculate</button>
+                        </div>
+                    </form>
                 </div>
               </div>
           </div>
     </div>
 @stop
 @section('dashboard-script')
-    <script src="https://maps.google.com/maps/api/js?key={{ config('services.google.google_map_key')}}&libraries=places" type="text/javascript"></script>
+    <script src="https://maps.google.com/maps/api/js?key={{ config('services.google.google_map_key')}}&libraries=places,geometry" type="text/javascript"></script>
 
     <script>
+        var map,directionsRenderer;
+
         setTimeout(() => {
-            drawMap()
+            drawMap();
         }, 1000);
+        
+        google.maps.event.addDomListener(window, 'load', initializeStartingAddress);
+        google.maps.event.addDomListener(window, 'load', initializeDestinationAddress);
+        
+        $('#transport-mode').select2();
+
+        $(document).on('change', '#travel_mode', function() {
+            drawLineOnMap();
+        })
 
         function drawMap() {
-            var zoomLatitude = 36.778259;  // centered California US
-            var zoomLongitude = -119.417931;  // centered California US
+            var zoomLatitude = 53.3498053;  // centered dublin
+            var zoomLongitude = -6.2603097;  // centered dublin
 
             var mapOptions = {
                 zoom: 14,
-                center: new google.maps.LatLng(zoomLatitude, zoomLongitude), // centered US
+                center: new google.maps.LatLng(zoomLatitude, zoomLongitude), // centered Dublin
                 mapTypeId: google.maps.MapTypeId.ROADMAP,
             };
 
-            var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+            map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
             var infowindow = new google.maps.InfoWindow();
 
@@ -67,6 +138,138 @@
                 position: new google.maps.LatLng(zoomLatitude, zoomLongitude),
                 map: map
             });
+        }
+
+        function initializeStartingAddress() {
+            var input = document.getElementById('starting_address');
+            var autocomplete = new google.maps.places.Autocomplete(input);
+
+            autocomplete.addListener('place_changed', function() {
+                var place = autocomplete.getPlace();
+
+                $('input[name="starting_latitude"]').val(place.geometry['location'].lat());
+                $('input[name="starting_longitude"]').val(place.geometry['location'].lng());
+
+                drawLineOnMap();
+            });
+        }
+
+        function initializeDestinationAddress() {
+            var input = document.getElementById('destination_address');
+            var autocomplete = new google.maps.places.Autocomplete(input);
+
+            autocomplete.addListener('place_changed', function() {
+                var place = autocomplete.getPlace();
+              
+                $('input[name="destination_latitude"]').val(place.geometry['location'].lat());
+                $('input[name="destination_longitude"]').val(place.geometry['location'].lng());
+
+                drawLineOnMap();
+            });
+        }
+
+        function drawLineOnMap() {
+            var startingLat = parseFloat($('input[name="starting_latitude"]').val());
+            var startingLng = parseFloat($('input[name="starting_longitude"]').val());
+            var destinationLat = parseFloat($('input[name="destination_latitude"]').val());
+            var destinationLng = parseFloat($('input[name="destination_longitude"]').val());
+            var selectedTravelMode = $('#travel_mode').val();
+
+            if (startingLat && startingLng && destinationLat && destinationLng) {
+                // Define the start and end points of the route
+                var startingAddress = { 
+                    lat: startingLat, 
+                    lng: startingLng 
+                };
+    
+                var destinationAddress = { 
+                    lat: destinationLat, 
+                    lng: destinationLng
+                };
+    
+                // Create the DirectionsService and DirectionsRenderer objects
+                var directionsService = new google.maps.DirectionsService();
+
+                if (directionsRenderer && google.maps.DirectionsStatus.OK) {
+                    directionsRenderer.setDirections({ routes: [] }); // Clear previous route from the map                    
+                }
+
+                directionsRenderer = new google.maps.DirectionsRenderer({
+                    map: map,
+                    polylineOptions: {
+                        strokeColor: '#FF0000',  // Red path color
+                        strokeOpacity: 0.7,      // Path opacity
+                        strokeWeight: 6          // Path thickness
+                    }
+                });
+    
+                // Set up the route options for the car route
+                var request = {
+                    origin: startingAddress,
+                    destination: destinationAddress,
+                    travelMode: google.maps.TravelMode[selectedTravelMode] // Driving mode for route
+                };
+    
+                // Call the Directions API to calculate the route
+                directionsService.route(request, function (result, status) {
+                    if (status === google.maps.DirectionsStatus.OK) {
+                        var mapRoute = result.routes[0];
+                        var routeDistance = (mapRoute.legs[0].distance.value)/1000;
+                        var routeDuration = (mapRoute.legs[0].duration.value)/1000;
+                        $('#route_distance').val(routeDistance);
+                        directionsRenderer.setDirections(result); // Display the route on the map
+                    } else {
+                        alert('Could not display directions: ' + status);
+                    }
+                });
+                var service = new google.maps.DistanceMatrixService();
+
+                // Calculate distance
+                // service.getDistanceMatrix({
+                //     origins: [startingAddress],
+                //     destinations: [destinationAddress],
+                //     travelMode: google.maps.TravelMode[selectedTravelMode],
+                // }, function(response, status) {
+                //     if (status === google.maps.DistanceMatrixStatus.OK) {
+                //         var distance = response.rows[0].elements[0].distance.text;
+                //         var duration = response.rows[0].elements[0].duration.text;
+
+                //         console.log(distance, duration);
+                //         $('#result').html(`Distance: ${distance}, Duration: ${duration}`);
+                //     } else {
+                //         $('#result').html('Error: ' + status);
+                //     }
+                // });             
+            }
+            // var lineCoordinates = [
+            //     { lat: 53.37889029999999, lng: -6.2668995 }, // San Francisco
+            //     { lat: 53.405634, lng: -6.4363921 }, // Los Angeles
+            //     //{ lat: 36.1699, lng: -115.1398 }  // Las Vegas
+            // ];
+
+            // // Create a polyline on the map
+            // var linePath = new google.maps.Polyline({
+            //     path: [new google.maps.LatLng(53.37889029999999, -6.2668995), new google.maps.LatLng(53.405634, -6.4363921)],
+            //     geodesic: true,
+            //     strokeColor: '#FF0000',
+            //     strokeOpacity: 1.0,
+            //     strokeWeight: 2,
+            //     map: map
+            // });
+
+            // // Add the polyline to the map
+            // linePath.setMap(map);
+
+            // // Create a LatLngBounds object
+            // var bounds = new google.maps.LatLngBounds();
+
+            // // Extend bounds to include each coordinate in the polyline
+            // for (var i = 0; i < lineCoordinates.length; i++) {
+            //     bounds.extend(lineCoordinates[i]);
+            // }
+
+            // // Fit the map to the bounds to adjust zoom and center
+            // map.fitBounds(bounds);
         }
     </script>
 @stop
