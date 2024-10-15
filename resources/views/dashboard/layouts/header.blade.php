@@ -5,7 +5,9 @@
     <title>Travel Green | @yield('dashboard-title', 'Dashboard')</title>
     <link rel="stylesheet" href="{{ asset('assets/dashboard/vendors/typicons.font/font/typicons.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/dashboard/vendors/css/vendor.bundle.base.css') }}">
-  
+    <link rel="stylesheet" href="{{ asset('assets/dashboard/vendors/select2/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/dashboard/vendors/select2-bootstrap-theme/select2-bootstrap.min.css') }}">
+
     <link rel="stylesheet" href="{{ asset('assets/dashboard/css/vertical-layout-light/style.css') }}">
     <link rel="shortcut icon" href="images/favicon.png" />
     @yield('dashboard-css')

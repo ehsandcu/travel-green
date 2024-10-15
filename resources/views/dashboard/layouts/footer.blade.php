@@ -23,6 +23,8 @@
 <script src="{{ asset('assets/dashboard/js/settings.js') }}"></script>
 <script src="{{ asset('assets/dashboard/js/todolist.js') }}"></script>
 <script src="{{ asset('assets/dashboard/js/dashboard.js') }}"></script>
+<script src="{{ asset('assets/dashboard/vendors/select2/select2.min.js') }}"></script>
+
 @yield('dashboard-script')
 
 </body>
