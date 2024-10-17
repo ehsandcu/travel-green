@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\Dashboard\EmissionController;
 use App\Http\Controllers\GoogleLoginController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
@@ -32,5 +33,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('update/user/info', [UserController::class, 'updateUserInfo'])->name('update.user.info');
     Route::group(['middleware' => ['check.user.info']], function () {
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+        Route::group(['prefix' => 'emission'], function () {
+            Route::post('/store', [EmissionController::class, 'storeEmission'])->name("emission.store");
+        });
     });
 });

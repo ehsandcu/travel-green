@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{{ asset('assets/dashboard/vendors/select2-bootstrap-theme/select2-bootstrap.min.css') }}">
 
     <link rel="stylesheet" href="{{ asset('assets/dashboard/css/vertical-layout-light/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/dashboard/css/custom.css') }}">
     <link rel="shortcut icon" href="images/favicon.png" />
     @yield('dashboard-css')
   </head>

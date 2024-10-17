@@ -1,0 +1,8 @@
+.error {
+    color: red;
+}
+
+.form-control.error {
+    color: red;
+    border-color: red;
+}

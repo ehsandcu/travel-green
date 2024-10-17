@@ -24,6 +24,8 @@
 <script src="{{ asset('assets/dashboard/js/todolist.js') }}"></script>
 <script src="{{ asset('assets/dashboard/js/dashboard.js') }}"></script>
 <script src="{{ asset('assets/dashboard/vendors/select2/select2.min.js') }}"></script>
+<script src="{{ asset('assets/dashboard/js/jquery.validate.js') }}"></script>
+<script src="{{ asset('assets/dashboard/js/sweetalert.min.js') }}"></script>
 
 @yield('dashboard-script')
 
