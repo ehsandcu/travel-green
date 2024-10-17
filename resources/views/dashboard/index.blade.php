@@ -48,20 +48,27 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">Calculate Carbon Emission</h4>                  
-                    <form> 
+                    <form id="carbon_form" method="POST" action="{{ route('emission.store') }}"> 
+                        @csrf
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="starting_address" class="form-label">Starting Address</label>
-                                    <input type="text" class="form-control" id="starting_address" placeholder="1234 Main St" required>
+                                    <label for="starting_address" class="form-label">
+                                        Starting Address
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" class="form-control" name="starting_address" id="starting_address" placeholder="1234 Main St" required>
                                     <input type="hidden" name="starting_latitude" value="">
                                     <input type="hidden" name="starting_longitude" value="">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="destination_address" class="form-label">Destination Address</label>
-                                    <input type="text" class="form-control" id="destination_address" placeholder="1234 Main St" required>
+                                    <label for="destination_address" class="form-label">
+                                        Destination Address
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" class="form-control" name="destination_address" id="destination_address" placeholder="1234 Main St" required>
                                     <input type="hidden" name="destination_latitude" value="">
                                     <input type="hidden" name="destination_longitude" value="">
                                 </div>
@@ -70,8 +77,11 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <div class="form-group">                        
-                                    <label for="transport-mode" class="form-label">Transport Mode</label>
-                                    <select class="transport-mode w-100" id="transport-mode" required>
+                                    <label for="transport_method" class="form-label">
+                                        Transport Mode
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <select class="transport_method w-100" name="transport_method" id="transport_method" required>
                                         @foreach (\App\Lib\TransportMode::MODES as $modeVal => $mode)
                                             <option value="{{ $modeVal }}">{{ $mode }}</option>                                                    
                                         @endforeach    
@@ -80,25 +90,40 @@
                             </div> 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="work-days" class="form-label">Work Days per week</label>
-                                    <input type="number" id="work-days" class="form-control" min="1" value="1" placeholder="Work Days" required>
+                                    <label for="work_days" class="form-label">
+                                        Work Days per week
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="number" name="work_days" id="work_days" class="form-control" min="1" value="1" placeholder="Work Days" required>
                                 </div>
                             </div>
                         </div> 
                         <div class="row g-3 mb-3">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="route_distance" class="form-label">Distance (km)</label>
-                                    <input type="text" id="route_distance" class="form-control" value="" placeholder="Distance" required readonly>
+                                    <label for="route_distance" class="form-label">
+                                        Distance (km)
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" name="route_distance" id="route_distance" class="form-control" value="" placeholder="Distance" required readonly>
                                 </div>
-                        </div>                
+                            </div>  
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="emission_value" class="form-label">
+                                        CO2e per year (kg)
+                                    </label>
+                                    <input type="text" id="emission_value" class="form-control" value="" placeholder="CO2e per year" readonly>                                    
+                                </div>
+                            </div> 
+                        </div>             
                         <div class="col-md-12 mt-3 text-right">
-                            <button type="button" class="btn btn-info btn-rounded btn-fw">Calculate</button>
+                            <button type="submit" class="btn btn-info btn-rounded btn-fw">Calculate</button>
                         </div>
                     </form>
                 </div>
-              </div>
-          </div>
+            </div>
+        </div>
     </div>
 @stop
 @section('dashboard-script')
@@ -114,11 +139,116 @@
         google.maps.event.addDomListener(window, 'load', initializeStartingAddress);
         google.maps.event.addDomListener(window, 'load', initializeDestinationAddress);
         
-        $('#transport-mode').select2();
+        $('#transport_method').select2();
 
         $(document).on('change', '#travel_mode', function() {
             drawLineOnMap();
-        })
+        });
+
+        // $(document).on('submit', '#carbon_form', function(e){
+        //     e.preventDefault();
+
+        //     const transportMethod = $('#transport_method').val();
+        //     const workDistance = parseFloat($('#route_distance').val());
+        //     const workDays = parseFloat($('#work_days').val());
+        //     const weeksPerYear = 48;
+
+        //     if (workDays > 0 && workDistance > 0 && transportMethod >= 0) {
+        //         const co2eEmissions = (transportMethod * workDistance * 2 * workDays * weeksPerYear).toFixed(2);
+        //         $('#emission_value').val(co2eEmissions);  
+                
+                
+        //     }
+        // });
+        
+
+
+
+        $("#carbon_form").validate({
+            rules: {
+                starting_address: {
+                    required: true,
+                },
+                starting_latitude: {
+                    required: true,
+                },
+                starting_longitude: {
+                    required: true,
+                },
+                destination_address: {
+                    required: true,
+                },
+                destination_latitude: {
+                    required: true,
+                },
+                destination_longitude: {
+                    required: true,
+                },
+                transport_method: {
+                    required: true,
+                },
+                work_days: {
+                    required: true,
+                },
+                route_distance: {
+                    required: true,
+                }
+            },
+            submitHandler: function(form) {
+                const transportMethod = $('#transport_method').val();
+                const workDistance = parseFloat($('#route_distance').val());
+                const workDays = parseFloat($('#work_days').val());
+                const weeksPerYear = 48;
+
+                if (workDays > 0 && workDistance > 0 && transportMethod >= 0) {
+                    const co2eEmissions = (transportMethod * workDistance * 2 * workDays * weeksPerYear).toFixed(2);
+                    $('#emission_value').val(co2eEmissions);  
+                    
+                    var formData = new FormData(form);
+                    var formBtn = $("button");
+                    formBtn.attr('disabled',true);
+                    console.log(formData);
+                    $.ajax({
+                        url: form.action,
+                        type: form.method,
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function(response) {
+                            formBtn.attr('disabled',false);
+                            if (response.success == "1") {
+                                drawMap();
+                                form.reset();
+
+                                swal({
+                                    title: "Got It!",
+                                    text: response.message || "You Have Successfully Calculated.",
+                                    icon: "success",
+                                    button: "Ok",
+                                    timer: 1500,
+                                });
+                            } else {
+                                swal({
+                                    title: "Got It!",
+                                    text: response.message,
+                                    icon: "error",
+                                    button: "Ok",
+                                });
+                            }
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            formBtn.attr('disabled',false);
+                            swal({
+                                title: "Got It!",
+                                text: jqXHR.responseJSON.message||'Something went wrong please try again',
+                                icon: "error",
+                                button: "Ok",
+                            });
+                        }
+                    });                    
+                }
+            }
+        });
 
         function drawMap() {
             var zoomLatitude = 53.3498053;  // centered dublin
