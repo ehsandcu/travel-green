@@ -32,10 +32,14 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/user/info', [UserController::class, 'userInfo'])->name('user.info');
     Route::post('update/user/info', [UserController::class, 'updateUserInfo'])->name('update.user.info');
     Route::group(['middleware' => ['check.user.info']], function () {
-        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::group(['prefix' => 'dashboard'], function () {
+            Route::get('/show', [DashboardController::class, 'index'])->name('dashboard');
 
-        Route::group(['prefix' => 'emission'], function () {
-            Route::post('/store', [EmissionController::class, 'storeEmission'])->name("emission.store");
+            Route::group(['prefix' => 'emission'], function () {
+                Route::get('/list', [EmissionController::class, 'index'])->name("emission.index");
+                Route::post('/store', [EmissionController::class, 'storeEmission'])->name("emission.store");
+                Route::post('/load/emission', [EmissionController::class, 'loadEmission'])->name("load.emissions");
+            });
         });
     });
 });

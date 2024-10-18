@@ -26,7 +26,14 @@
 <script src="{{ asset('assets/dashboard/vendors/select2/select2.min.js') }}"></script>
 <script src="{{ asset('assets/dashboard/js/jquery.validate.js') }}"></script>
 <script src="{{ asset('assets/dashboard/js/sweetalert.min.js') }}"></script>
-
+<script src="{{ asset('js/datatables.min.js') }}"></script>
+<script>
+  jQuery.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+    }
+  });
+</script>
 @yield('dashboard-script')
 
 </body>

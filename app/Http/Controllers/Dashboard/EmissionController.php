@@ -15,6 +15,13 @@ class EmissionController extends Controller
         $this->middleware('auth');
     }
 
+    public function index()
+    {
+        $emitList = CarbonEmission::all();
+       
+        return view('dashboard.emission.index', compact('emitList'));
+    }
+
     public function storeEmission(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -40,7 +47,9 @@ class EmissionController extends Controller
 
         $carbonEmission = CarbonEmission::create([
             'user_id' => auth()->user()->id,
+            'origin_address' => getAddressFromLatLng($request->starting_latitude, $request->starting_longitude),
             'starting_latlng' => $request->all(),
+            'destination_address' => getAddressFromLatLng($request->destination_latitude, $request->destination_longitude),
             'destination_latlng' => $request->all(),
             'transport_mode' => $transportMode,
             'work_day_per_week' => $workDays,
@@ -54,42 +63,66 @@ class EmissionController extends Controller
         ]);        
     }
 
-    public function haversineGreatCircleDistance($latitudeFrom, $longitudeFrom, $latitudeTo, $longitudeTo, $earthRadius = 6371000) {
-        // Convert degrees to radians
-        $latFrom = deg2rad($latitudeFrom);
-        $lonFrom = deg2rad($longitudeFrom);
-        $latTo = deg2rad($latitudeTo);
-        $lonTo = deg2rad($longitudeTo);
-    
-        // Haversine formula
-        $latDelta = $latTo - $latFrom;
-        $lonDelta = $lonTo - $lonFrom;
-    
-        $a = sin($latDelta / 2) * sin($latDelta / 2) +
-             cos($latFrom) * cos($latTo) *
-             sin($lonDelta / 2) * sin($lonDelta / 2);
-        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
-    
-        // Distance in meters
-        return $earthRadius * $c;
-    }
+    public function loadEmission(Request $request)
+    {
+        $columnIndex_arr = $request->input('order');
+        $columnName_arr = $request->input('columns');
+        $columnIndex = $columnIndex_arr[0]['column'];
+        $columnSortOrder = $columnIndex_arr[0]['dir'];
+        $columnName = $columnName_arr[$columnIndex]['data'];
+        
+        $order_arr = $request->input('order');
 
-    public function getAddressFromLatLng($lat, $lng, $apiKey) {
-        // Google Maps Geocoding API URL
-        $url = "https://maps.googleapis.com/maps/api/geocode/json?latlng={$lat},{$lng}&key={$apiKey}";
-    
-        // Make the API request
-        $response = file_get_contents($url);
-    
-        // Parse the JSON response
-        $json = json_decode($response, true);
-    
-        // Check if we got a successful response
-        if ($json['status'] == 'OK') {
-            // Return the formatted address from the response
-            return $json['results'][0]['formatted_address'];
-        } else {
-            return "Address not found.";
+        $draw = $request->input('draw');
+        $limit = $request->input('length');
+        $offset = $request->input('start');
+        $searchKey = $request->input('search')['value'];
+
+        $alterColumn = [
+            'Origin' => 'origin_address',
+            'Destination' => 'destination_address',
+            'Travel Mode' => 'transport_mode',
+            'Work Days/Week' => 'work_day_per_week',
+            'Distance' => 'distance',
+            'Carbon Emission' => 'carbon_emission',
+        ];
+
+        $emissionQuery = CarbonEmission::orderBy($alterColumn[$columnName], $columnSortOrder);
+
+        if (!empty($searchKey)) {
+            $searchKey = trim($searchKey);
+            $emissionQuery->where(function ($query) use ($searchKey) {
+                $query->orWhere('origin_address', 'like', '%' . $searchKey . '%');
+                $query->orWhere('destination_address', 'like', '%' . $searchKey . '%');
+                $query->orWhere('transport_mode', 'like', '%' . $searchKey . '%');
+                $query->orWhere('work_day_per_week', 'like', '%' . $searchKey . '%');
+                $query->orWhere('distance', 'like', '%' . $searchKey . '%');
+                $query->orWhere('carbon_emission', 'like', '%' . $searchKey . '%');
+            });
         }
+
+        $totalRecords = $emissionQuery->count();
+        $carbonEmissions = $emissionQuery->skip($offset)->take($limit)->get();
+        
+        $aaData = [];
+
+        foreach ($carbonEmissions as $emission) {
+            $data['Origin'] = $emission->origin_address ?? 'N/A';
+            $data['Destination'] = $emission->destination_address ?? 'N/A';
+            $data['Travel Mode'] = TransportMode::MODES[$emission->transport_mode] ?? '';
+            $data['Work Days/Week'] = $emission->work_day_per_week ?? '';
+            $data['Distance'] = $emission->distance ?? '';
+            $data['Carbon Emission'] = $emission->carbon_emission ?? '';                
+
+            $aaData[] = $data;
+        }
+
+        $response = array(
+            "draw" => intval($draw),
+            "iTotalRecords" => $totalRecords,
+            "iTotalDisplayRecords" => $totalRecords,
+            "aaData" => $aaData
+        );
+        return response()->json($response);
     }
 }

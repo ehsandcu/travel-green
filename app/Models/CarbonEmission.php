@@ -18,7 +18,9 @@ class CarbonEmission extends Model
 
     protected $fillable = [
         'user_id',
+        'origin_address',
         'starting_latlng',
+        'destination_address',
         'destination_latlng',
         'transport_mode',
         'work_day_per_week',
@@ -51,4 +53,20 @@ class CarbonEmission extends Model
 
         $this->attributes['destination_latlng'] = json_encode(['lat' => $destinationLat, 'lng' => $destinationLng]);
     }
+
+    // public function getOriginAddressAttribute()
+    // {
+    //     $lat = $this->starting_latlng['lat'] ?? 0;
+    //     $lng = $this->starting_latlng['lng'] ?? 0;
+        
+    //     return $this->getAddressFromLatLng($lat, $lng);
+    // }
+
+    // public function getDestinationAddressAttribute()
+    // {
+    //     $lat = $this->destination_latlng['lat'] ?? 0;
+    //     $lng = $this->destination_latlng['lng'] ?? 0;
+        
+    //     return $this->getAddressFromLatLng($lat, $lng);
+    // }
 }

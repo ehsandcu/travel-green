@@ -22,6 +22,7 @@ class User extends Authenticatable
         'email',
         'password',
         'type',
+        'photo',
         'google_id'
     ];
 
@@ -43,4 +44,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function getPhotoAttribute($image)
+    {
+        return $image ? $image : getInitialNameWordImage($this->name);
+    }
 }
