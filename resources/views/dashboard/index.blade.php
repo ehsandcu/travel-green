@@ -207,7 +207,7 @@
                     var formData = new FormData(form);
                     var formBtn = $("button");
                     formBtn.attr('disabled',true);
-                    console.log(formData);
+                    
                     $.ajax({
                         url: form.action,
                         type: form.method,

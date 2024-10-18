@@ -77,7 +77,7 @@
 				<div class="col-6 col-sm-6 col-md-6 col-lg-4">
 					<div class="counter-wrap">
 						<div class="counter">
-							<span class="" data-number="9313">0</span>
+							<span class="" data-number="{{ $emissionsResult->total_records ?? 0 }}">0</span>
 						</div>
 						<span class="caption">No. of Vehicles</span>
 					</div>
@@ -85,27 +85,19 @@
 				<div class="col-6 col-sm-6 col-md-6 col-lg-4">
 					<div class="counter-wrap">
 						<div class="counter">
-							<span class="" data-number="8492">0</span>
+							<span class="" data-number="{{ $emissionsResult->total_distance ?? 0}}">0</span>
 						</div>
-						<span class="caption">No. of People</span>
+						<span class="caption">Total Distance</span>
 					</div>
 				</div>
 				<div class="col-6 col-sm-6 col-md-6 col-lg-4">
 					<div class="counter-wrap">
 						<div class="counter">
-							<span class="" data-number="100">0</span>
+							<span class="" data-number="{{ $emissionsResult->total_carbon_emission ?? 0 }}">0</span>
 						</div>
 						<span class="caption">Quantity of Carbon Emissions</span>
 					</div>
-				</div>
-				{{-- <div class="col-6 col-sm-6 col-md-6 col-lg-3">
-					<div class="counter-wrap">
-						<div class="counter">
-							<span class="" data-number="120">0</span>
-						</div>
-						<span class="caption">No. of Countries</span>
-					</div>
-				</div> --}}
+				</div>				
 			</div>
 		</div>
 	</div>

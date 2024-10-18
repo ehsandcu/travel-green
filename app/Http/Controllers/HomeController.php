@@ -3,13 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\CarbonEmission;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        return view('home');
+        $emissionsResult = CarbonEmission::selectRaw('
+            COUNT(*) as total_records,              
+            SUM(distance) as total_distance, 
+            SUM(carbon_emission) as total_carbon_emission
+        ')->first();
+
+        return view('home', compact('emissionsResult'));
     }
 
     public function services()

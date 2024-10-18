@@ -2,6 +2,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Travel Green | @yield('dashboard-title', 'Dashboard')</title>
     <link rel="stylesheet" href="{{ asset('assets/dashboard/vendors/typicons.font/font/typicons.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/dashboard/vendors/css/vendor.bundle.base.css') }}">
@@ -9,6 +10,7 @@
     <link rel="stylesheet" href="{{ asset('assets/dashboard/vendors/select2-bootstrap-theme/select2-bootstrap.min.css') }}">
 
     <link rel="stylesheet" href="{{ asset('assets/dashboard/css/vertical-layout-light/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/dataTables.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/dashboard/css/custom.css') }}">
     <link rel="shortcut icon" href="images/favicon.png" />
     @yield('dashboard-css')
