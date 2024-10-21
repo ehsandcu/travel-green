@@ -79,18 +79,20 @@
                             <!-- <div class="column"></div> -->
                             <div id="login-view-colunm" class="column is-5">
                                 <!-- Login Form -->
-                                <form id="signin-form" class="needs-validation login-form-view" novalidate>
+                                <form method="post" action="{{ route('check.login') }}" id="signin-form" class="needs-validation login-form-view" novalidate>
+                                    @csrf
                                     <div class="auth-content text-center">
                                         <h2 class="mb-2">Welcome</h2>
                                         <p>Please sign in to your account</p>
-                                        <!-- <a class="" href="/signup">I do not have an account yet </a> -->
                                     </div>
+                                    <div id="login-error" class="text-danger"></div>
+
                                     <div class="animated preFadeInLeft fadeInLeft">
                                         <!-- Input -->
                                         <div class="form-group">
                                             <label for="uname">Email</label>
                                             <input type="email" class="form-control" id="email"
-                                                placeholder="Please enter username" name="uname" required />
+                                                placeholder="Please enter email" name="login_email" required />
                                             <div class="invalid-feedback">
                                                 Please enter valid email.
                                             </div>
@@ -98,17 +100,15 @@
                                         <div class="form-group">
                                             <label for="pwd">Password</label>
                                             <input type="password" class="form-control" id="password"
-                                                placeholder="Please enter password" minlength="6" name="pswd"
+                                                placeholder="Please enter password" minlength="6" name="login_password"
                                                 required />
                                             <div class="invalid-feedback">
                                                 Please enter correct password.
                                             </div>
                                         </div>
-                                        <div id="login-error" class="alert alert-danger" style="display: none"></div>
                                         <p class="control login">
                                             <button type="submit"
-                                                class="button button-cta primary-btn btn-align-lg w-100 rounded raised no-lh"
-                                                id="login">
+                                                class="button button-cta primary-btn btn-align-lg w-100 rounded raised no-lh" id="login">
                                                 Log in
                                                 <span class="action-load-btn spinner-border spinner-border-sm ml-2"
                                                     role="status" aria-hidden="true"></span>
@@ -280,24 +280,88 @@
                                         </p>
                                     </div>
                                 </form>
+                                <!-- Sign up Form -->
+                                <form method="POST" action="{{ route('register') }}" id="signup-form" class="register-form-view register-form-needs-validation" novalidate>
+                                    @csrf
+                                    <div class="auth-content text-center">
+                                        <h2 class="mb-2">Sign up</h2>
+                                        <p>
+                                            Please fill the form and register your account
+                                        </p>
+                                    </div>
+                                    <div id="register-error" class="text-danger"></div>
+                                    <div class="animated preFadeInLeft fadeInLeft">
+                                        <!-- Input -->
+                                        <div class="form-group">
+                                            <label for="uname">Name</label>
+                                            <input type="text" class="form-control" id="email"
+                                                placeholder="Please enter your name" name="register_name" required />
+                                            <div class="invalid-feedback">
+                                                Please enter your name.
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="uname">Email</label>
+                                            <input type="email" class="form-control" id="email"
+                                                placeholder="Please enter your email" name="register_email" required />
+                                            <div class="invalid-feedback">
+                                                Please enter valid email.
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="pwd">Password</label>
+                                            <input type="password" class="form-control" id="password"
+                                                placeholder="Please enter your password" minlength="6" name="new_password"
+                                                required />
+                                            <div class="invalid-feedback">
+                                                Please enter correct password.
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="pwd">Confirm Password</label>
+                                            <input type="password" class="form-control" id="confirm-password"
+                                                placeholder="Please enter confirm password" minlength="6" name="confirm_password"
+                                                required />
+                                            <div class="invalid-feedback">
+                                                Please enter correct password.
+                                            </div>
+                                        </div>
+                                        <p class="control register">
+                                            <button type="submit"
+                                                class="button button-cta primary-btn btn-align-lg w-100 rounded raised no-lh"
+                                                id="register">
+                                                Sign Up
+                                                <span class="action-load-btn spinner-border spinner-border-sm ml-2"
+                                                    role="status" aria-hidden="true"></span>
+                                            </button>
+                                        </p>
+                                    </div>
+                                </form>
                                 <!-- Toggles -->
-                                <div
-                                    class="forgot-password animated preFadeInLeft fadeInLeft forget-pswd-btn">
-                                    <p class="has-text-right">
-                                        <a href="javascript:void(0)">Forgot password?</a>
-                                    </p>
+                                <div>
+                                    <div class="forgot-password animated preFadeInLeft fadeInLeft forget-pswd-btn">
+                                        <p class="has-text-right">
+                                            <a href="javascript:void(0)">Forgot password?</a>
+                                        </p>                                    
+                                    </div>                                    
                                 </div>
                             </div>
                         </div>
                         <div class="divider-wrapper m-auto pb-2">
                             <span class="divider">OR</span>
                         </div>
-                        <div class="columns justify-content-md-center pt-10 has-text-centered">
+                        <div class="columns justify-content-md-center pt-10 has-text-centered pb-2">
                             <div class="column is-5">
                                 <a href="{{ route('google.redirect') }}" class="btn login-with-google-btn" >
                                     Sign in with Google
                                 </a>
                             </div>
+                        </div>
+                        
+                        <div class="register-account columns animated preFadeInLeft fadeInLeft justify-content-md-center pt-10 has-text-centered">
+                            <p class="has-text-right">
+                                <span class="">Don't have an account? <a href="javascript:void(0)">Register </a></span>
+                            </p>                                    
                         </div>
                     </div>
                 </div>
@@ -359,15 +423,15 @@
                 "remember_me=false; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
         }
 
-        $(document).ready(function () {
-            $("#remember_me").click(function () {
-                if ($(this).prop("checked") === true) {
-                    setRememberMeCookie();
-                } else if ($(this).prop("checked") === false) {
-                    unsetRememberMeCookie();
-                }
-            });
-        });
+        // $(document).ready(function () {
+        //     $("#remember_me").click(function () {
+        //         if ($(this).prop("checked") === true) {
+        //             setRememberMeCookie();
+        //         } else if ($(this).prop("checked") === false) {
+        //             unsetRememberMeCookie();
+        //         }
+        //     });
+        // });
 
         $(document).on("submit", "#reset-form", function (form) {
             form.preventDefault();
@@ -402,9 +466,6 @@
             form.preventDefault();
         });
 
-
-
-
         // Get the input field
         var input = document.getElementById("otp-input6");
 
@@ -419,6 +480,7 @@
                 document.getElementById("submit-otp-value").click();
             }
         });
+
         //Code Verification
         $("#submit-otp-value").click(function () {
             var str1 = $("#otp-input1").val();
@@ -473,6 +535,7 @@
             $(".reset-form-view").hide();
             $("#empety-otp").hide();
             $(".action-load-btn").hide();
+            $('.register-form-view').hide();
 
             $(".forget-pswd-btn").click(function () {
                 $(".forget-pswd-btn").hide();
@@ -480,6 +543,15 @@
                 $(".otp-form-view").hide();
                 $(".new-pswd-form-view").hide();
                 $(".reset-form-view").show();
+            });
+
+            $('.register-account').click(function () {
+                $(".forget-pswd-btn").hide();
+                $(".login-form-view").hide();
+                $(".otp-form-view").hide();
+                $(".new-pswd-form-view").hide();
+                $('.register-account').hide();
+                $(".register-form-view").show();
             });
 
             var container = document.getElementsByClassName("verification-code--inputs")[0];
@@ -511,10 +583,78 @@
                     }
                 }
             }
-
-
         });
+        
+        (function () {
+            "use strict";
+            window.addEventListener(
+                "load",
+                function () {
+                    // Get the forms we want to add validation styles to
+                    var forms = document.getElementsByClassName(
+                        "register-form-needs-validation"
+                    );
+                    // Loop over them and prevent submission
+                    var validation = Array.prototype.filter.call(forms, function (form) {
+                        form.addEventListener(
+                            "submit",
+                            function (event) {                                
+                                event.preventDefault();
+                                event.stopPropagation();
+                                
+                                var errorSelector = $('#register-error');
+                                errorSelector.text('');
 
+                                if (form.checkValidity() === true) {
+                                    var formData = new FormData(form);
+                                    var formBtn = $("button");
+                                    formBtn.attr('disabled',true);
+
+                                    $.ajax({
+                                        url: form.action,
+                                        type: form.method,
+                                        data: formData,
+                                        processData: false,
+                                        contentType: false,
+                                        cache: false,
+                                        headers: {
+                                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                        },
+                                        success: function (response) {
+                                            formBtn.attr('disabled',false);
+
+                                            if (response.success == "1") {
+                                                $(".forget-pswd-btn").show();
+                                                $(".login-form-view").show();
+                                                $("#signup-form").hide();
+                                                $(".new-pswd-form-view").hide();
+                                                $(".reset-form-view").hide();
+                                                swal({
+                                                    title: "Got It!",
+                                                    text: response.message || "Account successfully created!",
+                                                    icon: "success",
+                                                    button: "Ok",
+                                                    timer: 1500,
+                                                });
+                                            } else {
+                                                errorSelector.text(response.message || 'Something went wrong!');
+                                            }
+                                        },
+                                        error: function (response) {
+                                            formBtn.attr('disabled',false);
+                                            errorSelector.text(response.message || 'Something went wrong!');
+                                        },
+                                    });
+                                }
+                                form.classList.add("was-validated");
+                            },
+                            false
+                        );
+                    });
+                },
+                false
+            );
+        })();
 
         (function () {
             "use strict";
@@ -531,13 +671,39 @@
                                 event.preventDefault();
                                 event.stopPropagation();
 
+                                var errorSelector = $('#login-error');
+                                errorSelector.text('');
+
                                 if (form.checkValidity() === true) {
-                                    var email = $("#email").val();
-                                    var password = $("#password").val();
-                                    $("#signin-form").hide();
-                                    $(".otp-form-view").show();
-                                    document.getElementById("otp-input1").focus();
-                                    $(".forget-pswd-btn").hide();
+                                    console.log('here');
+                                    var formData = new FormData(form);
+                                    var formBtn = $("button");
+                                    formBtn.attr('disabled',true);
+
+                                    $.ajax({
+                                        url: form.action,
+                                        type: form.method,
+                                        data: formData,
+                                        processData: false,
+                                        contentType: false,
+                                        cache: false,
+                                        headers: {
+                                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                        },
+                                        success: function (response) {
+                                            formBtn.attr('disabled',false);
+
+                                            if (response.success == "1") {
+                                                location.reload();
+                                            } else {
+                                                errorSelector.text(response.message || 'Something went wrong!');
+                                            }
+                                        },
+                                        error: function (response) {
+                                            formBtn.attr('disabled',false);
+                                            errorSelector.text(response.message || 'Something went wrong!');
+                                        },
+                                    });
                                 }
                                 form.classList.add("was-validated");
                             },
@@ -548,6 +714,7 @@
                 false
             );
         })();
+
         (function () {
             "use strict";
             window.addEventListener(
@@ -621,6 +788,7 @@
                 false
             );
         })();
+
         function responsiveFunct(x) {
             if (x.matches) {
                 // If media query matches
@@ -661,6 +829,6 @@
     </script>
     <div id="backtotop"><a href="#"></a></div>
     <script src="assets/login/js/core.js"></script>
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="{{ asset('assets/dashboard/js/sweetalert.min.js') }}"></script>
 </body>
 </html>

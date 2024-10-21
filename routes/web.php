@@ -19,7 +19,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/login', [AuthController::class, 'login'])->name('check.login');
+Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('services', [HomeController::class, 'services'])->name('service.index');
 Route::get('about-us', [HomeController::class, 'about'])->name('about.us');
@@ -29,6 +30,7 @@ Route::get('/google/redirect', [GoogleLoginController::class, 'redirectToGoogle'
 Route::get('/google/callback', [GoogleLoginController::class, 'handleGoogleCallback'])->name('google.callback');
 
 Route::group(['middleware' => ['auth']], function () {
+    Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/user/info', [UserController::class, 'userInfo'])->name('user.info');
     Route::post('update/user/info', [UserController::class, 'updateUserInfo'])->name('update.user.info');
     Route::group(['middleware' => ['check.user.info']], function () {
