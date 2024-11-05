@@ -57,7 +57,6 @@
 </head>
 
 <body>
-
     <div class="pageloader"></div>
     <div class="infraloader is-active"></div>
     <!-- Header End-->
@@ -65,7 +64,7 @@
     <div class="row login-wrapper columns is-gapless">
         <!-- Form section -->
         <div class="col-md-7">
-            <div class="hero is-fullheight">
+            <div class="hero is-fullheight">                
                 <div class="hero-heading">
                     <div class="d-flex justify-content-center">
                         {{-- <a href="/">
@@ -475,7 +474,6 @@
             if (event.key === "Enter") {
                 // Cancel the default action, if needed
                 event.preventDefault();
-                console.log("ddd")
                 // Trigger the button element with a click
                 document.getElementById("submit-otp-value").click();
             }
@@ -503,9 +501,7 @@
             $(".verification-code input[type=text]").each(function (i) {
                 verificationCode[i] = $(".verification-code input[type=text]")[i].value;
                 $("#verificationCode").val(Number(verificationCode.join("")));
-                //console.log( $('#verificationCode').val() );
             });
-            //console.log(event.key, event.which);
             if ($(this).val() > 0) {
                 if (
                     event.key == 1 ||
@@ -675,7 +671,6 @@
                                 errorSelector.text('');
 
                                 if (form.checkValidity() === true) {
-                                    console.log('here');
                                     var formData = new FormData(form);
                                     var formBtn = $("button");
                                     formBtn.attr('disabled',true);
