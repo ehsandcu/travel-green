@@ -21,6 +21,10 @@ return [
         'google_map_key' => env('GOOGLE_MAP_API_KEY'),
     ],
 
+    'geoapify' => [
+        'api_key' => '16fd1b17c67d43e5a7c73e0c838341a6'
+    ],
+
     'mailgun' => [
         'domain' => env('MAILGUN_DOMAIN'),
         'secret' => env('MAILGUN_SECRET'),
