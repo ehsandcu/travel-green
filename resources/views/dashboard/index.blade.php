@@ -1,20 +1,5 @@
 @extends('dashboard.layouts.main')
-@section('dashboard-css')
-    <style>
-        #floating-panel {
-            background-color: #fff;
-            border: 1px solid #999;
-            font-family: Roboto, "sans-serif";
-            left: 20%;
-            line-height: 30px;
-            padding: 5px 5px 5px 10px;
-            position: absolute;
-            text-align: center;
-            top: 10px;
-            z-index: 5;
-        }
-    </style>
-@stop
+
 @section('dashboard_content')
     <div class="row">    
         <div class="col-lg-12 d-flex grid-margin stretch-card">
@@ -144,25 +129,6 @@
         $(document).on('change', '#travel_mode', function() {
             drawLineOnMap();
         });
-
-        // $(document).on('submit', '#carbon_form', function(e){
-        //     e.preventDefault();
-
-        //     const transportMethod = $('#transport_method').val();
-        //     const workDistance = parseFloat($('#route_distance').val());
-        //     const workDays = parseFloat($('#work_days').val());
-        //     const weeksPerYear = 48;
-
-        //     if (workDays > 0 && workDistance > 0 && transportMethod >= 0) {
-        //         const co2eEmissions = (transportMethod * workDistance * 2 * workDays * weeksPerYear).toFixed(2);
-        //         $('#emission_value').val(co2eEmissions);  
-                
-                
-        //     }
-        // });
-        
-
-
 
         $("#carbon_form").validate({
             rules: {
@@ -371,35 +337,6 @@
                 //     }
                 // });             
             }
-            // var lineCoordinates = [
-            //     { lat: 53.37889029999999, lng: -6.2668995 }, // San Francisco
-            //     { lat: 53.405634, lng: -6.4363921 }, // Los Angeles
-            //     //{ lat: 36.1699, lng: -115.1398 }  // Las Vegas
-            // ];
-
-            // // Create a polyline on the map
-            // var linePath = new google.maps.Polyline({
-            //     path: [new google.maps.LatLng(53.37889029999999, -6.2668995), new google.maps.LatLng(53.405634, -6.4363921)],
-            //     geodesic: true,
-            //     strokeColor: '#FF0000',
-            //     strokeOpacity: 1.0,
-            //     strokeWeight: 2,
-            //     map: map
-            // });
-
-            // // Add the polyline to the map
-            // linePath.setMap(map);
-
-            // // Create a LatLngBounds object
-            // var bounds = new google.maps.LatLngBounds();
-
-            // // Extend bounds to include each coordinate in the polyline
-            // for (var i = 0; i < lineCoordinates.length; i++) {
-            //     bounds.extend(lineCoordinates[i]);
-            // }
-
-            // // Fit the map to the bounds to adjust zoom and center
-            // map.fitBounds(bounds);
         }
     </script>
 @stop
