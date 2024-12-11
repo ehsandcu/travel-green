@@ -40,16 +40,18 @@ class EmissionController extends Controller
                 'message' => $validator->errors()->first(),
             ]);
         }
-
+ 
         $transportMode = $request->transport_method;
         $workDays = $request->work_days;
         $routeDistance = $request->route_distance;
 
         $carbonEmission = CarbonEmission::create([
             'user_id' => auth()->user()->id,
-            'origin_address' => getAddressFromLatLng($request->starting_latitude, $request->starting_longitude),
+            // 'origin_address' => getAddressFromLatLng($request->starting_latitude, $request->starting_longitude), //if you have google map api use this
+            // 'destination_address' => getAddressFromLatLng($request->destination_latitude, $request->destination_longitude), //if you have google map api use this
+            'origin_address' => $request->starting_address,
+            'destination_address' => $request->destination_address,
             'starting_latlng' => $request->all(),
-            'destination_address' => getAddressFromLatLng($request->destination_latitude, $request->destination_longitude),
             'destination_latlng' => $request->all(),
             'transport_mode' => $transportMode,
             'work_day_per_week' => $workDays,
@@ -59,7 +61,7 @@ class EmissionController extends Controller
         
         return $this->sendResponse([
             'success' => 1,
-            'message' => 'Data calculated successfully.',
+            'message' => $carbonEmission->carbon_emission .'kg of CO2 emissions per year.',
         ]);        
     }
 
@@ -112,7 +114,7 @@ class EmissionController extends Controller
             $data['Travel Mode'] = TransportMode::MODES[$emission->transport_mode] ?? '';
             $data['Work Days/Week'] = $emission->work_day_per_week ?? '';
             $data['Distance'] = $emission->distance ?? '';
-            $data['Carbon Emission'] = $emission->carbon_emission ?? '';                
+            $data['Carbon Emission'] = number_format(($emission->carbon_emission ?? ''), 2, '.', '');                
 
             $aaData[] = $data;
         }
