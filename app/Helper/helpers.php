@@ -7,7 +7,9 @@ function getInitialNameWordImage($name=null)
 
 function carbonEmission($tansportMode, $workDays, $distance, $weeksPerYear=48)
 {
-    return $tansportMode * $distance * 2 * $workDays * $weeksPerYear;
+    $carbonEmit = $tansportMode * $distance * 2 * $workDays * $weeksPerYear;
+    
+    return number_format((float)$carbonEmit, 2, '.', '');
 }
 
 function getAddressFromLatLng($lat, $lng) {
