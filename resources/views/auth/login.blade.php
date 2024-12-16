@@ -10,7 +10,7 @@
     <link rel="shortcut icon" href="{{ asset('favicon.png') }}">
     <link rel="stylesheet" href="{{ asset('assets/login/css/core.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/login/css/backend.css?v=1.0.0') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/login/css/googlebutton.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/login/css/googleButton.css') }}" />
     
     <script src="{{ asset('assets/login/js/app.js') }}"></script>
 
