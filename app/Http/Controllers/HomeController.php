@@ -4,17 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\CarbonEmission;
+use App\Models\Team;
+use App\Services\EmissionService;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
     public function index()
-    {
-        $emissionsResult = CarbonEmission::selectRaw('
-            COUNT(*) as total_records,              
-            SUM(distance) as total_distance, 
-            SUM(carbon_emission) as total_carbon_emission
-        ')->first();
+    {   
+        $emissionsResult = (new EmissionService())->getEmissionStats();
 
         return view('home', compact('emissionsResult'));
     }
@@ -26,7 +24,9 @@ class HomeController extends Controller
 
     public function about()
     {
-        return view('about.about');
+        $team = Team::get();
+
+        return view('about.about', compact('team'));
     }
 
     public function contactUs()

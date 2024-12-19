@@ -4,24 +4,6 @@
     <link rel="stylesheet" href="{{ asset('assets/dashboard/leaflet/leaflet.css') }}"/>
 @stop
 @section('dashboard_content')
-    <div class="row">    
-        <div class="col-lg-12 d-flex grid-margin stretch-card">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex flex-wrap justify-content-between">
-                        <h4 class="card-title mb-3">Carbon Emission</h4>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="d-sm-flex justify-content-between">
-                                <div id="map" style="width: 100%; height: 700px;"></div>                            
-                            </div>                            
-                        </div>              
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="row">
         <div class="col-12 grid-margin">
             <div class="card">
@@ -104,6 +86,24 @@
             </div>
         </div>
     </div>
+    <div class="row">    
+        <div class="col-lg-12 d-flex grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex flex-wrap justify-content-between">
+                        <h4 class="card-title mb-3">Carbon Emission</h4>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="d-sm-flex justify-content-between">
+                                <div id="map" style="width: 100%; height: 700px;"></div>                            
+                            </div>                            
+                        </div>              
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @stop
 @section('dashboard-script')
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
@@ -116,7 +116,6 @@
         $(document).on('change', '#travel_mode', function() {
             drawLineOnMap();
         });
-
 
         function drawMap() {
             var zoomLatitude = 53.3498053;  // centered dublin

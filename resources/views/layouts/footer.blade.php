@@ -1,4 +1,3 @@
-    
         <div class="site-footer">
             <div class="inner first">
                 <div class="container">
@@ -8,7 +7,7 @@
                                 <h3 class="heading">About Travel Green</h3>
                                 <p>Calculate to measure your commute's impact on the environment.</p>
                             </div>
-                            <div class="widget">
+                            {{-- <div class="widget">
                                 <ul class="list-unstyled social">
                                     <li><a href="#"><span class="icon-twitter"></span></a></li>
                                     <li><a href="#"><span class="icon-instagram"></span></a></li>
@@ -19,29 +18,19 @@
                                     <li><a href="#"><span class="icon-apple"></span></a></li>
                                     <li><a href="#"><span class="icon-google"></span></a></li>
                                 </ul>
-                            </div>
+                            </div> --}}
                         </div>
                         <div class="col-md-6 col-lg-2 pl-lg-5">
                             <div class="widget">
                                 <h3 class="heading">Pages</h3>
                                 <ul class="links list-unstyled">
                                     <li><a href="{{ route('home') }}">Home</a></li>
-                                    <li><a href="{{ route('service.index') }}">Services</a></li>
+                                    {{-- <li><a href="{{ route('service.index') }}">Services</a></li> --}}
                                     <li><a href="{{ route('about.us') }}">About</a></li>
                                     <li><a href="{{ route('contact.us') }}">Contact</a></li>
                                 </ul>
                             </div>
                         </div>
-                        {{-- <div class="col-md-6 col-lg-2">
-                            <div class="widget">
-                                <h3 class="heading">Resources</h3>
-                                <ul class="links list-unstyled">
-                                    <li><a href="#">Services</a></li>
-                                    <li><a href="#">About</a></li>
-                                    <li><a href="#">Contact</a></li>
-                                </ul>
-                            </div>
-                        </div> --}}
                         <div class="col-md-6 col-lg-4">
                             <div class="widget">
                                 <h3 class="heading">Contact</h3>
@@ -55,9 +44,7 @@
                     </div>
                 </div>
             </div>
-    
-    
-    
+
             <div class="inner dark">
                 <div class="container">
                     <div class="row text-center">
@@ -75,8 +62,7 @@
             <div class="spinner-border" role="status">
                 <span class="visually-hidden">Loading...</span>
             </div>
-        </div>
-        
+        </div>        
         
         {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script> --}}
         <script src="{{ asset('js/bootstrap/bootstrap.bundle.min.js') }}"></script>

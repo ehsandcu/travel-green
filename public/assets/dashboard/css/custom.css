@@ -44,3 +44,42 @@
 .select2-container--default .select2-selection--single .select2-selection__arrow {
     top: 10px;
 }
+
+.weekDays input {
+    display: none !important;
+}
+
+.weekDays input[type=checkbox] + label {
+    display: inline-block;
+    border-radius: 6px;
+    background: #ddd;
+    height: 40px;
+    width: 80px;
+    margin-right: 3px;
+    line-height: 40px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.weekDays input[type=checkbox]:checked + label {
+    background: #2AD705;
+    color: #fff;
+}
+
+.navbar .navbar-brand-wrapper .brand-text {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.nav-profile .sidebar-profile-image img {
+    box-shadow: none !important;
+}
+
+.date-icon-set .search-link {
+    position: absolute;
+    top: 15;
+    /* right: 15px; */
+    font-size: 18px;
+    line-height: 38px;
+    color: #6c757d;
+}

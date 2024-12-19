@@ -26,13 +26,33 @@
 <script src="{{ asset('assets/dashboard/vendors/select2/select2.min.js') }}"></script>
 <script src="{{ asset('assets/dashboard/js/jquery.validate.js') }}"></script>
 <script src="{{ asset('assets/dashboard/js/sweetalert.min.js') }}"></script>
+<script src="{{ asset('js/moment.min.js') }}"></script>
 <script src="{{ asset('js/datatables.min.js') }}"></script>
+<script src="{{ asset('js/daterangepicker.js') }}"></script>
+<script src="{{ asset('js/apexcharts.min.js') }}"></script>
+
 <script>
   jQuery.ajaxSetup({
     headers: {
         'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
     }
   });
+
+  function greetingMsg() {
+    const currentHour = new Date().getHours();
+    let greeting;
+
+    // Determine the greeting based on the time of day
+    if (currentHour >= 5 && currentHour < 12) {
+      greeting = "Good Morning";
+    } else if (currentHour >= 12 && currentHour < 18) {
+      greeting = "Good Afternoon";
+    } else {
+      greeting = "Good Evening";
+    }
+
+    return greeting;
+  }
 </script>
 @yield('dashboard-script')
 
