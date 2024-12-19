@@ -6,7 +6,7 @@
                 <div class="col-lg-6 mx-auto text-center">
                     <div class="intro-wrap">
                         <h1 class="mb-0">Contact Us</h1>
-                        <p class="text-white">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Est cum molestiae accusantium reiciendis commodi ab hic maxime sequi, accusamus provident, nulla iure! Rem reprehenderit reiciendis porro incidunt veritatis similique illo. </p>
+                        <p class="text-white">Got a question or need help? We’re here for you! Whether you have feedback, need assistance with using the Travel Green tool, or just want to learn more about how we can help you reduce your carbon footprint, feel free to reach out to us. Our team is happy to assist and connect with you. Just fill out the form below, and we'll get back to you as soon as possible!</p>
                     </div>
                 </div>
             </div>

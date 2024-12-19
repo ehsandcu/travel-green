@@ -6,13 +6,13 @@
                 <div class="col-lg-6 mx-auto text-center">
                     <div class="intro-wrap">
                         <h1 class="mb-0">About Us</h1>
-                        <p class="text-white">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Est cum molestiae accusantium reiciendis commodi ab hic maxime sequi, accusamus provident, nulla iure! Rem reprehenderit reiciendis porro incidunt veritatis similique illo. </p>
+                        <p class="text-white">Welcome to Travel Green! Our mission is to help you understand and reduce your carbon footprint. With our easy-to-use tool, you can calculate the carbon emissions from your daily commute and discover greener alternatives. We believe that by making small changes in how we travel, we can make a big difference for the planet. Join us in creating a cleaner, healthier world, one step at a time.</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="untree_co-section">
+    {{-- <div class="untree_co-section">
         <div class="container">
             <div class="row">
                 <div class="col-lg-7">
@@ -35,52 +35,29 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     <div class="untree_co-section">
         <div class="container">
             <div class="row justify-content-center mb-5">
                 <div class="col-md-6 text-center">
                     <h2 class="section-title mb-3 text-center">Team</h2>
-                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Laboriosam, repellendus iure quae eaque optio ad repellat quos. Vitae ex facere quaerat ratione, totam deserunt laudantium esse obcaecati voluptas nostrum earum.</p>
+                    <p>Meet the team behind Travel Green! Our team, including our supportive supervisor, is made up of people who care about the environment. Each of us uses our skills to create a platform that helps people make greener travel choices. Together, we’re working towards a cleaner and healthier future for everyone.</p>
                 </div>
             </div>    
-            <div class="row">
-                <div class="col-lg-3 mb-4">
-                    <div class="team">
-                        <img src="{{ asset('images/dummy-image.jpg') }}" alt="Image" class="img-fluid mb-4 rounded-20">
-                        <div class="px-3">
-                            <h3 class="mb-0">Member 1</h3>
-                            <p>Co-Founder &amp; CEO</p>
-                        </div>
+            <div class="row d-flex justify-content-center">
+                @foreach($team as $member)
+                    <div class="col-lg-3 mb-4">
+                        <a href="{{ $member->link }}" target="_blank" class="text-decoration-none">
+                            <div class="team">
+                                <img src="{{ asset( $member->image ) }}" alt="Image" class="img-fluid mb-4 rounded-20 h-250 w-100">
+                                    <div class="px-3">
+                                        <h3 class="mb-0">{{ $member->name }}</h3>
+                                        <p>{{ $member->position }}</p>
+                                    </div>
+                            </div>
+                        </a>
                     </div>
-                </div>
-                <div class="col-lg-3 mb-4">
-					<div class="team">
-						<img src="{{ asset('images/dummy-image.jpg') }}" alt="Image" class="img-fluid mb-4 rounded-20">
-						<div class="px-3">
-							<h3 class="mb-0">Member 2</h3>
-							<p>Co-Founder &amp; CEO</p>
-						</div>
-					</div>
-                </div> 
-				<div class="col-lg-3 mb-4">
-                    <div class="team">
-                        <img src="{{ asset('images/dummy-image.jpg') }}" alt="Image" class="img-fluid mb-4 rounded-20">
-                        <div class="px-3">
-                            <h3 class="mb-0">Member 4</h3>
-                            <p>Co-Founder &amp; CEO</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 mb-4">
-					<div class="team">
-						<img src="{{ asset('images/dummy-image.jpg') }}" alt="Image" class="img-fluid mb-4 rounded-20">
-						<div class="px-3">
-							<h3 class="mb-0">Member 5</h3>
-							<p>Co-Founder &amp; CEO</p>
-						</div>
-					</div>
-                </div> 
+                @endforeach
             </div>
         </div>
     </div>
@@ -89,9 +66,9 @@
 			<div class="row text-center">
 				<div class="col-md-12">
 					<h2 class="mb-2 text-white">Lets you Explore the Best. Contact Us Now</h2>
-					<p class="mb-4 lead text-white text-white-opacity">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Excepturi, fugit?</p>
+					<p class="mb-4 lead text-white text-white-opacity"></p>
 					<p class="mb-0">
-						<a href="#" class="btn btn-outline-white text-white btn-md font-weight-bold">Get in touch</a>
+						<a href="{{ route('contact.us') }}" class="btn btn-outline-white text-white btn-md font-weight-bold">Get in touch</a>
 					</p>
 				</div>
 			</div>

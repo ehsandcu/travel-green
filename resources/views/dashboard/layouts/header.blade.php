@@ -7,20 +7,22 @@
     <link rel="stylesheet" href="{{ asset('assets/dashboard/vendors/typicons.font/font/typicons.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/dashboard/vendors/css/vendor.bundle.base.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/dashboard/vendors/select2/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/bootstrap/alpha_bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/dashboard/vendors/select2-bootstrap-theme/select2-bootstrap.min.css') }}">
 
     <link rel="stylesheet" href="{{ asset('assets/dashboard/css/vertical-layout-light/style.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/dataTables.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/dashboard/css/custom.css') }}">
-    <link rel="shortcut icon" href="images/favicon.png" />
+    <link rel="shortcut icon" href="{{ asset('images/favicon.png') }}" />
     @yield('dashboard-css')
   </head>
   <body>
     <div class="container-scroller">
       <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
         <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-          <a class="navbar-brand brand-logo" href="{{ route('dashboard') }}"><img src="{{ asset('assets//dashboard/images/logo/dummy.png') }}" alt="logo"/></a>
-          <a class="navbar-brand brand-logo-mini" href="{{ route('dashboard') }}"><img src="images/logo-mini.svg" alt="logo"/></a>
+          <a class="navbar-brand brand-logo brand-text" href="{{ route('dashboard') }}">Travel Green</a>
+          {{-- <a class="navbar-brand brand-logo" href="{{ route('dashboard') }}"><img src="{{ asset('assets/dashboard/images/logo/dummy.png') }}" alt="logo"/></a>
+          <a class="navbar-brand brand-logo-mini" href="{{ route('dashboard') }}"><img src="{{ asset('assets/dashboard/images/logo/dummy.png') }}" alt="logo"/></a> --}}
           <button class="navbar-toggler navbar-toggler align-self-center d-none d-lg-flex" type="button" data-toggle="minimize">
             <span class="typcn typcn-th-menu"></span>
           </button>
@@ -49,16 +51,29 @@
                 </a>  
               </div>
             </li> --}}
+            <li class="nav-item nav-profile">
+              <a class="nav-link dropdown-toggle  pl-0 pr-0" href="{{ route('home') }}">
+                <span class="nav-profile-name">Home</span>
+              </a>              
+            </li>
+            <li class="nav-item nav-profile">
+              <a class="nav-link dropdown-toggle  pl-0 pr-0" href="{{ route('contact.us') }}">
+                <span class="nav-profile-name">Contact Us</span>
+              </a>              
+            </li>
             <li class="nav-item nav-profile dropdown">
               <a class="nav-link dropdown-toggle  pl-0 pr-0" href="#" data-toggle="dropdown" id="profileDropdown">
-                <i class="typcn typcn-user-outline mr-0"></i>
-                <span class="nav-profile-name">{{ auth()->user()->name }}</span>
+                {{-- <i class="typcn typcn-user-outline mr-0"></i> --}}
+                <div class="sidebar-profile-image">
+                  <img src="{{ auth()->user()->photo }}" alt="image">
+                  <span class="nav-profile-name">{{ auth()->user()->name }}</span>
+                </div>
               </a>
               <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
-                <a class="dropdown-item" href="{{ route('home') }}">
+                {{-- <a class="dropdown-item" href="{{ route('home') }}">
                   <i class="typcn typcn-device-desktop text-primary"></i>
                     Main Site
-                </a>
+                </a> --}}
                 <a class="dropdown-item" href="{{ route('logout') }}">
                     <i class="typcn typcn-power text-primary"></i>
                     Logout

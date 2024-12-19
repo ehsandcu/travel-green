@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Lib\TransportMode;
+use App\Lib\TripJourney;
 use App\Models\CarbonEmission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -17,14 +18,15 @@ class EmissionController extends Controller
 
     public function index()
     {
-        $emitList = CarbonEmission::all();
-       
-        return view('dashboard.emission.index', compact('emitList'));
+        // return view('dashboard.map'); //geoapify implimented
+        return view('dashboard.index'); //google map implemented
     }
 
     public function storeEmission(Request $request)
     {
+        dd($request->all(),implode(',', array_keys(TripJourney::JOURNEYS)));
         $validator = Validator::make($request->all(), [
+            'trip_journey' => ['required', 'in:'.implode(',', array_keys(TripJourney::JOURNEYS))],
             'starting_latitude' => ['required'],
             'starting_longitude' => ['required'],
             'destination_latitude' => ['required'],

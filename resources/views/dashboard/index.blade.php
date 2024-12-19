@@ -1,33 +1,8 @@
 @extends('dashboard.layouts.main')
-
+@section('dashboard-css')
+    <link rel="stylesheet" href="{{ asset('css/daterangepicker.css') }}">
+@stop
 @section('dashboard_content')
-    <div class="row">    
-        <div class="col-lg-12 d-flex grid-margin stretch-card">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex flex-wrap justify-content-between">
-                        <h4 class="card-title mb-3">Carbon Emission</h4>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="d-sm-flex justify-content-between">
-                                <div id="floating-panel">
-                                    <b>Mode of Travel: </b>
-                                    <select id="travel_mode">
-                                      <option value="DRIVING">Driving</option>
-                                      <option value="WALKING">Walking</option>
-                                      <option value="BICYCLING">Bicycling</option>
-                                      <option value="TRANSIT">Transit</option>
-                                    </select>
-                                  </div>
-                                <div id="map" style="width: 100%; height: 700px;"></div>                            
-                            </div>                            
-                        </div>              
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="row">
         <div class="col-12 grid-margin">
             <div class="card">
@@ -35,6 +10,37 @@
                     <h4 class="card-title">Calculate Carbon Emission</h4>                  
                     <form id="carbon_form" method="POST" action="{{ route('emission.store') }}"> 
                         @csrf
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        Trip Journey
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <div>
+                                        @foreach(\App\Lib\TripJourney::JOURNEYS as $journeyKey => $journey)
+                                            <input type="radio" class="btn-check form-control" name="trip_journey" id="{{ $journeyKey }}-outlined" value="{{ $journeyKey }}" autocomplete="off" @if ($loop->first) checked @endif>
+                                            <label class="btn btn-outline-{{ $journey['color'] }}" for="{{ $journeyKey }}-outlined">{{ $journey['label'] }}</label>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="weekDays form-group" style="display: none;">                            
+                                    @foreach(\App\Lib\WeekDays::LIST as $day)
+                                        <input type="checkbox" id="weekday-{{ $day }}" name="default_week_days[days][{{ $day }}]" value="1"/>
+                                        <label for="weekday-{{ $day }}">{{ $day }}</label>
+                                    @endforeach                            
+                                </div>
+
+                                <div class="customDates form-group" style="display: none;">    
+                                    <input type="text" class="form-control" name="custom_date" value="" />
+                                </div>
+                            </div>
+                        </div>
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -72,8 +78,21 @@
                                         @endforeach    
                                     </select>
                                 </div>                        
-                            </div> 
+                            </div>
                             <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="route_type" class="form-label">
+                                        Route Type
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <select class="w-100" name="route_type" id="route_type" required>
+                                        @foreach (\App\Lib\RouteType::TYPES as $routeKey => $routeType)
+                                            <option value="{{ $routeKey }}">{{ $routeType }}</option>                                                    
+                                        @endforeach    
+                                    </select>
+                                </div>
+                            </div> 
+                            {{-- <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="work_days" class="form-label">
                                         Work Days per week
@@ -81,7 +100,7 @@
                                     </label>
                                     <input type="number" name="work_days" id="work_days" class="form-control" min="1" value="1" placeholder="Work Days" required>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div> 
                         <div class="row g-3 mb-3">
                             <div class="col-md-6">
@@ -110,111 +129,170 @@
             </div>
         </div>
     </div>
+    <div class="row">    
+        <div class="col-lg-12 d-flex grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex flex-wrap justify-content-between">
+                        <h4 class="card-title mb-3">Carbon Emission</h4>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="d-sm-flex justify-content-between">
+                                <div id="floating-panel">
+                                    <b>Mode of Travel: </b>
+                                    <select id="travel_mode">
+                                      <option value="DRIVING">Driving</option>
+                                      <option value="WALKING">Walking</option>
+                                      <option value="BICYCLING">Bicycling</option>
+                                      <option value="TRANSIT">Transit</option>
+                                    </select>
+                                  </div>
+                                <div id="map" style="width: 100%; height: 700px;"></div>                            
+                            </div>                            
+                        </div>              
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @stop
 @section('dashboard-script')
     <script src="https://maps.google.com/maps/api/js?key={{ config('services.google.google_map_key')}}&libraries=places,geometry" type="text/javascript"></script>
 
     <script>
         var map,directionsRenderer;
+        var dateFormat = 'DD-MM-YYYY';
 
-        setTimeout(() => {
-            drawMap();
-        }, 1000);
-        
         google.maps.event.addDomListener(window, 'load', initializeStartingAddress);
         google.maps.event.addDomListener(window, 'load', initializeDestinationAddress);
         
-        $('#transport_method').select2();
-
-        $(document).on('change', '#travel_mode', function() {
-            drawLineOnMap();
-        });
-
-        $("#carbon_form").validate({
-            rules: {
-                starting_address: {
-                    required: true,
-                },
-                starting_latitude: {
-                    required: true,
-                },
-                starting_longitude: {
-                    required: true,
-                },
-                destination_address: {
-                    required: true,
-                },
-                destination_latitude: {
-                    required: true,
-                },
-                destination_longitude: {
-                    required: true,
-                },
-                transport_method: {
-                    required: true,
-                },
-                work_days: {
-                    required: true,
-                },
-                route_distance: {
-                    required: true,
+        $(document).ready(function(){
+            $('input[name="custom_date"]').daterangepicker({
+                maxDate:  moment(),
+                locale: {
+                    format: dateFormat
                 }
-            },
-            submitHandler: function(form) {
-                const transportMethod = $('#transport_method').val();
-                const workDistance = parseFloat($('#route_distance').val());
-                const workDays = parseFloat($('#work_days').val());
-                const weeksPerYear = 48;
+            });
 
-                if (workDays > 0 && workDistance > 0 && transportMethod >= 0) {
-                    const co2eEmissions = (transportMethod * workDistance * 2 * workDays * weeksPerYear).toFixed(2);
-                    $('#emission_value').val(co2eEmissions);  
-                    
-                    var formData = new FormData(form);
-                    var formBtn = $("button");
-                    formBtn.attr('disabled',true);
-                    
-                    $.ajax({
-                        url: form.action,
-                        type: form.method,
-                        data: formData,
-                        contentType: false,
-                        processData: false,
-                        success: function(response) {
-                            formBtn.attr('disabled',false);
-                            if (response.success == "1") {
-                                drawMap();
-                                form.reset();
+            //draw map
+            setTimeout(() => {
+                drawMap();
+            }, 1000);
+            
+            $('#transport_method').select2();
+            $('#route_type').select2();
 
+            $(document).on('change', '#travel_mode', function() {
+                drawLineOnMap();
+            });
+
+            $(document).on('change', 'input[name=trip_journey]', function(){
+                var journey = $(this).val();
+                $('.weekDays').hide();
+                $('.customDates').hide();
+
+                switch(journey) {
+                    case "weekly":                
+                        $('.weekDays').show();
+                        break;
+
+                    case "custom":
+                        $('.customDates').show();
+                        break;
+                }
+            });
+
+            $("#carbon_form").validate({
+                rules: {
+                    starting_address: {
+                        required: true,
+                    },
+                    starting_latitude: {
+                        required: true,
+                    },
+                    starting_longitude: {
+                        required: true,
+                    },
+                    destination_address: {
+                        required: true,
+                    },
+                    destination_latitude: {
+                        required: true,
+                    },
+                    destination_longitude: {
+                        required: true,
+                    },
+                    transport_method: {
+                        required: true,
+                    },
+                    route_type: {
+                        required: true,
+                    },
+                    work_days: {
+                        required: true,
+                    },
+                    route_distance: {
+                        required: true,
+                    }
+                },
+                submitHandler: function(form) {
+                    const transportMethod = $('#transport_method').val();
+                    const workDistance = parseFloat($('#route_distance').val());
+                    const routeType = parseFloat($('#route_type').val());
+                    const workDays = parseFloat($('#work_days').val());
+                    const weeksPerYear = 48;
+
+                    if (workDays > 0 && workDistance > 0 && transportMethod >= 0) {
+                        const co2eEmissions = (transportMethod * workDistance * 2 * workDays * weeksPerYear).toFixed(2);
+                        $('#emission_value').val(co2eEmissions);  
+                        
+                        var formData = new FormData(form);
+                        var formBtn = $("button");
+                        formBtn.attr('disabled',true);
+                        
+                        $.ajax({
+                            url: form.action,
+                            type: form.method,
+                            data: formData,
+                            contentType: false,
+                            processData: false,
+                            success: function(response) {
+                                formBtn.attr('disabled',false);
+                                if (response.success == "1") {
+                                    drawMap();
+                                    form.reset();
+
+                                    swal({
+                                        title: "Got It!",
+                                        text: response.message || "You Have Successfully Calculated.",
+                                        icon: "success",
+                                        button: "Ok",
+                                        timer: 1500,
+                                    });
+                                } else {
+                                    swal({
+                                        title: "Got It!",
+                                        text: response.message,
+                                        icon: "error",
+                                        button: "Ok",
+                                    });
+                                }
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) {
+                                formBtn.attr('disabled',false);
                                 swal({
                                     title: "Got It!",
-                                    text: response.message || "You Have Successfully Calculated.",
-                                    icon: "success",
-                                    button: "Ok",
-                                    timer: 1500,
-                                });
-                            } else {
-                                swal({
-                                    title: "Got It!",
-                                    text: response.message,
+                                    text: jqXHR.responseJSON.message||'Something went wrong please try again',
                                     icon: "error",
                                     button: "Ok",
                                 });
                             }
-                        },
-                        error: function(jqXHR, textStatus, errorThrown) {
-                            formBtn.attr('disabled',false);
-                            swal({
-                                title: "Got It!",
-                                text: jqXHR.responseJSON.message||'Something went wrong please try again',
-                                icon: "error",
-                                button: "Ok",
-                            });
-                        }
-                    });                    
+                        });                    
+                    }
                 }
-            }
-        });
+            });
+        });        
 
         function drawMap() {
             var zoomLatitude = 53.3498053;  // centered dublin
