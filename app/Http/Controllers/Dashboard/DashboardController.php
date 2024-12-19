@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Lib\UserRole;
 use App\Models\CarbonEmission;
 use App\Services\EmissionService;
 use Carbon\Carbon;
@@ -37,6 +38,7 @@ class DashboardController extends Controller
 
         $query = $date = Carbon::createFromFormat('Y-m-d H:i:s', Carbon::parse($datePeriodStartDate)->format($format). '00:00:00');
         $end = Carbon::createFromFormat('Y-m-d H:i:s', Carbon::parse($datePeriodEndDate)->format($format). '23:59:59');
+        $user = auth()->user();
         
         if ($dateRangeStatus) {
             $graphQuery = CarbonEmission::selectRaw('
@@ -44,7 +46,11 @@ class DashboardController extends Controller
                             SUM(distance) as total_distance, 
                             SUM(carbon_emission) as total_carbon_emission,
                             date_format(created_at,"%Y-%m-%d") as dates
-                        ');   
+                        ')->when($user, function ($query) use ($user) {
+                            if ($user->user_role != UserRole::ADMIN_ROLE) {
+                                $query->where('user_id', $user->id);
+                            }
+                        });   
 
             $graphQuery->whereBetween(DB::raw('DATE(created_at)'), [$startDate, $endDate])
                 ->groupBy('dates')
@@ -55,7 +61,11 @@ class DashboardController extends Controller
                             SUM(distance) as total_distance, 
                             SUM(carbon_emission) as total_carbon_emission,
                             date_format(created_at,"%H") as hours
-                        '); 
+                        ')->when($user, function ($query) use ($user) {
+                            if ($user->user_role != UserRole::ADMIN_ROLE) {
+                                $query->where('user_id', $user->id);
+                            }
+                        }); 
 
             $graphQuery->where(DB::raw('DATE(created_at)'), '=', $datePeriodStartDate)
                 ->groupBy('hours')
