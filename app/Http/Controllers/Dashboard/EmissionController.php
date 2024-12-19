@@ -89,6 +89,7 @@ class EmissionController extends Controller
             'Work Days/Week' => 'work_day_per_week',
             'Distance' => 'distance',
             'Carbon Emission' => 'carbon_emission',
+            'Calculated At' => 'created_at',
         ];
 
         $emissionQuery = CarbonEmission::whereUserId(auth()->user()->id)->orderBy($alterColumn[$columnName], $columnSortOrder);
@@ -102,6 +103,7 @@ class EmissionController extends Controller
                 $query->orWhere('work_day_per_week', 'like', '%' . $searchKey . '%');
                 $query->orWhere('distance', 'like', '%' . $searchKey . '%');
                 $query->orWhere('carbon_emission', 'like', '%' . $searchKey . '%');
+                $query->orWhere('created_at', 'like', '%' . $searchKey . '%');
             });
         }
 
@@ -117,6 +119,7 @@ class EmissionController extends Controller
             $data['Work Days/Week'] = $emission->work_day_per_week ?? '';
             $data['Distance'] = $emission->distance ?? '';
             $data['Carbon Emission'] = number_format(($emission->carbon_emission ?? ''), 2, '.', '');                
+            $data['Calculated At'] = $emission->created_at->format('Y-m-d') ?? '-';                
 
             $aaData[] = $data;
         }

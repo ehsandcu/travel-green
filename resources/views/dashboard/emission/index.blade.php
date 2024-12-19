@@ -89,6 +89,7 @@
                                     <th>Work Days/Week</th>
                                     <th>Distance</th>
                                     <th>Carbon Emission</th>
+                                    <th>Calculated At</th>
                                 </tr>
                             </thead>
                             <tbody>                                                                                                                                                              
@@ -147,7 +148,8 @@
                     { data: 'Travel Mode' },
                     { data: 'Work Days/Week' },
                     { data: 'Distance' },
-                    { data: 'Carbon Emission' }
+                    { data: 'Carbon Emission' },
+                    { data: 'Calculated At' }
                 ]
             });
         }
