@@ -140,7 +140,7 @@
                     "url": "{{ route('load.emissions') }}",
                     "contentType": "application/json",
                     "type": "POST",
-                    "data": function (d) { return JSON.stringify(d);}
+                    "data": function (d) { return JSON.stringify(d); }
                 },
                 columns: [
                     { data: 'Origin' },
@@ -164,7 +164,6 @@
                     end_date:$('#dashboard_end_date').val(),
                 },
                 success: function (result) {
-                    console.log(result);
                     $(emissionSelector).html(''); //remove old divs before chart                    
 
                     if ((result.total_records).length > 0) {

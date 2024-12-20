@@ -87,7 +87,7 @@ class DashboardController extends Controller
 
         foreach ($period as $date_) {
             $column = $dateRangeStatus ? 'dates' : 'hours';
-            $columnValue = $dateRangeStatus ? $date_->format($format)  : $date_->format('H') ;
+            $columnValue = $dateRangeStatus ? $date_->format($format) : $date_->format('H') ;
             $exist = $graph->where($column, $columnValue);
 
             $label = $dateRangeStatus ? Carbon::parse($date_)->format($format) : Carbon::parse($date_)->format('gA');
