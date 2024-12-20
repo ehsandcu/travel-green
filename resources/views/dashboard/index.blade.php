@@ -3,12 +3,15 @@
     <link rel="stylesheet" href="{{ asset('css/daterangepicker.css') }}">
 @stop
 @section('dashboard_content')
+    @php
+        $currentYear = \Carbon\Carbon::now()->year;   
+    @endphp
     <div class="row">
         <div class="col-12 grid-margin">
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">Calculate Carbon Emission</h4>                  
-                    <form id="carbon_form" method="POST" action="{{ route('emission.store') }}"> 
+                    <form id="carbon_form" method="POST" action="{{ route('emission.store') }}">                         
                         @csrf
                         <div class="row g-3">
                             <div class="col-md-6">
@@ -29,11 +32,14 @@
                         
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <div class="weekDays form-group" style="display: none;">                            
+                                {{-- <div class="weekDays form-group" style="display: none;">                            
                                     @foreach(\App\Lib\WeekDays::LIST as $day)
                                         <input type="checkbox" id="weekday-{{ $day }}" name="default_week_days[days][{{ $day }}]" value="1"/>
                                         <label for="weekday-{{ $day }}">{{ $day }}</label>
                                     @endforeach                            
+                                </div> --}}
+                                <div class="weekDays form-group" style="display: none;">
+                                    <input type="week" name="custom_week" id="camp-week" min="{{ $currentYear }}-W01" max="{{ $currentYear }}-W52" class="form-control" />
                                 </div>
 
                                 <div class="customDates form-group" style="display: none;">    

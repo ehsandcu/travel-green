@@ -45,9 +45,9 @@
     top: 10px;
 }
 
-.weekDays input {
+/* .weekDays input {
     display: none !important;
-}
+} */
 
 .weekDays input[type=checkbox] + label {
     display: inline-block;
