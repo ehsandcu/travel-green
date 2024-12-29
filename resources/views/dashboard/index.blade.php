@@ -126,10 +126,16 @@
                                         Destination Address
                                         <span class="text-danger">*</span>
                                     </label>
-                                    <input type="text" class="form-control" name="destination_address" id="destination_address" placeholder="1234 Main St" required>
-                                    <input type="hidden" name="destination_latitude" value="">
-                                    <input type="hidden" name="destination_longitude" value="">
+                                    <select class="destination_campus w-100" name="destination_address" id="destination_address" required>
+                                        <option value="">Select Campus</option>                                                    
+                                        @foreach (\App\Lib\DcuCampus::CAMPUSES as $campus)
+                                            <option value="{{ $campus['latitude'] ?? '' }},{{ $campus['longitude'] ?? '' }}">{{ $campus['label'] ?? '' }}</option>                                                    
+                                        @endforeach    
+                                    </select>
+                                    {{-- <input type="text" class="form-control" name="destination_address" id="destination_address" placeholder="1234 Main St" required> --}}
                                 </div>
+                                <input type="hidden" name="destination_latitude" value="">
+                                <input type="hidden" name="destination_longitude" value="">
                             </div>
                         </div>
                         <div class="row g-3">
@@ -281,13 +287,23 @@
                 drawMap();
             }, 1000);
             
-            $('#transport_method, #semester_year, #route_type').select2({
+            $('.destination_campus, #transport_method, #semester_year, #route_type').select2({
                 width: '100%',
             });
 
             $(document).on('change', '#travel_mode', function() {
                 drawLineOnMap();
             });
+
+            $(document).on('change', '.destination_campus', function(){
+                var campusVal = $(this).val();
+
+                if (campusVal) {
+                    var latlng = campusVal.split(',');
+                    
+                    updateDestinationParam(latlng[0],latlng[1]);                    
+                }
+            })
 
             $(document).on('change', 'input[name=trip_journey]', function(){
                 var journey = $(this).val();
@@ -451,12 +467,16 @@
 
             autocomplete.addListener('place_changed', function() {
                 var place = autocomplete.getPlace();
-              
-                $('input[name="destination_latitude"]').val(place.geometry['location'].lat());
-                $('input[name="destination_longitude"]').val(place.geometry['location'].lng());
 
-                drawLineOnMap();
+                updateDestinationParam(place.geometry['location'].lat(), place.geometry['location'].lng());
             });
+        }
+
+        function updateDestinationParam(lat,lng) {
+            $('input[name="destination_latitude"]').val(lat);
+            $('input[name="destination_longitude"]').val(lng);
+
+            drawLineOnMap();
         }
 
         function drawLineOnMap() {
