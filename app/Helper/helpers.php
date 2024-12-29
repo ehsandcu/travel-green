@@ -12,7 +12,8 @@ function carbonEmission($tansportMode, $workDays, $distance, $weeksPerYear=48)
     return number_format((float)$carbonEmit, 2, '.', '');
 }
 
-function getAddressFromLatLng($lat, $lng) {
+function getAddressFromLatLng($lat, $lng) 
+{
     if($lat && $lng) {
         $apiKey = config('services.google.google_map_key');
 
@@ -35,4 +36,11 @@ function getAddressFromLatLng($lat, $lng) {
     }
 
     return "N/A";
+}
+
+function listOfYears($startYear = null)
+{
+    $currentYear = now()->year;
+    
+    return range($startYear ?? $currentYear, $currentYear);
 }
