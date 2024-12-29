@@ -1,6 +1,7 @@
 @extends('dashboard.layouts.main')
 @section('dashboard-css')
     <link rel="stylesheet" href="{{ asset('css/daterangepicker.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/yearpicker.css') }}">
 @stop
 @section('dashboard_content')
     @php
@@ -29,20 +30,80 @@
                                 </div>
                             </div>
                         </div>
-                        
                         <div class="row g-3">
-                            <div class="col-md-6">
+                            <div class="col-md-6 weekDays" style="display: none;">
                                 {{-- <div class="weekDays form-group" style="display: none;">                            
                                     @foreach(\App\Lib\WeekDays::LIST as $day)
                                         <input type="checkbox" id="weekday-{{ $day }}" name="default_week_days[days][{{ $day }}]" value="1"/>
                                         <label for="weekday-{{ $day }}">{{ $day }}</label>
                                     @endforeach                            
                                 </div> --}}
-                                <div class="weekDays form-group" style="display: none;">
-                                    <input type="week" name="custom_week" id="camp-week" min="{{ $currentYear }}-W01" max="{{ $currentYear }}-W52" class="form-control" />
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        Week
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" name="custom_week" id="camp-week" min="{{ $currentYear }}-W01" max="{{ $currentYear }}-W52" class="form-control" />
                                 </div>
-
-                                <div class="customDates form-group" style="display: none;">    
+                            </div>
+                            <div class="col-md-6 customMonth" style="display: none;">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        Month
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="month" name="custom_month" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-md-6 customSemester" style="display: none;">                                
+                                <div class="form-group">
+                                    <label class="form-label" for="semester_year">
+                                        Semester Year
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <select class="w-100" name="semester_year" id="semester_year" required>
+                                        @foreach ( listOfYears('2022') as $year)
+                                            @php
+                                                $semesterYear = $year .' - '. $year + 1
+                                            @endphp
+                                            <option value="{{ $semesterYear }}">{{ $semesterYear }}</option>                                                    
+                                        @endforeach    
+                                    </select>          
+                                </div>                                
+                            </div>
+                            <div class="col-md-6 customSemester" style="display: none;">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        Semester
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="d-flex">                                             
+                                        @foreach(\App\Lib\SemesterType::TYPES as $semesterKey => $semesterType)
+                                            <div class="form-check form-check-inline">
+                                                <label class="form-check-label" for="{{ $semesterKey }}">
+                                                    <input class="form-check-input" name="semester_type" type="radio" id="{{ $semesterKey }}" value="{{ $semesterKey }}">
+                                                    {{ $semesterType['label'] }}
+                                                </label>
+                                            </div>
+                                        @endforeach                       
+                                    </div>                     
+                                </div>
+                            </div>
+                            <div class="col-md-6 customYear" style="display: none;">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        Year
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" name="custom_year" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-md-6 customDates" style="display: none;">
+                                <div class="form-group"> 
+                                    <label class="form-label">
+                                        Custom
+                                        <span class="text-danger">*</span>
+                                    </label>   
                                     <input type="text" class="form-control" name="custom_date" value="" />
                                 </div>
                             </div>
@@ -165,6 +226,7 @@
 @stop
 @section('dashboard-script')
     <script src="https://maps.google.com/maps/api/js?key={{ config('services.google.google_map_key')}}&libraries=places,geometry" type="text/javascript"></script>
+    <script src="{{ asset('js/yearpicker.js') }}"></script>
 
     <script>
         var map,directionsRenderer;
@@ -181,13 +243,47 @@
                 }
             });
 
+            // $('input[name="custom_week"]').daterangepicker({   
+            //     showWeekNumbers: true,      
+            // });
+
+            $('input[name="custom_week"]').daterangepicker({
+                autoApply: true,
+                singleDatePicker: true,
+                showWeekNumbers: true,
+                showISOWeekNumbers: true,
+                locale: {
+                    firstDay: 1, // Week starts on Monday
+                    format: 'YYYY-WW' // Display the week in ISO format
+                }
+            }, function (start, end, label) {
+                // Set the input to the start week
+                const startOfWeek = start.clone().startOf('isoWeek');
+                const endOfWeek = start.clone().endOf('isoWeek');
+                $('input[name="custom_week"]').val(
+                    startOfWeek.format('YYYY-WW')
+                );
+            });
+
+            // Modify click behavior to select the entire week
+            // $('input[name="custom_week"]').on('apply.daterangepicker', function (ev, picker) {
+            //     const startOfWeek = picker.startDate.clone().startOf('isoWeek');
+            //     const endOfWeek = picker.startDate.clone().endOf('isoWeek');
+            //     picker.setStartDate(startOfWeek);
+            //     picker.setEndDate(endOfWeek);
+            //     $(this).val(startOfWeek.format('YYYY-WW'));
+            // });
+
+            $('input[name="custom_year"]').yearpicker({ year : new Date().getFullYear() });
+
             //draw map
             setTimeout(() => {
                 drawMap();
             }, 1000);
             
-            $('#transport_method').select2();
-            $('#route_type').select2();
+            $('#transport_method, #semester_year, #route_type').select2({
+                width: '100%',
+            });
 
             $(document).on('change', '#travel_mode', function() {
                 drawLineOnMap();
@@ -196,12 +292,27 @@
             $(document).on('change', 'input[name=trip_journey]', function(){
                 var journey = $(this).val();
                 $('.weekDays').hide();
+                $('.customMonth').hide();
+                $('.customSemester').hide();
+                $('.customYear').hide();
                 $('.customDates').hide();
-
+                
                 switch(journey) {
                     case "weekly":                
                         $('.weekDays').show();
                         break;
+                    
+                    case "monthly":                
+                        $('.customMonth').show();
+                    break;
+
+                    case "semester":                
+                        $('.customSemester').show();
+                    break;
+
+                    case "annual":                
+                        $('.customYear').show();
+                    break;
 
                     case "custom":
                         $('.customDates').show();
