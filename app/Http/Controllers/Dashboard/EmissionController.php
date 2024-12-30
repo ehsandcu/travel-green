@@ -20,9 +20,11 @@ class EmissionController extends Controller
     }
 
     public function index()
-    {
+    {    
+        $emissionExists = CarbonEmission::where('user_id', auth()->user()->id)->where('journey_start_date', '>=', Carbon::today()->format('Y-m-d'))->exists();
+
         // return view('dashboard.map'); //geoapify implimented
-        return view('dashboard.index'); //google map implemented
+        return view('dashboard.index', compact('emissionExists')); //google map implemented
     }
 
     public function storeEmission(Request $request)

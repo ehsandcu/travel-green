@@ -7,233 +7,245 @@
     @php
         $currentYear = \Carbon\Carbon::now()->year;   
     @endphp
-    <div class="row">
-        <div class="col-12 grid-margin">
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title">Calculate Carbon Emission</h4>                  
-                    <form id="carbon_form" method="POST" action="{{ route('emission.store') }}">                         
-                        @csrf
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        Trip Journey
-                                        <span class="text-danger">*</span>
-                                    </label>
-                                    <div>
-                                        @foreach(\App\Lib\TripJourney::JOURNEYS as $journeyKey => $journey)
-                                            <input type="radio" class="btn-check form-control" name="trip_journey" id="{{ $journeyKey }}-outlined" value="{{ $journeyKey }}" autocomplete="off" @if ($loop->first) checked @endif>
-                                            <label class="btn btn-outline-{{ $journey['color'] }}" for="{{ $journeyKey }}-outlined">{{ $journey['label'] }}</label>
-                                        @endforeach
+    @if($emissionExists)
+        <div class="row">
+            <div class="col-12 grid-margin">
+                <div class="card">
+                    <div class="card-body">
+                        <p>Form already submitted. You cannot submit another one at this time.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @else
+        <div class="row">
+            <div class="col-12 grid-margin">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Calculate Carbon Emission</h4>                  
+                        <form id="carbon_form" method="POST" action="{{ route('emission.store') }}">                         
+                            @csrf
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            Trip Journey
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <div>
+                                            @foreach(\App\Lib\TripJourney::JOURNEYS as $journeyKey => $journey)
+                                                <input type="radio" class="btn-check form-control" name="trip_journey" id="{{ $journeyKey }}-outlined" value="{{ $journeyKey }}" autocomplete="off" @if ($loop->first) checked @endif>
+                                                <label class="btn btn-outline-{{ $journey['color'] }}" for="{{ $journeyKey }}-outlined">{{ $journey['label'] }}</label>
+                                            @endforeach
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row g-3">
-                            <div class="col-md-6 weekDays" style="display: none;">
-                                {{-- <div class="weekDays form-group" style="display: none;">                            
-                                    @foreach(\App\Lib\WeekDays::LIST as $day)
-                                        <input type="checkbox" id="weekday-{{ $day }}" name="default_week_days[days][{{ $day }}]" value="1"/>
-                                        <label for="weekday-{{ $day }}">{{ $day }}</label>
-                                    @endforeach                            
-                                </div> --}}
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        Week
-                                        <span class="text-danger">*</span>
-                                    </label>
-                                    <input type="text" name="custom_week" id="camp-week" min="{{ $currentYear }}-W01" max="{{ $currentYear }}-W52" class="form-control" />
+                            <div class="row g-3">
+                                <div class="col-md-6 weekDays" style="display: none;">
+                                    {{-- <div class="weekDays form-group" style="display: none;">                            
+                                        @foreach(\App\Lib\WeekDays::LIST as $day)
+                                            <input type="checkbox" id="weekday-{{ $day }}" name="default_week_days[days][{{ $day }}]" value="1"/>
+                                            <label for="weekday-{{ $day }}">{{ $day }}</label>
+                                        @endforeach                            
+                                    </div> --}}
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            Week
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <input type="text" name="custom_week" id="camp-week" min="{{ $currentYear }}-W01" max="{{ $currentYear }}-W52" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6 customMonth" style="display: none;">
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            Month
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <input type="month" name="custom_month" class="form-control" value="{{ date('Y-m') }}"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 customSemester" style="display: none;">                                
+                                    <div class="form-group">
+                                        <label class="form-label" for="semester_year">
+                                            Semester Year
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <select class="w-100" name="semester_year" id="semester_year" required>
+                                            @foreach ( listOfYears('2022') as $year)
+                                                @php
+                                                    $semesterYear = $year .'-'. $year + 1
+                                                @endphp
+                                                <option value="{{ $semesterYear }}">{{ $semesterYear }}</option>                                                    
+                                            @endforeach    
+                                        </select>          
+                                    </div>                                
+                                </div>
+                                <div class="col-md-6 customSemester" style="display: none;">
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            Semester
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="d-flex">                                             
+                                            @foreach(\App\Lib\SemesterType::TYPES as $semesterKey => $semesterType)
+                                                <div class="form-check form-check-inline">
+                                                    <label class="form-check-label" for="{{ $semesterKey }}">
+                                                        <input class="form-check-input" name="semester_type" type="radio" id="{{ $semesterKey }}" value="{{ $semesterKey }}">
+                                                        {{ $semesterType['label'] }}
+                                                    </label>
+                                                </div>
+                                            @endforeach                       
+                                        </div>                     
+                                    </div>
+                                </div>
+                                <div class="col-md-6 customYear" style="display: none;">
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            Year
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <input type="text" name="custom_year" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6 customDates" style="display: none;">
+                                    <div class="form-group"> 
+                                        <label class="form-label">
+                                            Custom
+                                            <span class="text-danger">*</span>
+                                        </label>   
+                                        <input type="text" class="form-control" name="custom_date" value="" />
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-6 customMonth" style="display: none;">
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        Month
-                                        <span class="text-danger">*</span>
-                                    </label>
-                                    <input type="month" name="custom_month" class="form-control" value="{{ date('Y-m') }}"/>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="starting_address" class="form-label">
+                                            Starting Address
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <input type="text" class="form-control" name="starting_address" id="starting_address" placeholder="1234 Main St" required>
+                                        <input type="hidden" name="starting_latitude" value="">
+                                        <input type="hidden" name="starting_longitude" value="">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="destination_address" class="form-label">
+                                            Destination Address
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <select class="destination_campus w-100" name="destination_address" id="destination_address" required>
+                                            <option value="">Select Campus</option>                                                    
+                                            @foreach (\App\Lib\DcuCampus::CAMPUSES as $campus)
+                                                @php
+                                                    $campus_name = $campus['label'] ?? '';
+                                                @endphp
+                                                <option value="{{ $campus_name }}" data-lat="{{ $campus['latitude'] ?? '' }}" data-lng="{{ $campus['longitude'] ?? '' }}">{{ $campus_name }}</option>                                                    
+                                            @endforeach    
+                                        </select>
+                                        {{-- <input type="text" class="form-control" name="destination_address" id="destination_address" placeholder="1234 Main St" required> --}}
+                                    </div>
+                                    <input type="hidden" name="destination_latitude" value="">
+                                    <input type="hidden" name="destination_longitude" value="">
                                 </div>
                             </div>
-                            <div class="col-md-6 customSemester" style="display: none;">                                
-                                <div class="form-group">
-                                    <label class="form-label" for="semester_year">
-                                        Semester Year
-                                        <span class="text-danger">*</span>
-                                    </label>
-                                    <select class="w-100" name="semester_year" id="semester_year" required>
-                                        @foreach ( listOfYears('2022') as $year)
-                                            @php
-                                                $semesterYear = $year .'-'. $year + 1
-                                            @endphp
-                                            <option value="{{ $semesterYear }}">{{ $semesterYear }}</option>                                                    
-                                        @endforeach    
-                                    </select>          
-                                </div>                                
-                            </div>
-                            <div class="col-md-6 customSemester" style="display: none;">
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        Semester
-                                        <span class="text-danger">*</span>
-                                    </label>
-                                    <div class="d-flex">                                             
-                                        @foreach(\App\Lib\SemesterType::TYPES as $semesterKey => $semesterType)
-                                            <div class="form-check form-check-inline">
-                                                <label class="form-check-label" for="{{ $semesterKey }}">
-                                                    <input class="form-check-input" name="semester_type" type="radio" id="{{ $semesterKey }}" value="{{ $semesterKey }}">
-                                                    {{ $semesterType['label'] }}
-                                                </label>
-                                            </div>
-                                        @endforeach                       
-                                    </div>                     
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-group">                        
+                                        <label for="transport_method" class="form-label">
+                                            Transport Mode
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <select class="transport_method w-100" name="transport_method" id="transport_method" required>
+                                            @foreach (\App\Lib\TransportMode::MODES as $modeVal => $mode)
+                                                <option value="{{ $modeVal }}">{{ $mode }}</option>                                                    
+                                            @endforeach    
+                                        </select>
+                                    </div>                        
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="route_type" class="form-label">
+                                            Route Type
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <select class="w-100" name="route_type" id="route_type" required>
+                                            @foreach (\App\Lib\RouteType::TYPES as $routeKey => $routeType)
+                                                <option value="{{ $routeKey }}">{{ $routeType }}</option>                                                    
+                                            @endforeach    
+                                        </select>
+                                    </div>
+                                </div> 
                             </div>
-                            <div class="col-md-6 customYear" style="display: none;">
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        Year
-                                        <span class="text-danger">*</span>
-                                    </label>
-                                    <input type="text" name="custom_year" class="form-control" />
-                                </div>
-                            </div>
-                            <div class="col-md-6 customDates" style="display: none;">
-                                <div class="form-group"> 
-                                    <label class="form-label">
-                                        Custom
-                                        <span class="text-danger">*</span>
-                                    </label>   
-                                    <input type="text" class="form-control" name="custom_date" value="" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="starting_address" class="form-label">
-                                        Starting Address
-                                        <span class="text-danger">*</span>
-                                    </label>
-                                    <input type="text" class="form-control" name="starting_address" id="starting_address" placeholder="1234 Main St" required>
-                                    <input type="hidden" name="starting_latitude" value="">
-                                    <input type="hidden" name="starting_longitude" value="">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="destination_address" class="form-label">
-                                        Destination Address
-                                        <span class="text-danger">*</span>
-                                    </label>
-                                    <select class="destination_campus w-100" name="destination_address" id="destination_address" required>
-                                        <option value="">Select Campus</option>                                                    
-                                        @foreach (\App\Lib\DcuCampus::CAMPUSES as $campus)
-                                            @php
-                                                $campus_name = $campus['label'] ?? '';
-                                            @endphp
-                                            <option value="{{ $campus_name }}" data-lat="{{ $campus['latitude'] ?? '' }}" data-lng="{{ $campus['longitude'] ?? '' }}">{{ $campus_name }}</option>                                                    
-                                        @endforeach    
-                                    </select>
-                                    {{-- <input type="text" class="form-control" name="destination_address" id="destination_address" placeholder="1234 Main St" required> --}}
-                                </div>
-                                <input type="hidden" name="destination_latitude" value="">
-                                <input type="hidden" name="destination_longitude" value="">
-                            </div>
-                        </div>
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <div class="form-group">                        
-                                    <label for="transport_method" class="form-label">
-                                        Transport Mode
-                                        <span class="text-danger">*</span>
-                                    </label>
-                                    <select class="transport_method w-100" name="transport_method" id="transport_method" required>
-                                        @foreach (\App\Lib\TransportMode::MODES as $modeVal => $mode)
-                                            <option value="{{ $modeVal }}">{{ $mode }}</option>                                                    
-                                        @endforeach    
-                                    </select>
-                                </div>                        
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="route_type" class="form-label">
-                                        Route Type
-                                        <span class="text-danger">*</span>
-                                    </label>
-                                    <select class="w-100" name="route_type" id="route_type" required>
-                                        @foreach (\App\Lib\RouteType::TYPES as $routeKey => $routeType)
-                                            <option value="{{ $routeKey }}">{{ $routeType }}</option>                                                    
-                                        @endforeach    
-                                    </select>
+                            <div class="row g-3 workDays" style="display: none;">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="work_days" class="form-label">
+                                            Work Days per week
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <input type="number" name="work_days" id="work_days" class="form-control" min="1" value="1" placeholder="Work Days">
+                                    </div>
                                 </div>
                             </div> 
-                        </div>
-                        <div class="row g-3 workDays" style="display: none;">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="work_days" class="form-label">
-                                        Work Days per week
-                                        <span class="text-danger">*</span>
-                                    </label>
-                                    <input type="number" name="work_days" id="work_days" class="form-control" min="1" value="1" placeholder="Work Days">
-                                </div>
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="route_distance" class="form-label">
+                                            Distance (km)
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <input type="text" name="route_distance" id="route_distance" class="form-control" value="" placeholder="Distance" required readonly>
+                                    </div>
+                                </div>  
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="emission_value" class="form-label">
+                                            CO2e per year (kg)
+                                        </label>
+                                        <input type="text" id="emission_value" class="form-control" value="" placeholder="CO2e per year" readonly>                                    
+                                    </div>
+                                </div> 
+                            </div>             
+                            <div class="col-md-12 mt-3 text-right">
+                                <button type="submit" class="btn btn-info btn-rounded btn-fw">Calculate</button>
                             </div>
-                        </div> 
-                        <div class="row g-3 mb-3">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="route_distance" class="form-label">
-                                        Distance (km)
-                                        <span class="text-danger">*</span>
-                                    </label>
-                                    <input type="text" name="route_distance" id="route_distance" class="form-control" value="" placeholder="Distance" required readonly>
-                                </div>
-                            </div>  
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="emission_value" class="form-label">
-                                        CO2e per year (kg)
-                                    </label>
-                                    <input type="text" id="emission_value" class="form-control" value="" placeholder="CO2e per year" readonly>                                    
-                                </div>
-                            </div> 
-                        </div>             
-                        <div class="col-md-12 mt-3 text-right">
-                            <button type="submit" class="btn btn-info btn-rounded btn-fw">Calculate</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">    
-        <div class="col-lg-12 d-flex grid-margin stretch-card">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex flex-wrap justify-content-between">
-                        <h4 class="card-title mb-3">Carbon Emission</h4>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="d-sm-flex justify-content-between">
-                                <div id="floating-panel">
-                                    <b>Mode of Travel: </b>
-                                    <select id="travel_mode">
-                                      <option value="DRIVING">Driving</option>
-                                      <option value="WALKING">Walking</option>
-                                      <option value="BICYCLING">Bicycling</option>
-                                      <option value="TRANSIT">Transit</option>
-                                    </select>
-                                  </div>
-                                <div id="map" style="width: 100%; height: 700px;"></div>                            
-                            </div>                            
-                        </div>              
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+        <div class="row">    
+            <div class="col-lg-12 d-flex grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex flex-wrap justify-content-between">
+                            <h4 class="card-title mb-3">Carbon Emission</h4>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="d-sm-flex justify-content-between">
+                                    <div id="floating-panel">
+                                        <b>Mode of Travel: </b>
+                                        <select id="travel_mode">
+                                        <option value="DRIVING">Driving</option>
+                                        <option value="WALKING">Walking</option>
+                                        <option value="BICYCLING">Bicycling</option>
+                                        <option value="TRANSIT">Transit</option>
+                                        </select>
+                                    </div>
+                                    <div id="map" style="width: 100%; height: 700px;"></div>                            
+                                </div>                            
+                            </div>              
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
 @stop
 @section('dashboard-script')
     <script src="https://maps.google.com/maps/api/js?key={{ config('services.google.google_map_key')}}&libraries=places,geometry" type="text/javascript"></script>
@@ -393,8 +405,8 @@
                         
                         swal({
                             title: "Got It!",
-                            text: "Do you want to store!",
                             icon: "warning",
+                            text: "Do you want to store it?",
                             buttons: {
                                 cancel: true,
                                 confirm: true,
