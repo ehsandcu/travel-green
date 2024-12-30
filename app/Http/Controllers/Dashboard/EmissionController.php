@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Lib\RouteType;
+use App\Lib\SemesterType;
 use App\Lib\TransportMode;
 use App\Lib\TripJourney;
 use App\Models\CarbonEmission;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -24,31 +27,146 @@ class EmissionController extends Controller
 
     public function storeEmission(Request $request)
     {
-        dd($request->all(),implode(',', array_keys(TripJourney::JOURNEYS)));
         $validator = Validator::make($request->all(), [
             'trip_journey' => ['required', 'in:'.implode(',', array_keys(TripJourney::JOURNEYS))],
+            'custom_week' => ['required_if:trip_journey,==,'. TripJourney::WEEKLY .'','regex:/^\d{4}-(5[0-2]|[1-4][0-9]|0[1-9])$/'], //format 2024-01 like year-weekNo
+            'custom_month' => ['required_if:trip_journey,==,'. TripJourney::MONTHLY .'', 'date_format:Y-m'],
+            'semester_year' => ['required_if:trip_journey,==,'. TripJourney::SEMESTER .'', 'regex:/^\d{4}-\d{4}$/'], //format 2024-2025 like year-year
+            'semester_type' => ['required_if:trip_journey,==,'. TripJourney::SEMESTER .'', 'in:'.implode(',', array_keys(SemesterType::TYPES))],
+            'custom_year' => ['required_if:trip_journey,==,'. TripJourney::ANNUAL .'', 'date_format:Y'],
+            'custom_date' => ['required_if:trip_journey,==,'. TripJourney::CUSTOM .'', 'regex:/^\d{2}-\d{2}-\d{4} - \d{2}-\d{2}-\d{4}$/'], //format 01-12-2024 - 01-12-2024 like d-m-Y - d-m-Y
             'starting_latitude' => ['required'],
             'starting_longitude' => ['required'],
             'destination_latitude' => ['required'],
             'destination_longitude' => ['required'],
             'transport_method' => ['required', 'in:'.implode(',', array_keys(TransportMode::MODES))],
-            'work_days' => ['required', 'gt:0'],
+            'work_days' => ['required_unless:trip_journey,'. TripJourney::DAILY .'', 'between:1,5'],
+            'route_type' => ['required', 'in:'.implode(',', array_keys(RouteType::TYPES))],
             'route_distance' => ['required', 'gt:0'],
         ]);
-
+        
         if ($validator->fails()) {
             return $this->sendResponse([
                 'success' => 0,
                 'message' => $validator->errors()->first(),
             ]);
         }
- 
+        
         $transportMode = $request->transport_method;
-        $workDays = $request->work_days;
+        $workDays = $request->work_days ?? null;
         $routeDistance = $request->route_distance;
+        $routeType = $request->route_type;
 
-        $carbonEmission = CarbonEmission::create([
+        $tripJourney = $request->trip_journey;
+        $formatDate = 'Y-m-d';
+        $currentDate = Carbon::now()->format($formatDate);
+        $journeyStartDate = $currentDate;
+        $journeyEndDate = $currentDate;
+
+        switch ($tripJourney) {
+            case TripJourney::DAILY :
+                $journeyStartDate = $currentDate;
+                $journeyEndDate = $currentDate;
+
+                break;
+            
+            case TripJourney::WEEKLY :
+                $customWeek = $request->custom_week; //year-weekNo
+                $splitWeekString = explode('-', $customWeek);
+                $todayDate = Carbon::now();
+                $todayDate->setISODate($splitWeekString[0], $splitWeekString[1]);
+
+                $journeyStartDate = $todayDate->startOfWeek()->format($formatDate);
+                $journeyEndDate = $todayDate->endOfWeek()->format($formatDate);
+                
+                $createData['custom_week'] = $request->custom_week;
+                break;
+            
+            case TripJourney::MONTHLY :
+                $customMonth = $request->custom_month; //year-monthNo
+                $splitMonthString = explode('-', $customMonth);
+                $year = $splitMonthString[0];
+                $month = $splitMonthString[1];
+                $customDate = Carbon::create($year, $month);
+
+                $journeyStartDate = $customDate->startOfMonth()->format($formatDate);
+                $journeyEndDate = $customDate->lastOfMonth()->format($formatDate);
+                
+                $createData['custom_month'] = $request->custom_month;
+                break;
+            
+            case TripJourney::SEMESTER :
+                $semesterType = $request->semester_type;
+                $semesterYear = $request->semester_year; //year-year
+
+                $splitSemesterYear = explode('-', $semesterYear);
+                $startYear = $splitSemesterYear[0];
+                $endYear = $splitSemesterYear[1];
+
+                $semesterTypeData = SemesterType::TYPES[$semesterType];
+                $splitSemesterLabel = explode('-', $semesterTypeData['label']);
+                $semesterStartMonth = trim($splitSemesterLabel[0]);
+                $semesterEndMonth = trim($splitSemesterLabel[1]);
+                $semesterStartDate = $semesterTypeData['start_date'];
+                $semesterEndDate = $semesterTypeData['end_date'];
+                
+                $startDateWithoutYear = $semesterStartDate .'-'. $semesterStartMonth ; //d-F
+                $endDateWithoutYear = $semesterEndDate .'-'. $semesterEndMonth; //d-F
+                
+                switch ($semesterType) {
+                    case SemesterType::WINTER :
+                        $startDateWithYear = $startDateWithoutYear .'-'. $startYear; //d-F-Y
+                        $endDateWithYear = $endDateWithoutYear .'-'. $startYear; //d-F-Y
+                        break;
+                        
+                    case SemesterType::SPRING :
+                        $startDateWithYear = $startDateWithoutYear .'-'. $endYear; //d-F-Y
+                        $endDateWithYear = $endDateWithoutYear .'-'. $endYear; //d-F-Y
+                        break;
+                }
+                
+                $semesterDateFormat = 'd-F-Y';
+                $journeyStartDate = Carbon::createFromFormat($semesterDateFormat, $startDateWithYear)->format($formatDate);
+                $journeyEndDate = Carbon::createFromFormat($semesterDateFormat, $endDateWithYear)->format($formatDate);
+
+                $createData['semester_type'] = $request->semester_type;
+                $createData['semester_year'] = $request->semester_year;
+                break;
+                
+            case TripJourney::ANNUAL :
+                $customYear = $request->custom_year;
+
+                $journeyStartDate = $customYear .'-'.'01'.'-'.'01'; //first date of given year
+                $journeyEndDate = $customYear .'-'.'12'.'-'.'31'; //last date of given year
+
+                $createData['custom_year'] = $request->custom_year;
+                break;
+            
+            case TripJourney::CUSTOM :
+                $customDate = $request->custom_date; //date-month-year - date-month-year
+                $splitCustomDateString = explode(' - ', $customDate);
+                $inputDateFormat = 'd-m-Y';
+
+                $journeyStartDate = Carbon::createFromFormat($inputDateFormat, $splitCustomDateString[0])->format($formatDate);
+                $journeyEndDate = Carbon::createFromFormat($inputDateFormat, $splitCustomDateString[1])->format($formatDate);
+
+                $createData['custom_date'] = $request->custom_date;
+                break;
+            
+            default:
+                $journeyStartDate = $currentDate;
+                $journeyEndDate = $currentDate;
+
+                break;
+        }
+
+        $calculateDays = calculateDaysForDateRange($journeyStartDate, $journeyEndDate, $workDays);
+        
+        $createArr =  array_merge($createData, [
             'user_id' => auth()->user()->id,
+            'trip_journey' => $tripJourney,
+            'journey_start_date' => $journeyStartDate,
+            'journey_end_date' => $journeyEndDate,
             // 'origin_address' => getAddressFromLatLng($request->starting_latitude, $request->starting_longitude), //if you have google map api use this
             // 'destination_address' => getAddressFromLatLng($request->destination_latitude, $request->destination_longitude), //if you have google map api use this
             'origin_address' => $request->starting_address,
@@ -58,12 +176,15 @@ class EmissionController extends Controller
             'transport_mode' => $transportMode,
             'work_day_per_week' => $workDays,
             'distance' => $routeDistance,
-            'carbon_emission' => carbonEmission($transportMode, $workDays, $routeDistance),
+            'route_type' => $routeType,
+            'carbon_emission' => carbonEmission($transportMode, $calculateDays, $routeDistance, $routeType),
         ]);
+
+        $carbonEmission = CarbonEmission::create($createArr);
         
         return $this->sendResponse([
             'success' => 1,
-            'message' => $carbonEmission->carbon_emission .'kg of CO2 emissions per year.',
+            'message' => $carbonEmission->carbon_emission .'kg of CO2 emissions.',
         ]);        
     }
 

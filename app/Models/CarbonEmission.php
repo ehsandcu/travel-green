@@ -18,6 +18,15 @@ class CarbonEmission extends Model
 
     protected $fillable = [
         'user_id',
+        'trip_journey',
+        'journey_start_date',
+        'journey_end_date',
+        'custom_week',
+        'custom_month',
+        'semester_type',
+        'semester_year',
+        'custom_date',
+        'custom_year',
         'origin_address',
         'starting_latlng',
         'destination_address',
