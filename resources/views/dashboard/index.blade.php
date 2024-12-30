@@ -52,7 +52,7 @@
                                         Month
                                         <span class="text-danger">*</span>
                                     </label>
-                                    <input type="month" name="custom_month" class="form-control" />
+                                    <input type="month" name="custom_month" class="form-control" value="{{ date('Y-m') }}"/>
                                 </div>
                             </div>
                             <div class="col-md-6 customSemester" style="display: none;">                                
@@ -64,7 +64,7 @@
                                     <select class="w-100" name="semester_year" id="semester_year" required>
                                         @foreach ( listOfYears('2022') as $year)
                                             @php
-                                                $semesterYear = $year .' - '. $year + 1
+                                                $semesterYear = $year .'-'. $year + 1
                                             @endphp
                                             <option value="{{ $semesterYear }}">{{ $semesterYear }}</option>                                                    
                                         @endforeach    
@@ -129,7 +129,10 @@
                                     <select class="destination_campus w-100" name="destination_address" id="destination_address" required>
                                         <option value="">Select Campus</option>                                                    
                                         @foreach (\App\Lib\DcuCampus::CAMPUSES as $campus)
-                                            <option value="{{ $campus['latitude'] ?? '' }},{{ $campus['longitude'] ?? '' }}">{{ $campus['label'] ?? '' }}</option>                                                    
+                                            @php
+                                                $campus_name = $campus['label'] ?? '';
+                                            @endphp
+                                            <option value="{{ $campus_name }}" data-lat="{{ $campus['latitude'] ?? '' }}" data-lng="{{ $campus['longitude'] ?? '' }}">{{ $campus_name }}</option>                                                    
                                         @endforeach    
                                     </select>
                                     {{-- <input type="text" class="form-control" name="destination_address" id="destination_address" placeholder="1234 Main St" required> --}}
@@ -165,15 +168,17 @@
                                     </select>
                                 </div>
                             </div> 
-                            {{-- <div class="col-md-6">
+                        </div>
+                        <div class="row g-3 workDays" style="display: none;">
+                            <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="work_days" class="form-label">
                                         Work Days per week
                                         <span class="text-danger">*</span>
                                     </label>
-                                    <input type="number" name="work_days" id="work_days" class="form-control" min="1" value="1" placeholder="Work Days" required>
+                                    <input type="number" name="work_days" id="work_days" class="form-control" min="1" value="1" placeholder="Work Days">
                                 </div>
-                            </div> --}}
+                            </div>
                         </div> 
                         <div class="row g-3 mb-3">
                             <div class="col-md-6">
@@ -296,12 +301,12 @@
             });
 
             $(document).on('change', '.destination_campus', function(){
-                var campusVal = $(this).val();
-
-                if (campusVal) {
-                    var latlng = campusVal.split(',');
-                    
-                    updateDestinationParam(latlng[0],latlng[1]);                    
+                var campusVal = $(this).find(":selected");
+                var campusLat = campusVal.attr('data-lat');
+                var campusLng = campusVal.attr('data-lng');
+                
+                if (campusLat) {                    
+                    updateDestinationParam(campusLat, campusLng);                    
                 }
             })
 
@@ -312,8 +317,13 @@
                 $('.customSemester').hide();
                 $('.customYear').hide();
                 $('.customDates').hide();
-                
+                $('.workDays').show();
+
                 switch(journey) {
+                    case "daily":                
+                        $('.workDays').hide();
+                        break;
+
                     case "weekly":                
                         $('.weekDays').show();
                         break;
@@ -362,9 +372,9 @@
                     route_type: {
                         required: true,
                     },
-                    work_days: {
-                        required: true,
-                    },
+                    // work_days: {
+                    //     required: true,
+                    // },
                     route_distance: {
                         required: true,
                     }
@@ -376,52 +386,65 @@
                     const workDays = parseFloat($('#work_days').val());
                     const weeksPerYear = 48;
 
-                    if (workDays > 0 && workDistance > 0 && transportMethod >= 0) {
+                    // if (workDays > 0 && workDistance > 0 && transportMethod >= 0) {
+                    if (workDistance > 0 && transportMethod >= 0) {
                         const co2eEmissions = (transportMethod * workDistance * 2 * workDays * weeksPerYear).toFixed(2);
                         $('#emission_value').val(co2eEmissions);  
                         
-                        var formData = new FormData(form);
-                        var formBtn = $("button");
-                        formBtn.attr('disabled',true);
-                        
-                        $.ajax({
-                            url: form.action,
-                            type: form.method,
-                            data: formData,
-                            contentType: false,
-                            processData: false,
-                            success: function(response) {
-                                formBtn.attr('disabled',false);
-                                if (response.success == "1") {
-                                    drawMap();
-                                    form.reset();
-
-                                    swal({
-                                        title: "Got It!",
-                                        text: response.message || "You Have Successfully Calculated.",
-                                        icon: "success",
-                                        button: "Ok",
-                                        timer: 1500,
-                                    });
-                                } else {
-                                    swal({
-                                        title: "Got It!",
-                                        text: response.message,
-                                        icon: "error",
-                                        button: "Ok",
-                                    });
-                                }
+                        swal({
+                            title: "Got It!",
+                            text: "Do you want to store!",
+                            icon: "warning",
+                            buttons: {
+                                cancel: true,
+                                confirm: true,
                             },
-                            error: function(jqXHR, textStatus, errorThrown) {
-                                formBtn.attr('disabled',false);
-                                swal({
-                                    title: "Got It!",
-                                    text: jqXHR.responseJSON.message||'Something went wrong please try again',
-                                    icon: "error",
-                                    button: "Ok",
-                                });
+                        }).then(function(result){
+                            if(result){
+                                var formData = new FormData(form);
+                                var formBtn = $("#carbon_form button");
+                                formBtn.attr('disabled',true);
+
+                                $.ajax({
+                                    url: form.action,
+                                    type: form.method,
+                                    data: formData,
+                                    contentType: false,
+                                    processData: false,
+                                    success: function(response) {
+                                        formBtn.attr('disabled',false);
+                                        if (response.success == "1") {
+                                            drawMap();
+                                            form.reset();
+
+                                            swal({
+                                                title: "Got It!",
+                                                text: response.message || "You Have Successfully Calculated.",
+                                                icon: "success",
+                                                button: "Ok",
+                                                timer: 1500,
+                                            });
+                                        } else {
+                                            swal({
+                                                title: "Got It!",
+                                                text: response.message,
+                                                icon: "error",
+                                                button: "Ok",
+                                            });
+                                        }
+                                    },
+                                    error: function(jqXHR, textStatus, errorThrown) {
+                                        formBtn.attr('disabled',false);
+                                        swal({
+                                            title: "Got It!",
+                                            text: jqXHR.responseJSON.message||'Something went wrong please try again',
+                                            icon: "error",
+                                            button: "Ok",
+                                        });
+                                    }
+                                }); 
                             }
-                        });                    
+                        });                   
                     }
                 }
             });
