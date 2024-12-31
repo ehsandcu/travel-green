@@ -396,67 +396,98 @@
                     const workDistance = parseFloat($('#route_distance').val());
                     const routeType = parseFloat($('#route_type').val());
                     const workDays = parseFloat($('#work_days').val());
-                    const weeksPerYear = 48;
 
                     // if (workDays > 0 && workDistance > 0 && transportMethod >= 0) {
                     if (workDistance > 0 && transportMethod >= 0) {
-                        const co2eEmissions = (transportMethod * workDistance * 2 * workDays * weeksPerYear).toFixed(2);
-                        $('#emission_value').val(co2eEmissions);  
-                        
-                        swal({
-                            title: "Got It!",
-                            icon: "warning",
-                            text: "Do you want to store it?",
-                            buttons: {
-                                cancel: true,
-                                confirm: true,
-                            },
-                        }).then(function(result){
-                            if(result){
-                                var formData = new FormData(form);
-                                var formBtn = $("#carbon_form button");
-                                formBtn.attr('disabled',true);
+                        var formData = new FormData(form);
+                        formData.append('get_emission', 1);
 
-                                $.ajax({
-                                    url: form.action,
-                                    type: form.method,
-                                    data: formData,
-                                    contentType: false,
-                                    processData: false,
-                                    success: function(response) {
-                                        formBtn.attr('disabled',false);
-                                        if (response.success == "1") {
-                                            drawMap();
-                                            form.reset();
+                        //get emission from ajax call 
+                        $.ajax({
+                            url: form.action,
+                            type: form.method,
+                            data: formData,
+                            contentType: false,
+                            processData: false,
+                            success: function(response) {
+                                if (response.success == "1") {
+                                    $('#emission_value').val(response.data); 
+                                    formData.delete('get_emission');
 
-                                            swal({
-                                                title: "Got It!",
-                                                text: response.message || "You Have Successfully Calculated.",
-                                                icon: "success",
-                                                button: "Ok",
-                                                timer: 1500,
-                                            });
-                                        } else {
-                                            swal({
-                                                title: "Got It!",
-                                                text: response.message,
-                                                icon: "error",
-                                                button: "Ok",
-                                            });
+                                    swal({
+                                        title: "Got It!",
+                                        icon: "warning",
+                                        text: "Do you want to store it?",
+                                        buttons: {
+                                            cancel: true,
+                                            confirm: true,
+                                        },
+                                    }).then(function(result){
+                                        if(result){                                
+                                            var formBtn = $("#carbon_form button");
+                                            formBtn.attr('disabled',true);
+
+                                            $.ajax({
+                                                url: form.action,
+                                                type: form.method,
+                                                data: formData,
+                                                contentType: false,
+                                                processData: false,
+                                                success: function(res) {
+                                                    formBtn.attr('disabled',false);
+                                                    if (res.success == "1") {
+                                                        drawMap();
+                                                        location.reload();
+
+                                                        swal({
+                                                            title: "Got It!",
+                                                            text: res.message || "You Have Successfully Calculated.",
+                                                            icon: "success",
+                                                            button: "Ok",
+                                                            timer: 1500,
+                                                        });
+                                                    } else {
+                                                        swal({
+                                                            title: "Got It!",
+                                                            text: res.message,
+                                                            icon: "error",
+                                                            button: "Ok",
+                                                        });
+                                                    }
+                                                },
+                                                error: function(jqXHR, textStatus, errorThrown) {
+                                                    formBtn.attr('disabled',false);
+                                                    swal({
+                                                        title: "Got It!",
+                                                        text: jqXHR.responseJSON.message||'Something went wrong please try again',
+                                                        icon: "error",
+                                                        button: "Ok",
+                                                    });
+                                                }
+                                            }); 
                                         }
-                                    },
-                                    error: function(jqXHR, textStatus, errorThrown) {
-                                        formBtn.attr('disabled',false);
-                                        swal({
-                                            title: "Got It!",
-                                            text: jqXHR.responseJSON.message||'Something went wrong please try again',
-                                            icon: "error",
-                                            button: "Ok",
-                                        });
-                                    }
-                                }); 
+                                    });
+                                } else {
+                                    swal({
+                                        title: "Got It!",
+                                        text: response.message,
+                                        icon: "error",
+                                        button: "Ok",
+                                    });
+                                }
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) {
+                                formBtn.attr('disabled',false);
+                                swal({
+                                    title: "Got It!",
+                                    text: jqXHR.responseJSON.message||'Something went wrong please try again',
+                                    icon: "error",
+                                    button: "Ok",
+                                });
                             }
-                        });                   
+                        }); 
+                        //end get emission from ajax call
+                        // const co2eEmissions = (transportMethod * workDistance * routeType * workDays).toFixed(2);                   
                     }
                 }
             });

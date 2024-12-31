@@ -76,7 +76,8 @@ class EmissionController extends Controller
         $currentDate = Carbon::now()->format($formatDate);
         $journeyStartDate = $currentDate;
         $journeyEndDate = $currentDate;
-
+        $createData = [];
+        
         switch ($tripJourney) {
             case TripJourney::DAILY :
                 $journeyStartDate = $currentDate;
@@ -175,7 +176,15 @@ class EmissionController extends Controller
         }
 
         $calculateDays = calculateDaysForDateRange($journeyStartDate, $journeyEndDate, $workDays);
-        
+        $carbonEmission = carbonEmission($transportMode, $calculateDays, $routeDistance, $routeType);
+
+        if ($request->get_emission) {
+            return $this->sendResponse([
+                'success' => 1,
+                'message' => 'Calculated CO2 emissions successfully.',
+                'data' => $carbonEmission
+            ]);  
+        }
         $createArr =  array_merge($createData, [
             'user_id' => auth()->user()->id,
             'trip_journey' => $tripJourney,
@@ -191,7 +200,7 @@ class EmissionController extends Controller
             'work_day_per_week' => $workDays,
             'distance' => $routeDistance,
             'route_type' => $routeType,
-            'carbon_emission' => carbonEmission($transportMode, $calculateDays, $routeDistance, $routeType),
+            'carbon_emission' => $carbonEmission,
         ]);
 
         $carbonEmission = CarbonEmission::create($createArr);
