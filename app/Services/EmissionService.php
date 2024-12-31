@@ -30,6 +30,17 @@ class EmissionService
         return CarbonEmission::where('user_id', auth()->user()->id)->where('journey_end_date', '>=', Carbon::today()->format('Y-m-d'))->exists();
     }
 
+    public function getEmissionQuery()
+    {
+        $user = auth()->user();
+
+        return CarbonEmission::when($user, function ($query) use ($user) {
+                    if ($user->user_role != UserRole::ADMIN_ROLE) {
+                        $query->where('user_id', $user->id);
+                    }
+                });
+    }
+
     private function emissionStatQuery()
     {
         return CarbonEmission::selectRaw('

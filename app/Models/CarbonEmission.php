@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Lib\SemesterType;
+use App\Lib\TripJourney;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -37,9 +39,48 @@ class CarbonEmission extends Model
         'carbon_emission',
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function getJourneyDescriptionAttribute()
     {
-        return "N/A";
+        $description = '-';
+
+        switch ($this->trip_journey) {
+            case TripJourney::WEEKLY :
+                $splitWeek = explode('-', $this->custom_week);
+                
+                $description = '<span><strong>Week:</strong>' .($splitWeek[1] ?? ''). '</span></br><span><strong>Year:</strong>' .($splitWeek[0] ?? ''). '</span>';
+                break;
+            
+            case TripJourney::MONTHLY :
+                $splitMonth = explode('-', $this->custom_month);
+                $description = '<span><strong>Month:</strong>' .($splitMonth[1] ?? ''). '</span></br><span><strong>Year:</strong>' .($splitMonth[0] ?? ''). '</span>';
+
+                break;
+            
+            case TripJourney::SEMESTER :
+                $description = '<span><strong>Semester:</strong>' .(SemesterType::TYPES[$this->semester_type]['label'] ?? ''). '</span></br><span><strong>Year:</strong>' .($this->semester_year). '</span>';
+                break;
+            
+            case TripJourney::ANNUAL :
+                $description = '<span><strong>Year:</strong>' .$this->custom_year. '</span>';
+                break;
+            
+            case TripJourney::CUSTOM :
+                $splitDate = explode(' - ', $this->custom_date);
+                
+                $description = '<span><strong>Start Date:</strong>' .($splitDate[0] ?? ''). '</span></br><span><strong>End Date:</strong>' .($splitDate[1] ?? ''). '</span>';
+                break;
+            
+            default:
+                $description = '-';
+                break;
+        }
+
+        return $description;
     }
 
     public function setStartingLatlngAttribute($startingArray)

@@ -216,12 +216,14 @@ class EmissionController extends Controller
         $searchKey = $request->input('search')['value'];
         
         $alterColumn = [
+            'Name' => 'user_id',
             'Origin' => 'origin_address',
             'Destination' => 'destination_address',
             'Trip Journey' => 'trip_journey',
             'Journey Start Date' => 'journey_start_date',
             'Journey End Date' => 'journey_end_date',
             'Journey Description' => 'journey_end_date',
+            'Route Type' => 'route_type',
             'Travel Mode' => 'transport_mode',
             'Work Days/Week' => 'work_day_per_week',
             'Distance' => 'distance',
@@ -229,7 +231,8 @@ class EmissionController extends Controller
             'Calculated At' => 'created_at',
         ];
 
-        $emissionQuery = CarbonEmission::whereUserId(auth()->user()->id)->orderBy($alterColumn[$columnName], $columnSortOrder);
+        // $emissionQuery = CarbonEmission::whereUserId(auth()->user()->id)->orderBy($alterColumn[$columnName], $columnSortOrder);
+        $emissionQuery = (new EmissionService())->getEmissionQuery()->orderBy($alterColumn[$columnName], $columnSortOrder);
 
         if (!empty($searchKey)) {
             $searchKey = trim($searchKey);
@@ -239,6 +242,13 @@ class EmissionController extends Controller
                 $query->orWhere('trip_journey', 'like', '%' . $searchKey . '%');
                 $query->orWhere('journey_start_date', 'like', '%' . $searchKey . '%');
                 $query->orWhere('journey_end_date', 'like', '%' . $searchKey . '%');
+                $query->orWhere('route_type', 'like', '%' . $searchKey . '%');
+                $query->orWhere('custom_week', 'like', '%' . $searchKey . '%');
+                $query->orWhere('custom_month', 'like', '%' . $searchKey . '%');
+                $query->orWhere('semester_type', 'like', '%' . $searchKey . '%');
+                $query->orWhere('semester_year', 'like', '%' . $searchKey . '%');
+                $query->orWhere('custom_date', 'like', '%' . $searchKey . '%');
+                $query->orWhere('custom_year', 'like', '%' . $searchKey . '%');
                 $query->orWhere('transport_mode', 'like', '%' . $searchKey . '%');
                 $query->orWhere('work_day_per_week', 'like', '%' . $searchKey . '%');
                 $query->orWhere('distance', 'like', '%' . $searchKey . '%');
@@ -255,12 +265,14 @@ class EmissionController extends Controller
         foreach ($carbonEmissions as $emission) {
             $tripJourney = '<span class="badge badge-'. TripJourney::JOURNEYS[$emission->trip_journey]['color'] .'">'. TripJourney::JOURNEYS[$emission->trip_journey]['label'] .'</span>';
 
+            $data['Name'] = $emission->user->name ?? 'N/A';
             $data['Origin'] = $emission->origin_address ?? 'N/A';
             $data['Destination'] = $emission->destination_address ?? 'N/A';
             $data['Trip Journey'] =  $tripJourney;
             $data['Journey Start Date'] =  $emission->journey_start_date ?? 'N/A';
             $data['Journey End Date'] =  $emission->journey_end_date ?? 'N/A';
             $data['Journey Description'] =  $emission->journey_description ?? 'N/A';
+            $data['Route Type'] =  RouteType::TYPES[$emission->route_type] ?? "N/A";
             $data['Travel Mode'] = TransportMode::MODES[$emission->transport_mode] ?? '';
             $data['Work Days/Week'] = $emission->work_day_per_week ?? '';
             $data['Distance'] = $emission->distance ?? '';

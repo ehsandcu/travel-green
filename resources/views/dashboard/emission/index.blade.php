@@ -83,12 +83,14 @@
                         <table class="table table-striped" id="emission_data_table">
                             <thead>
                                 <tr>
+                                    <th>Name</th>
                                     <th>Origin</th>
                                     <th>Destination</th>
                                     <th>Trip Journey</th>
                                     <th>Journey Start Date</th>
                                     <th>Journey End Date</th>
                                     <th>Journey Description</th>
+                                    <th>Route Type</th>
                                     <th>Travel Mode</th>
                                     <th>Work Days/Week</th>
                                     <th>Distance</th>
@@ -147,12 +149,14 @@
                     "data": function (d) { return JSON.stringify(d); }
                 },
                 columns: [
+                    { data: 'Name' },
                     { data: 'Origin' },
                     { data: 'Destination' },
                     { data: 'Trip Journey' },
                     { data: 'Journey Start Date' },
                     { data: 'Journey End Date' },
                     { data: 'Journey Description' },
+                    { data: 'Route Type' },
                     { data: 'Travel Mode' },
                     { data: 'Work Days/Week' },
                     { data: 'Distance' },
