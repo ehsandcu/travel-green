@@ -41,6 +41,7 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::get('/list', [EmissionController::class, 'index'])->name("emission.index");
                 Route::post('/graphData', [DashboardController::class, 'getGraphData'])->name("emission.graph.data");
                 Route::post('/store', [EmissionController::class, 'storeEmission'])->name("emission.store");
+                Route::post('/delete/{id}', [EmissionController::class, 'deleteEmission'])->name("emission.delete");
                 Route::post('/load/emission', [EmissionController::class, 'loadEmission'])->name("load.emissions");
             });
         });

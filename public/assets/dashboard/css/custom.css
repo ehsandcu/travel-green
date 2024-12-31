@@ -87,3 +87,8 @@
 .h-280 {
     height: 280px;
 }
+
+.typcn {
+    font-size: 20px;
+    cursor: pointer;
+}

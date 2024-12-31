@@ -96,6 +96,7 @@
                                     <th>Distance</th>
                                     <th>Carbon Emission</th>
                                     <th>Calculated At</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>                                                                                                                                                              
@@ -133,6 +134,54 @@
                 }
             });
 
+            $(document).on('click', '.delete_emission', function() {
+                var deleteUrl = $(this).attr('data-delete_url');
+                swal({
+                    title: "Are you sure?",
+                    icon: "warning",
+                    text: "You will not be able to recover this record!",
+                    buttons: {
+                        cancel: true,
+                        confirm: true,
+                    },
+                }).then(function(result){
+                    if(result){
+                        $.ajax({
+                            url: deleteUrl,
+                            type: 'POST',
+                            success: function(response) {
+                                if (response.success == "1") {
+                                    loadEmissionList();
+                                    
+                                    swal({
+                                        title: "Got It!",
+                                        text: response.message,
+                                        icon: "success",
+                                        button: "Ok",
+                                        timer: 500
+                                    });
+                                } else {
+                                    swal({
+                                        title: "Got It!",
+                                        text: response.message,
+                                        icon: "error",
+                                        button: "Ok",
+                                    });
+                                }
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) {
+                                swal({
+                                    title: "Got It!",
+                                    text: jqXHR.responseJSON.message||'Something went wrong please try again',
+                                    icon: "error",
+                                    button: "Ok",
+                                });
+                            }
+                        }); 
+                    }
+                }); 
+            });
+
             loadEmissionList();
             emissionGraph();
         });
@@ -161,7 +210,8 @@
                     { data: 'Work Days/Week' },
                     { data: 'Distance' },
                     { data: 'Carbon Emission' },
-                    { data: 'Calculated At' }
+                    { data: 'Calculated At' },
+                    { data: 'Action', orderable: false }
                 ]
             });
         }
