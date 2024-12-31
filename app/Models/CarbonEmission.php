@@ -37,6 +37,11 @@ class CarbonEmission extends Model
         'carbon_emission',
     ];
 
+    public function getJourneyDescriptionAttribute()
+    {
+        return "N/A";
+    }
+
     public function setStartingLatlngAttribute($startingArray)
     {   
         $startingLat = 0;

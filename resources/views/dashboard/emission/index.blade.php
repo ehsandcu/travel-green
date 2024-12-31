@@ -85,6 +85,10 @@
                                 <tr>
                                     <th>Origin</th>
                                     <th>Destination</th>
+                                    <th>Trip Journey</th>
+                                    <th>Journey Start Date</th>
+                                    <th>Journey End Date</th>
+                                    <th>Journey Description</th>
                                     <th>Travel Mode</th>
                                     <th>Work Days/Week</th>
                                     <th>Distance</th>
@@ -145,6 +149,10 @@
                 columns: [
                     { data: 'Origin' },
                     { data: 'Destination' },
+                    { data: 'Trip Journey' },
+                    { data: 'Journey Start Date' },
+                    { data: 'Journey End Date' },
+                    { data: 'Journey Description' },
                     { data: 'Travel Mode' },
                     { data: 'Work Days/Week' },
                     { data: 'Distance' },

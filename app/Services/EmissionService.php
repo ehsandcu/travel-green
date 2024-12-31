@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Lib\UserRole;
 use App\Models\CarbonEmission;
+use Carbon\Carbon;
 
 class EmissionService
 {
@@ -22,6 +23,11 @@ class EmissionService
                         $query->where('user_id', $user->id);
                     }
                 })->first();
+    }
+
+    public function emissionExists()
+    {
+        return CarbonEmission::where('user_id', auth()->user()->id)->where('journey_end_date', '>=', Carbon::today()->format('Y-m-d'))->exists();
     }
 
     private function emissionStatQuery()
