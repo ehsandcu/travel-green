@@ -10,7 +10,9 @@ use App\Lib\TripJourney;
 use App\Models\CarbonEmission;
 use App\Services\EmissionService;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class EmissionController extends Controller
@@ -254,6 +256,9 @@ class EmissionController extends Controller
                 $query->orWhere('distance', 'like', '%' . $searchKey . '%');
                 $query->orWhere('carbon_emission', 'like', '%' . $searchKey . '%');
                 $query->orWhere('created_at', 'like', '%' . $searchKey . '%');
+                $query->orWhereHas('user', function (Builder $query) use ($searchKey) {
+                    $query->where('name', 'like', '%' . $searchKey . '%');
+                });
             });
         }
 
@@ -278,6 +283,7 @@ class EmissionController extends Controller
             $data['Distance'] = $emission->distance ?? '';
             $data['Carbon Emission'] = number_format(($emission->carbon_emission ?? ''), 2, '.', '');                
             $data['Calculated At'] = $emission->created_at->format('Y-m-d') ?? '-';                
+            $data['Action'] = '<div class="typcn icon typcn-trash delete_emission" data-delete_url = '.route('emission.delete', ['id' => $emission->id]) .'></div>';                
 
             $aaData[] = $data;
         }
@@ -289,5 +295,24 @@ class EmissionController extends Controller
             "aaData" => $aaData
         );
         return response()->json($response);
+    }
+
+    public function deleteEmission($id)
+    {
+        try {
+            $getEmission = CarbonEmission::findOrFail($id);
+            $getEmission->delete();
+
+            return $this->sendResponse([
+                'success' => 1,
+                'message' => "Record deleted Successfully.",
+            ]);
+
+        } catch (\Throwable $th) {
+            return $this->sendResponse([
+                'success' => 0,
+                'message' => $th->getMessage(),
+            ]);
+        }
     }
 }
