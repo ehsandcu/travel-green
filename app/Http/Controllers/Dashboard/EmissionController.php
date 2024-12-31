@@ -8,6 +8,7 @@ use App\Lib\SemesterType;
 use App\Lib\TransportMode;
 use App\Lib\TripJourney;
 use App\Models\CarbonEmission;
+use App\Services\EmissionService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -21,7 +22,7 @@ class EmissionController extends Controller
 
     public function index()
     {    
-        $emissionExists = CarbonEmission::where('user_id', auth()->user()->id)->where('journey_start_date', '>=', Carbon::today()->format('Y-m-d'))->exists();
+        $emissionExists = (new EmissionService())->emissionExists();
 
         // return view('dashboard.map'); //geoapify implimented
         return view('dashboard.index', compact('emissionExists')); //google map implemented
@@ -54,6 +55,15 @@ class EmissionController extends Controller
             ]);
         }
         
+        $emissionExists = (new EmissionService())->emissionExists();
+
+        if ($emissionExists) {
+            return $this->sendResponse([
+                'success' => 0,
+                'message' => 'Form already submitted. You cannot submit another one at this time.',
+            ]);  
+        }
+
         $transportMode = $request->transport_method;
         $workDays = $request->work_days ?? null;
         $routeDistance = $request->route_distance;
@@ -204,10 +214,14 @@ class EmissionController extends Controller
         $limit = $request->input('length');
         $offset = $request->input('start');
         $searchKey = $request->input('search')['value'];
-
+        
         $alterColumn = [
             'Origin' => 'origin_address',
             'Destination' => 'destination_address',
+            'Trip Journey' => 'trip_journey',
+            'Journey Start Date' => 'journey_start_date',
+            'Journey End Date' => 'journey_end_date',
+            'Journey Description' => 'journey_end_date',
             'Travel Mode' => 'transport_mode',
             'Work Days/Week' => 'work_day_per_week',
             'Distance' => 'distance',
@@ -222,6 +236,9 @@ class EmissionController extends Controller
             $emissionQuery->where(function ($query) use ($searchKey) {
                 $query->orWhere('origin_address', 'like', '%' . $searchKey . '%');
                 $query->orWhere('destination_address', 'like', '%' . $searchKey . '%');
+                $query->orWhere('trip_journey', 'like', '%' . $searchKey . '%');
+                $query->orWhere('journey_start_date', 'like', '%' . $searchKey . '%');
+                $query->orWhere('journey_end_date', 'like', '%' . $searchKey . '%');
                 $query->orWhere('transport_mode', 'like', '%' . $searchKey . '%');
                 $query->orWhere('work_day_per_week', 'like', '%' . $searchKey . '%');
                 $query->orWhere('distance', 'like', '%' . $searchKey . '%');
@@ -236,8 +253,14 @@ class EmissionController extends Controller
         $aaData = [];
 
         foreach ($carbonEmissions as $emission) {
+            $tripJourney = '<span class="badge badge-'. TripJourney::JOURNEYS[$emission->trip_journey]['color'] .'">'. TripJourney::JOURNEYS[$emission->trip_journey]['label'] .'</span>';
+
             $data['Origin'] = $emission->origin_address ?? 'N/A';
             $data['Destination'] = $emission->destination_address ?? 'N/A';
+            $data['Trip Journey'] =  $tripJourney;
+            $data['Journey Start Date'] =  $emission->journey_start_date ?? 'N/A';
+            $data['Journey End Date'] =  $emission->journey_end_date ?? 'N/A';
+            $data['Journey Description'] =  $emission->journey_description ?? 'N/A';
             $data['Travel Mode'] = TransportMode::MODES[$emission->transport_mode] ?? '';
             $data['Work Days/Week'] = $emission->work_day_per_week ?? '';
             $data['Distance'] = $emission->distance ?? '';

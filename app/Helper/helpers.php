@@ -13,6 +13,11 @@ function carbonEmission($tansportMode, $workDays, $distance, $routeType=2)
     return number_format((float)$carbonEmit, 2, '.', '');
 }
 
+function convertInInteger($value)
+{
+    return intval($value);
+}
+
 function getAddressFromLatLng($lat, $lng) 
 {
     if($lat && $lng) {

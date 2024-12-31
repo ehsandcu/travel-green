@@ -71,13 +71,14 @@
             </div>
         </div>
     </div>
-    <div class="untree_co-section count-numbers py-5">
+    {{-- <div class="untree_co-section count-numbers py-5"> --}}
+    <div class="untree_co-section py-5">
 		<div class="container">
 			<div class="row">
 				<div class="col-6 col-sm-6 col-md-6 col-lg-4">
 					<div class="counter-wrap">
 						<div class="counter">
-							<span class="" data-number="{{ $emissionsResult->total_records ?? 0 }}">0</span>
+							<span class="" data-number="">{{ convertInInteger($emissionsResult->total_records) ?? 0 }}</span>
 						</div>
 						<span class="caption">No. of Vehicles</span>
 					</div>
@@ -85,7 +86,7 @@
 				<div class="col-6 col-sm-6 col-md-6 col-lg-4">
 					<div class="counter-wrap">
 						<div class="counter">
-							<span class="" data-number="{{ $emissionsResult->total_distance ?? 0}}">0</span>
+							<span class="" data-number="">{{ convertInInteger($emissionsResult->total_distance) ?? 0}}</span>
 						</div>
 						<span class="caption">Total Distance</span>
 					</div>
@@ -93,7 +94,7 @@
 				<div class="col-6 col-sm-6 col-md-6 col-lg-4">
 					<div class="counter-wrap">
 						<div class="counter">
-							<span class="" data-number="{{ $emissionsResult->total_carbon_emission ?? 0 }}">0</span>
+							<span class="" data-number="">{{ convertInInteger($emissionsResult->total_carbon_emission) ?? 0 }}</span>
 						</div>
 						<span class="caption">Quantity of Carbon Emissions</span>
 					</div>
