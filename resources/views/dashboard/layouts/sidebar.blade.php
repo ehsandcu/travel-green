@@ -36,7 +36,7 @@
       </li> 
       @if($user->user_role == \App\Lib\UserRole::ADMIN_ROLE)
         <li class="nav-item">
-          <a class="nav-link {{ Route::currentRouteNamed('contact.us') ? 'active' : '' }}" href="{{ route('contact.us') }}">
+          <a class="nav-link {{ Route::currentRouteNamed('dashboard.contact.us') ? 'active' : '' }}" href="{{ route('dashboard.contact.us') }}">
             <i class="typcn typcn-mail menu-icon"></i>
             <span class="menu-title">Contact Us</span>
           </a>

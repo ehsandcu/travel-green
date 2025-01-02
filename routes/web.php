@@ -40,7 +40,7 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('/show', [DashboardController::class, 'index'])->name('dashboard');
             
             Route::group(['prefix' => 'contact-us'], function () {
-                Route::get('/', [ContactUsController::class, 'index'])->name('contact.us');
+                Route::get('/', [ContactUsController::class, 'index'])->name('dashboard.contact.us');
                 Route::get('/show/{id}', [ContactUsController::class, 'showContact'])->name("contact_us.show");
                 Route::post('/load/contact/list', [ContactUsController::class, 'loadContactUsList'])->name("load.contact_us.list");
             });
