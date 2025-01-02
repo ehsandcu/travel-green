@@ -195,7 +195,12 @@
                     "url": "{{ route('load.emissions') }}",
                     "contentType": "application/json",
                     "type": "POST",
-                    "data": function (d) { return JSON.stringify(d); }
+                    "data": function (d) { return JSON.stringify(d); },
+                    complete: function (res) {
+                        var response = res['responseJSON'];
+                        var emissionStats = response.emissionStats;
+                        console.log(emissionStats);
+                    },
                 },
                 columns: [
                     { data: 'Name' },

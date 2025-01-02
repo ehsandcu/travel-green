@@ -30,6 +30,12 @@ body {
 .h-250 {
   height: 250px;
 }
+.error {
+  color: red;
+}
+input.error ,textarea.error{
+  border-color: red;
+}
 a {
   color: #1A374D;
   -webkit-transition: .3s all ease;

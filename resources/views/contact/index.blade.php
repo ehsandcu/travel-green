@@ -16,29 +16,30 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-6 mb-5 mb-lg-0">
-                    <form class="contact-form" data-aos="fade-up" data-aos-delay="200">
+                    <form class="contact-form" action="{{ route('contact.us.store') }}" method="post" data-aos="fade-up" data-aos-delay="200">
+                        @csrf
                         <div class="row mb-3">
                             <div class="col-6">
                                 <div class="form-group">
-                                <label class="text-black mb-1" for="fname">First name</label>
-                                <input type="text" class="form-control" id="fname">
+                                <label class="text-black mb-1" for="first_name">First name</label>
+                                <input type="text" name="first_name" class="form-control" id="first_name">
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
-                                <label class="text-black mb-1" for="lname">Last name</label>
-                                <input type="text" class="form-control" id="lname">
+                                <label class="text-black mb-1" for="last_name">Last name</label>
+                                <input type="text" name="last_name" class="form-control" id="last_name">
                                 </div>
                             </div>
                         </div>
                         <div class="form-group mb-3">
                             <label class="text-black mb-1" for="email">Email address</label>
-                            <input type="email" class="form-control" id="email">
+                            <input type="email" name="email" class="form-control" id="email">
                         </div>
             
                         <div class="form-group mb-3">
                             <label class="text-black mb-1" for="message">Message</label>
-                            <textarea name="" class="form-control h-auto" id="message" cols="30" rows="5"></textarea>
+                            <textarea name="message" class="form-control h-auto" id="message" cols="30" rows="5"></textarea>
                         </div>
             
                         <button type="submit" class="btn btn-primary">Send Message</button>
@@ -67,4 +68,70 @@
             </div>
         </div>
     </div>
+@stop
+@section('script')
+    <script>
+        $(document).ready(function(){
+            $(".contact-form").validate({
+                rules: {
+                    first_name: {
+                        required: true,
+                    },
+                    last_name: {
+                        required: true,
+                    },
+                    email: {
+                        required: true,
+                        email: true,
+                    },
+                    message: {
+                        required: true,
+                    }
+                },
+                submitHandler: function(form) {
+                    var formData = new FormData(form);
+
+                    var formBtn = $(".contact-form button");
+                    formBtn.attr('disabled',true);
+
+                    $.ajax({
+                        url: form.action,
+                        type: form.method,
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function(res) {
+                            formBtn.attr('disabled',false);
+                            if (res.success == "1") {
+                                form.reset();
+
+                                swal({
+                                    title: "Got It!",
+                                    text: res.message || "You Have Successfully Calculated.",
+                                    icon: "success",
+                                    button: "Ok",
+                                });
+                            } else {
+                                swal({
+                                    title: "Got It!",
+                                    text: res.message,
+                                    icon: "error",
+                                    button: "Ok",
+                                });
+                            }
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            formBtn.attr('disabled',false);
+                            swal({
+                                title: "Got It!",
+                                text: jqXHR.responseJSON.message||'Something went wrong please try again',
+                                icon: "error",
+                                button: "Ok",
+                            });
+                        }
+                    }); 
+                }
+            });
+        });
+    </script>
 @stop
