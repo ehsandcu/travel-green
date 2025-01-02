@@ -26,7 +26,7 @@
                                 <ul class="links list-unstyled">
                                     <li><a href="{{ route('home') }}">Home</a></li>
                                     {{-- <li><a href="{{ route('service.index') }}">Services</a></li> --}}
-                                    <li><a href="{{ route('about.us') }}">About</a></li>
+                                    {{-- <li><a href="{{ route('about.us') }}">About</a></li> --}}
                                     <li><a href="{{ route('contact.us') }}">Contact</a></li>
                                 </ul>
                             </div>
@@ -76,6 +76,8 @@
         <script src="{{ asset('js/moment.min.js') }}"></script>
         <script src="{{ asset('js/daterangepicker.js') }}"></script>
         <script src="{{ asset('js/typed.js') }}"></script>
+        <script src="{{ asset('assets/dashboard/js/jquery.validate.js') }}"></script>
+        <script src="{{ asset('assets/dashboard/js/sweetalert.min.js') }}"></script>
         <script src="{{ asset('js/custom.js') }}"></script>
         @yield('script')
     </body>

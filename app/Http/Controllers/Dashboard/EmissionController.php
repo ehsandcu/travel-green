@@ -185,6 +185,7 @@ class EmissionController extends Controller
                 'data' => $carbonEmission
             ]);  
         }
+
         $createArr =  array_merge($createData, [
             'user_id' => auth()->user()->id,
             'trip_journey' => $tripJourney,
@@ -297,12 +298,13 @@ class EmissionController extends Controller
             $aaData[] = $data;
         }
 
-        $response = array(
+        $response = [
             "draw" => intval($draw),
             "iTotalRecords" => $totalRecords,
             "iTotalDisplayRecords" => $totalRecords,
-            "aaData" => $aaData
-        );
+            "aaData" => $aaData,
+            "emissionStats" => (new EmissionService())->getEmissionStatsByUser()
+        ];
         return response()->json($response);
     }
 

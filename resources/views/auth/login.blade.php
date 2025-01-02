@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>Green Travel | Login</title>
+    <title>Travel Green | Login</title>
     <link rel="shortcut icon" href="{{ asset('favicon.png') }}">
     <link rel="stylesheet" href="{{ asset('assets/login/css/core.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/login/css/backend.css?v=1.0.0') }}" />
@@ -53,6 +53,12 @@
             margin: 0;
             height: 12px;
         }
+
+        .logo {
+            font-size: 24px;
+            color: #27367f;
+            font-weight: 700;
+        }
     </style>
 </head>
 
@@ -70,6 +76,7 @@
                         {{-- <a href="/">
                             <img class="top-logo switcher-logo" src="assets/login/img/logos/LOGO 1.svg" alt="" />
                         </a> --}}
+                        <a href="{{ route('home')}}" class="logo m-0 text-decoration-none">Travel Green</a>     
                     </div>
                 </div>
                 <div class="hero-body">
@@ -146,8 +153,6 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
-
                                                 <input type="hidden" id="verificationCode" />
                                             </div>
                                         </div>
@@ -337,13 +342,13 @@
                                     </div>
                                 </form>
                                 <!-- Toggles -->
-                                <div>
+                                {{-- <div>
                                     <div class="forgot-password animated preFadeInLeft fadeInLeft forget-pswd-btn">
                                         <p class="has-text-right">
                                             <a href="javascript:void(0)">Forgot password?</a>
                                         </p>                                    
                                     </div>                                    
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
                         <div class="divider-wrapper m-auto pb-2">
@@ -371,8 +376,8 @@
             <div class="hero login-hero is-fullheight is-theme-primary is-relative">
                 <div class="text-center">
                     <p class="text-white font-size-28 " style="padding-left: 30px; padding-right: 30px;">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Est ipsa alias, cum aperiam enim quisquam.<br>
-                        <small>Lorem ipsum dolor sit amet consectetur adipisicing elit.</small>
+                        At Green Travel, it’s not just about the numbers or the calculations—it’s about inspiring a journey toward a greener future, one conscious choice at a time.<br>
+                        <small>Redesigning the way we travel, shaping a cleaner and greener future for all.</small>
                     </p>
                 </div>
                 <ul class="circles">

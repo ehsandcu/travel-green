@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Dashboard\ContactUsController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\EmissionController;
 use App\Http\Controllers\GoogleLoginController;
@@ -25,6 +26,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('services', [HomeController::class, 'services'])->name('service.index');
 Route::get('about-us', [HomeController::class, 'about'])->name('about.us');
 Route::get('contact-us', [HomeController::class, 'contactUs'])->name('contact.us');
+Route::post('contact-us/info/store', [HomeController::class, 'storeContactUsInfo'])->name('contact.us.store');
 
 Route::get('/google/redirect', [GoogleLoginController::class, 'redirectToGoogle'])->name('google.redirect');
 Route::get('/google/callback', [GoogleLoginController::class, 'handleGoogleCallback'])->name('google.callback');
@@ -36,6 +38,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::group(['middleware' => ['check.user.info']], function () {
         Route::group(['prefix' => 'dashboard'], function () {
             Route::get('/show', [DashboardController::class, 'index'])->name('dashboard');
+            
+            Route::group(['prefix' => 'contact-us'], function () {
+                Route::get('/', [ContactUsController::class, 'index'])->name('contact.us');
+                Route::get('/show/{id}', [ContactUsController::class, 'showContact'])->name("contact_us.show");
+                Route::post('/load/contact/list', [ContactUsController::class, 'loadContactUsList'])->name("load.contact_us.list");
+            });
 
             Route::group(['prefix' => 'emission'], function () {
                 Route::get('/list', [EmissionController::class, 'index'])->name("emission.index");
