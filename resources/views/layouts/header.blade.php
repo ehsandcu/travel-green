@@ -23,6 +23,9 @@
             <link rel="stylesheet" href="{{ asset('css/daterangepicker.css') }}">
             <link rel="stylesheet" href="{{ asset('css/aos.css') }}">
             <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+            <link rel="stylesheet" href="{{ asset('assets/dashboard/vendors/select2/select2.min.css') }}">
+            <link rel="stylesheet" href="{{ asset('assets/dashboard/vendors/select2-bootstrap-theme/select2-bootstrap.min.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/yearpicker.css') }}">
             @yield('css')
         </head>
         <body>

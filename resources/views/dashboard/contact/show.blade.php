@@ -4,6 +4,11 @@
         <div class="col-12 grid-margin">
             <div class="card">
                 <div class="card-body">
+                    <div class="mb-3">
+                        <a href="{{ route('dashboard.contact.us') }}">
+                            <button class="btn btn-info btn-sm"><i class="typcn typcn-arrow-left"></i>Back</button>
+                        </a>
+                    </div>
                     <h4 class="card-title">Contact Us</h4>
                     <div class="row g-3">
                         <div class="col-md-4">

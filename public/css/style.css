@@ -30,6 +30,9 @@ body {
 .h-250 {
   height: 250px;
 }
+.text-right {
+  text-align: right;
+}
 .error {
   color: red;
 }
