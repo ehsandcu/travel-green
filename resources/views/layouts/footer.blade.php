@@ -76,8 +76,11 @@
         <script src="{{ asset('js/moment.min.js') }}"></script>
         <script src="{{ asset('js/daterangepicker.js') }}"></script>
         <script src="{{ asset('js/typed.js') }}"></script>
-        <script src="{{ asset('assets/dashboard/js/jquery.validate.js') }}"></script>
         <script src="{{ asset('assets/dashboard/js/sweetalert.min.js') }}"></script>
+        <script src="{{ asset('js/calculate_carbon.js') }}"></script>
+        <script src="{{ asset('js/yearpicker.js') }}"></script>
+        <script src="{{ asset('assets/dashboard/vendors/select2/select2.min.js') }}"></script>
+        <script src="{{ asset('assets/dashboard/js/jquery.validate.js') }}"></script>
         <script src="{{ asset('js/custom.js') }}"></script>
         @yield('script')
     </body>

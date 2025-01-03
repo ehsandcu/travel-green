@@ -27,6 +27,7 @@ Route::get('services', [HomeController::class, 'services'])->name('service.index
 Route::get('about-us', [HomeController::class, 'about'])->name('about.us');
 Route::get('contact-us', [HomeController::class, 'contactUs'])->name('contact.us');
 Route::post('contact-us/info/store', [HomeController::class, 'storeContactUsInfo'])->name('contact.us.store');
+Route::post('calculate/carbon', [HomeController::class, 'getCarbonCalculation'])->name('calculate_carbon.home');
 
 Route::get('/google/redirect', [GoogleLoginController::class, 'redirectToGoogle'])->name('google.redirect');
 Route::get('/google/callback', [GoogleLoginController::class, 'handleGoogleCallback'])->name('google.callback');
@@ -46,7 +47,7 @@ Route::group(['middleware' => ['auth']], function () {
             });
 
             Route::group(['prefix' => 'emission'], function () {
-                Route::get('/list', [EmissionController::class, 'index'])->name("emission.index");
+                Route::get('/calculate', [EmissionController::class, 'index'])->name("emission.index");
                 Route::post('/graphData', [DashboardController::class, 'getGraphData'])->name("emission.graph.data");
                 Route::post('/store', [EmissionController::class, 'storeEmission'])->name("emission.store");
                 Route::post('/delete/{id}', [EmissionController::class, 'deleteEmission'])->name("emission.delete");

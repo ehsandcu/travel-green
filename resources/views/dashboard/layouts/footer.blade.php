@@ -30,6 +30,7 @@
 <script src="{{ asset('js/datatables.min.js') }}"></script>
 <script src="{{ asset('js/daterangepicker.js') }}"></script>
 <script src="{{ asset('js/apexcharts.min.js') }}"></script>
+<script src="{{ asset('js/calculate_carbon.js') }}"></script>
 
 <script>
   jQuery.ajaxSetup({

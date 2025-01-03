@@ -26,7 +26,7 @@
                         <form id="carbon_form" method="POST" action="{{ route('emission.store') }}">                         
                             @csrf
                             <div class="row g-3">
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <div class="form-group">
                                         <label class="form-label">
                                             Trip Journey
@@ -204,9 +204,9 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="emission_value" class="form-label">
-                                            CO2e per year (kg)
+                                            CO2 (kg)
                                         </label>
-                                        <input type="text" id="emission_value" class="form-control" value="" placeholder="CO2e per year" readonly>                                    
+                                        <input type="text" id="emission_value" class="form-control" value="" placeholder="CO2" readonly>                                    
                                     </div>
                                 </div> 
                             </div>             
@@ -259,34 +259,11 @@
         google.maps.event.addDomListener(window, 'load', initializeDestinationAddress);
         
         $(document).ready(function(){
-            $('input[name="custom_date"]').daterangepicker({
-                maxDate:  moment(),
-                locale: {
-                    format: dateFormat
-                }
-            });
+            
 
             // $('input[name="custom_week"]').daterangepicker({   
             //     showWeekNumbers: true,      
             // });
-
-            $('input[name="custom_week"]').daterangepicker({
-                autoApply: true,
-                singleDatePicker: true,
-                showWeekNumbers: true,
-                showISOWeekNumbers: true,
-                locale: {
-                    firstDay: 1, // Week starts on Monday
-                    format: 'YYYY-WW' // Display the week in ISO format
-                }
-            }, function (start, end, label) {
-                // Set the input to the start week
-                const startOfWeek = start.clone().startOf('isoWeek');
-                const endOfWeek = start.clone().endOf('isoWeek');
-                $('input[name="custom_week"]').val(
-                    startOfWeek.format('YYYY-WW')
-                );
-            });
 
             // Modify click behavior to select the entire week
             // $('input[name="custom_week"]').on('apply.daterangepicker', function (ev, picker) {
@@ -296,8 +273,6 @@
             //     picker.setEndDate(endOfWeek);
             //     $(this).val(startOfWeek.format('YYYY-WW'));
             // });
-
-            $('input[name="custom_year"]').yearpicker({ year : new Date().getFullYear() });
 
             //draw map
             setTimeout(() => {
@@ -319,42 +294,6 @@
                 
                 if (campusLat) {                    
                     updateDestinationParam(campusLat, campusLng);                    
-                }
-            })
-
-            $(document).on('change', 'input[name=trip_journey]', function(){
-                var journey = $(this).val();
-                $('.weekDays').hide();
-                $('.customMonth').hide();
-                $('.customSemester').hide();
-                $('.customYear').hide();
-                $('.customDates').hide();
-                $('.workDays').show();
-
-                switch(journey) {
-                    case "daily":                
-                        $('.workDays').hide();
-                        break;
-
-                    case "weekly":                
-                        $('.weekDays').show();
-                        break;
-                    
-                    case "monthly":                
-                        $('.customMonth').show();
-                    break;
-
-                    case "semester":                
-                        $('.customSemester').show();
-                    break;
-
-                    case "annual":                
-                        $('.customYear').show();
-                    break;
-
-                    case "custom":
-                        $('.customDates').show();
-                        break;
                 }
             });
 
@@ -411,16 +350,21 @@
                             processData: false,
                             success: function(response) {
                                 if (response.success == "1") {
-                                    $('#emission_value').val(response.data); 
+                                    var emissionVal = response.data;
+                                    $('#emission_value').val(); 
                                     formData.delete('get_emission');
 
                                     swal({
-                                        title: "Got It!",
+                                        title: "Carbon Emission Estimate: "+ emissionVal +"(kg)",
                                         icon: "warning",
                                         text: "Do you want to store it?",
                                         buttons: {
                                             cancel: true,
-                                            confirm: true,
+                                            confirm: {
+                                                text: "Yes",
+                                                value: true,
+                                                visible: true
+                                            },
                                         },
                                     }).then(function(result){
                                         if(result){                                

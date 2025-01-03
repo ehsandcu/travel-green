@@ -32,23 +32,7 @@ class EmissionController extends Controller
 
     public function storeEmission(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'trip_journey' => ['required', 'in:'.implode(',', array_keys(TripJourney::JOURNEYS))],
-            'custom_week' => ['required_if:trip_journey,==,'. TripJourney::WEEKLY .'','regex:/^\d{4}-(5[0-2]|[1-4][0-9]|0[1-9])$/'], //format 2024-01 like year-weekNo
-            'custom_month' => ['required_if:trip_journey,==,'. TripJourney::MONTHLY .'', 'date_format:Y-m'],
-            'semester_year' => ['required_if:trip_journey,==,'. TripJourney::SEMESTER .'', 'regex:/^\d{4}-\d{4}$/'], //format 2024-2025 like year-year
-            'semester_type' => ['required_if:trip_journey,==,'. TripJourney::SEMESTER .'', 'in:'.implode(',', array_keys(SemesterType::TYPES))],
-            'custom_year' => ['required_if:trip_journey,==,'. TripJourney::ANNUAL .'', 'date_format:Y'],
-            'custom_date' => ['required_if:trip_journey,==,'. TripJourney::CUSTOM .'', 'regex:/^\d{2}-\d{2}-\d{4} - \d{2}-\d{2}-\d{4}$/'], //format 01-12-2024 - 01-12-2024 like d-m-Y - d-m-Y
-            'starting_latitude' => ['required'],
-            'starting_longitude' => ['required'],
-            'destination_latitude' => ['required'],
-            'destination_longitude' => ['required'],
-            'transport_method' => ['required', 'in:'.implode(',', array_keys(TransportMode::MODES))],
-            'work_days' => ['required_unless:trip_journey,'. TripJourney::DAILY .'', 'between:1,5'],
-            'route_type' => ['required', 'in:'.implode(',', array_keys(RouteType::TYPES))],
-            'route_distance' => ['required', 'gt:0'],
-        ]);
+        $validator = Validator::make($request->all(), (new EmissionService())->emissionFormRules());
         
         if ($validator->fails()) {
             return $this->sendResponse([
