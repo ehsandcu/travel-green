@@ -149,7 +149,7 @@ class DashboardController extends Controller
             }
         });
         
-        dd($resultWithCampus, $latLngs);
+        dd($resultWithCampus,$campusResult, $latLngs);
        return $this->sendResponse([
             'success' => 1,
             'message' => "Data Listed Successfully.",
