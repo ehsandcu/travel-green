@@ -17,8 +17,8 @@ return new class extends Migration
         Schema::create('carbon_emission', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(User::class)->constrained();
-            $table->json('starting_latlng');
-            $table->json('destination_latlng');
+            $table->longText('starting_latlng');
+            $table->longText('destination_latlng');
             $table->string('transport_mode');
             $table->integer('work_day_per_week');
             $table->float('distance');
