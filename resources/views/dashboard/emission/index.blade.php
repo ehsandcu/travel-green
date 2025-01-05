@@ -330,8 +330,8 @@
                     end_date:$('#dashboard_end_date').val(),
                 },
                 success: function (result) {
+                    console.log(result);
                     $(campusEmissionSelector).html(''); //remove old divs before chart
-
                     var graphLabels = result.labels;
                     var graphPercentage = result.percentages;
 
