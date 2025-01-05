@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Lib\DcuCampus;
 use App\Lib\UserRole;
 use App\Models\CarbonEmission;
 use App\Services\EmissionService;
@@ -107,5 +108,52 @@ class DashboardController extends Controller
         }
 
         return $response;
+    }
+
+    public function getGraphDataByCampuses(Request $request)
+    {
+        $user = auth()->user();
+        $campuses = DcuCampus::CAMPUSES;
+        $format = 'Y-m-d';
+        $startDate =   ($request && $request->start_date) ? Carbon::parse($request->start_date)->format($format) : null;
+        $endDate = ($request && $request->end_date) ? Carbon::parse($request->end_date)->format($format) : null;
+        $latLngToCampus = [];
+
+        //format like '{"lat":"12.23","lng":"4.56"}' => 'Campus A',
+        foreach ($campuses as $campusKey => $campus) {
+           $latLngToCampus['{"lat":"'.$campus['latitude'].'","lng":"'.$campus['longitude'].'"}'] = $campusKey;
+        }
+        
+        $latLngs = array_keys($latLngToCampus);
+
+        $campusQuery = CarbonEmission::select('destination_latlng')
+            ->selectRaw('SUM(carbon_emission) AS total_emission')
+            ->selectRaw('ROUND(SUM(carbon_emission) / (SELECT SUM(carbon_emission) FROM carbon_emission) * 100, 2) AS percentage')
+            ->whereIn('destination_latlng', $latLngs)
+            ->when($user, function ($query) use ($user) {
+                if ($user->user_role != UserRole::ADMIN_ROLE) {
+                    $query->where('user_id', $user->id);
+                }
+            });
+        
+            if ($startDate && $endDate) {
+                $campusQuery->whereBetween(DB::raw('DATE(created_at)'), [$startDate, $endDate]);
+            }
+
+        $campusResult = $campusQuery->groupBy('destination_latlng')->get();
+        
+        $resultWithCampus = $campusResult->map(function ($item) use ($latLngToCampus) {
+            if ($item->destination_latlng) {
+                $item->campus_name = DcuCampus::CAMPUSES[$latLngToCampus[$item->getRawOriginal('destination_latlng')]]['label'] ?? 'Unknown Campus';
+                return $item;
+            }
+        });
+
+       return $this->sendResponse([
+            'success' => 1,
+            'message' => "Data Listed Successfully.",
+            'labels' => $resultWithCampus->pluck('campus_name') ?? [],
+            'percentages' => $resultWithCampus->pluck('percentage') ?? [],
+        ]);
     }
 }

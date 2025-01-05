@@ -13,6 +13,11 @@ function carbonEmission($tansportMode, $workDays, $distance, $routeType=2)
     return number_format((float)$carbonEmit, 2, '.', '');
 }
 
+function numFormat($val, $precisionNo=2) 
+{
+    return number_format((float)$val, $precisionNo, '.', '');
+}
+
 function convertInInteger($value)
 {
     return intval($value);

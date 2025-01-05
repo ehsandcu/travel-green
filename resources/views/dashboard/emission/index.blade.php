@@ -1,4 +1,11 @@
 @extends('dashboard.layouts.main')
+@section('dashboard-css')
+    <style>
+        .apexcharts-legend {
+            text-align: justify;
+        }
+    </style>
+@stop
 @section('dashboard_content')
     <div class="row">
         <div class="col-md-12">
@@ -48,7 +55,7 @@
         </div>
     </div>
     <div class="row">   
-        <div class="col-lg-12 grid-margin stretch-card">
+        <div class="col-lg-8 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body" id="dashboard-graph-emission-report" data-route="{{ route('emission.graph.data') }}">
                     <div class="d-flex justify-content-between align-items-center flex-wrap">
@@ -68,8 +75,14 @@
                             </div> --}}
                         </div>
                     </div>
-                    <div id="chart-apex-emission-report" class="custom-chart text-center">
-                    </div>
+                    <div id="chart-apex-emission-report" class="custom-chart text-center"></div>
+                </div>
+            </div>           
+        </div>
+        <div class="col-lg-4 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body m-auto" id="campuses-graph-emission-report" data-route="{{ route('emission.campus_graph.data') }}">                    
+                    <div id="chart-apex-campus-report" class="text-center"></div>
                 </div>
             </div>           
         </div>
@@ -112,6 +125,8 @@
 @section('dashboard-script')
     <script>
         var emissionSelector = "#chart-apex-emission-report";
+        var campusEmissionSelector = "#chart-apex-campus-report";
+        
         $(document).ready(function() {  
             // Display the greeting
             $('.greeting').text(greetingMsg());
@@ -122,6 +137,7 @@
 
                 if (startDate && endDate) {
                     emissionGraph();
+                    emissionCampusGraph();
                 }
             });
 
@@ -131,6 +147,7 @@
                 
                 if (startDate && endDate) {
                     emissionGraph();
+                    emissionCampusGraph();
                 }
             });
 
@@ -184,6 +201,7 @@
 
             loadEmissionList();
             emissionGraph();
+            emissionCampusGraph();
         });
 
         function loadEmissionList() {
@@ -221,7 +239,7 @@
             });
         }
 
-        function emissionGraph(){
+        function emissionGraph() {
             $.ajax({
                 url: $("#dashboard-graph-emission-report").attr("data-route"),
                 type: "POST",
@@ -299,6 +317,58 @@
                     } else {
                         $(emissionSelector).html('<img class="h-280" src="../images/icon/statistic-transparent.png">');
                     }
+                }
+            });
+        }
+        
+        function emissionCampusGraph() {
+            $.ajax({
+                url: $("#campuses-graph-emission-report").attr("data-route"),
+                type: "POST",
+                cache: false,
+                data: {
+                    start_date:$('#dashboard_start_date').val(),
+                    end_date:$('#dashboard_end_date').val(),
+                },
+                success: function (result) {
+                    $(campusEmissionSelector).html(''); //remove old divs before chart
+                    
+                    var graphLabels = result.labels;
+                    var graphPercentage = result.percentages;
+
+                    var options = {
+                        series: graphPercentage,
+                        chart: {
+                            width: 380,
+                            type: 'donut',
+                        },
+                        dataLabels: {
+                            enabled: false
+                        },
+                        labels: graphLabels,
+                        responsive: [{
+                            breakpoint: 480,
+                            options: {
+                                chart: {
+                                width: 200
+                                },
+                                legend: {
+                                show: false
+                                }
+                            }
+                        }],
+                        legend: {
+                            position: 'right',
+                            offsetY: 0,
+                            height: 230,
+                        }
+                    };
+            
+                    var campusChart = new ApexCharts(document.querySelector(campusEmissionSelector), options);
+                    campusChart.render()catch(function () {
+                            $(campusEmissionSelector).html('<img class="h-280" src="../images/icon/statistic-transparent.png">');
+
+                    });
                 }
             });
         }

@@ -49,6 +49,7 @@ Route::group(['middleware' => ['auth']], function () {
             Route::group(['prefix' => 'emission'], function () {
                 Route::get('/calculate', [EmissionController::class, 'index'])->name("emission.index");
                 Route::post('/graphData', [DashboardController::class, 'getGraphData'])->name("emission.graph.data");
+                Route::post('/campuses/graphData', [DashboardController::class, 'getGraphDataByCampuses'])->name("emission.campus_graph.data");
                 Route::post('/store', [EmissionController::class, 'storeEmission'])->name("emission.store");
                 Route::post('/delete/{id}', [EmissionController::class, 'deleteEmission'])->name("emission.delete");
                 Route::post('/load/emission', [EmissionController::class, 'loadEmission'])->name("load.emissions");
