@@ -129,10 +129,9 @@ class DashboardController extends Controller
         $campusQuery = CarbonEmission::select('destination_latlng')
             ->selectRaw('SUM(carbon_emission) AS total_emission')
             ->selectRaw('ROUND(SUM(carbon_emission) / (SELECT SUM(carbon_emission) FROM carbon_emission) * 100, 2) AS percentage')
-            // ->whereIn('destination_latlng', $latLngs)
+            ->whereIn('destination_latlng', $latLngs)
             ->when($user, function ($query) use ($user) {
                 if ($user->user_role != UserRole::ADMIN_ROLE) {
-                    dd('user');
                     $query->where('user_id', $user->id);
                 }
             }
