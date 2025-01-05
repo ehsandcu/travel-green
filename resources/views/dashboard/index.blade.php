@@ -353,7 +353,7 @@
                             success: function(response) {
                                 if (response.success == "1") {
                                     var emissionVal = response.data;
-                                    $('#emission_value').val(); 
+                                    $('#emission_value').val(emissionVal); 
                                     formData.delete('get_emission');
 
                                     swal({
