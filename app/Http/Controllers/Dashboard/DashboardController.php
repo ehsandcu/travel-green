@@ -137,19 +137,19 @@ class DashboardController extends Controller
             }
         );
         
-            dd($campusQuery->groupBy('destination_latlng')->get(),$latLngs);
-            if ($startDate && $endDate) {
-                $campusQuery->whereBetween(DB::raw('DATE(created_at)'), [$startDate, $endDate]);
-            }
-
+        if ($startDate && $endDate) {
+            $campusQuery->whereBetween(DB::raw('DATE(created_at)'), [$startDate, $endDate]);
+        }
+        
         $campusResult = $campusQuery->groupBy('destination_latlng')->get();
         $resultWithCampus = $campusResult->map(function ($item) use ($latLngToCampus) {
-            if ($item->destination_latlng) {
+            if (isset($latLngToCampus[$item->getRawOriginal('destination_latlng')])) {
                 $item->campus_name = DcuCampus::CAMPUSES[$latLngToCampus[$item->getRawOriginal('destination_latlng')]]['label'] ?? 'Unknown Campus';
                 return $item;
             }
         });
-
+        
+        dd($resultWithCampus, $latLngs);
        return $this->sendResponse([
             'success' => 1,
             'message' => "Data Listed Successfully.",
