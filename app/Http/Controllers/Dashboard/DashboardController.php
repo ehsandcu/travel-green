@@ -138,11 +138,16 @@ class DashboardController extends Controller
         );
         
         if ($startDate && $endDate) {
-            dd('inds');
             $campusQuery->whereBetween(DB::raw('DATE(created_at)'), [$startDate, $endDate]);
         }
         
         $campusResult = $campusQuery->groupBy('destination_latlng')->get();
+
+        $res = $campusResult->filter(function ($model) use ($latLngs) {
+            // Compare raw original values
+            return in_array($model->getRawOriginal('destination_latlng'), $latLngs);
+        });
+        dd($res);
         $resultWithCampus = $campusResult->map(function ($item) use ($latLngToCampus) {
             if (isset($latLngToCampus[$item->getRawOriginal('destination_latlng')])) {
                 $item->campus_name = DcuCampus::CAMPUSES[$latLngToCampus[$item->getRawOriginal('destination_latlng')]]['label'] ?? 'Unknown Campus';
