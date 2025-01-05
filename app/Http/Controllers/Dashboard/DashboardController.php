@@ -121,7 +121,7 @@ class DashboardController extends Controller
 
         //format like '{"lat":"12.23","lng":"4.56"}' => 'Campus A',
         foreach ($campuses as $campusKey => $campus) {
-           $latLngToCampus['{"lat":"'.$campus['latitude'].'","lng":"'.$campus['longitude'].'"}'] = $campusKey;
+           $latLngToCampus['{"lat":'.$campus['latitude'].',"lng":'.$campus['longitude'].'}'] = $campusKey;
         }
         
         $latLngs = array_keys($latLngToCampus);
