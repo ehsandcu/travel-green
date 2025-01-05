@@ -214,6 +214,9 @@
                                 <button type="submit" class="btn btn-info btn-rounded btn-fw">Calculate</button>
                             </div>
                         </form>
+                        <div class="text-info">
+                            <strong>Note:</strong> Weekdays are not currently included in the carbon emission calculation.
+                        </div>
                     </div>
                 </div>
             </div>
@@ -249,7 +252,6 @@
 @stop
 @section('dashboard-script')
     <script src="https://maps.google.com/maps/api/js?key={{ config('services.google.google_map_key')}}&libraries=places,geometry" type="text/javascript"></script>
-    <script src="{{ asset('js/yearpicker.js') }}"></script>
 
     <script>
         var map,directionsRenderer;

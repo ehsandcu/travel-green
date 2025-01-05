@@ -29,6 +29,7 @@
 <script src="{{ asset('js/moment.min.js') }}"></script>
 <script src="{{ asset('js/datatables.min.js') }}"></script>
 <script src="{{ asset('js/daterangepicker.js') }}"></script>
+<script src="{{ asset('js/yearpicker.js') }}"></script>
 <script src="{{ asset('js/apexcharts.min.js') }}"></script>
 <script src="{{ asset('js/calculate_carbon.js') }}"></script>
 
