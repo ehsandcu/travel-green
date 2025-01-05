@@ -129,7 +129,7 @@ class DashboardController extends Controller
         $campusQuery = CarbonEmission::select('destination_latlng')
             ->selectRaw('SUM(carbon_emission) AS total_emission')
             ->selectRaw('ROUND(SUM(carbon_emission) / (SELECT SUM(carbon_emission) FROM carbon_emission) * 100, 2) AS percentage')
-            // ->whereIn('destination_latlng', $latLngs)
+            ->whereIn('destination_latlng', $latLngs)
             ->when($user, function ($query) use ($user) {
                 if ($user->user_role != UserRole::ADMIN_ROLE) {
                     $query->where('user_id', $user->id);
@@ -142,21 +142,15 @@ class DashboardController extends Controller
         }
         
         $campusResult = $campusQuery->groupBy('destination_latlng')->get();
-        // dd($campusResult);
-
-        $res = $campusResult->filter(function ($model) use ($latLngs) {
-            // Compare raw original values
-            return in_array($model->getRawOriginal('destination_latlng'), $latLngs);
-        });
-        $resultWithCampus = $res->map(function ($item) use ($latLngToCampus) {
-            if (isset($latLngToCampus[$item->getRawOriginal('destination_latlng')])) {
+        
+        $resultWithCampus = $campusResult->map(function ($item) use ($latLngToCampus) {
+            if (isset($item->destination_latlng)) {
                 $item->campus_name = DcuCampus::CAMPUSES[$latLngToCampus[$item->getRawOriginal('destination_latlng')]]['label'] ?? 'Unknown Campus';
                 return $item;
             }
         });
         
-        // dd($resultWithCampus, $latLngs,$campusResult,$resultWithCampus->pluck('campus_name'));
-       return $this->sendResponse([
+        return $this->sendResponse([
             'success' => 1,
             'message' => "Data Listed Successfully.",
             'labels' => $resultWithCampus->pluck('campus_name') ?? [],
