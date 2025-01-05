@@ -217,7 +217,6 @@
                     complete: function (res) {
                         var response = res['responseJSON'];
                         var emissionStats = response.emissionStats;
-                        console.log(emissionStats);
                     },
                 },
                 columns: [
@@ -332,7 +331,7 @@
                 },
                 success: function (result) {
                     $(campusEmissionSelector).html(''); //remove old divs before chart
-                    
+
                     var graphLabels = result.labels;
                     var graphPercentage = result.percentages;
 
@@ -365,9 +364,8 @@
                     };
             
                     var campusChart = new ApexCharts(document.querySelector(campusEmissionSelector), options);
-                    campusChart.render()catch(function () {
-                            $(campusEmissionSelector).html('<img class="h-280" src="../images/icon/statistic-transparent.png">');
-
+                    campusChart.render().catch(function () {
+                        $(campusEmissionSelector).html('<img class="h-280" src="../images/icon/statistic-transparent.png">');
                     });
                 }
             });
