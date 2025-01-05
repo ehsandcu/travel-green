@@ -142,20 +142,20 @@ class DashboardController extends Controller
         }
         
         $campusResult = $campusQuery->groupBy('destination_latlng')->get();
-        dd($campusResult);
+        // dd($campusResult);
 
         $res = $campusResult->filter(function ($model) use ($latLngs) {
             // Compare raw original values
             return in_array($model->getRawOriginal('destination_latlng'), $latLngs);
         });
-        $resultWithCampus = $campusResult->map(function ($item) use ($latLngToCampus) {
+        $resultWithCampus = $res->map(function ($item) use ($latLngToCampus) {
             if (isset($latLngToCampus[$item->getRawOriginal('destination_latlng')])) {
                 $item->campus_name = DcuCampus::CAMPUSES[$latLngToCampus[$item->getRawOriginal('destination_latlng')]]['label'] ?? 'Unknown Campus';
                 return $item;
             }
         });
         
-        dd($resultWithCampus, $latLngs,$campusResult);
+        // dd($resultWithCampus, $latLngs,$campusResult,$resultWithCampus->pluck('campus_name'));
        return $this->sendResponse([
             'success' => 1,
             'message' => "Data Listed Successfully.",
