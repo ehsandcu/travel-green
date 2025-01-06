@@ -204,7 +204,10 @@
         function initializeProcess() {
             loadEmissionList();
             emissionGraph();
-            emissionCampusGraph();
+
+            setTimeout(function() { 
+                emissionCampusGraph();
+            }, 500);
         }
 
         function loadEmissionList() {
@@ -342,16 +345,14 @@
                     var statRes = result.emit_stats;
                     var graphLabels = result.labels;
                     var graphPercentage = result.percentages;
-
+                
                     $('.total_carbon_emission').text(statRes.total_carbon_emission != null ? statRes.total_carbon_emission.toFixed(2) : 0);
                     $('.total_records_stat').text(statRes.total_records ?? 0);
                     $('.total_distance').text(statRes.total_distance != null ? statRes.total_distance.toFixed(2) : 0);
-
-
-                    var options = {
+                    
+                    var campusChartOptions = {
                         series: graphPercentage,
                         chart: {
-                            width: 380,
                             type: 'donut',
                         },
                         dataLabels: {
@@ -376,10 +377,8 @@
                         }
                     };
             
-                    var campusChart = new ApexCharts(document.querySelector(campusEmissionSelector), options);
-                    campusChart.render().catch(function () {
-                        $(campusEmissionSelector).html('<img class="h-280" src="../images/icon/statistic-transparent.png">');
-                    });
+                    var campusChart = new ApexCharts(document.querySelector(campusEmissionSelector), campusChartOptions);
+                    campusChart.render();  
                 }
             });
         }
