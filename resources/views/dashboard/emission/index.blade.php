@@ -125,6 +125,7 @@
 
 @section('dashboard-script')
     <script>
+        var campusChart;
         var emissionSelector = "#chart-apex-emission-report";
         var campusEmissionSelector = "#chart-apex-campus-report";
         
@@ -198,16 +199,14 @@
                 }); 
             });
 
+            loadCampusEmissionGraph();
             initializeProcess();
         });
 
         function initializeProcess() {
             loadEmissionList();
             emissionGraph();
-
-            setTimeout(function() { 
-                emissionCampusGraph();
-            }, 500);
+            emissionCampusGraph();
         }
 
         function loadEmissionList() {
@@ -331,6 +330,39 @@
             });
         }
         
+        function loadCampusEmissionGraph() {
+            var campusChartOptions = {
+                series: [],
+                chart: {
+                    type: 'donut',
+                    width: 350,
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                labels: [],
+                responsive: [{
+                    breakpoint: 480,
+                    options: {
+                        chart: {
+                        width: 200
+                        },
+                        legend: {
+                        show: false
+                        }
+                    }
+                }],
+                legend: {
+                    position: 'right',
+                    offsetY: 0,
+                    height: 230,
+                }
+            };
+
+            campusChart = new ApexCharts(document.querySelector(campusEmissionSelector), campusChartOptions);
+            campusChart.render();
+        }
+
         function emissionCampusGraph() {
             $.ajax({
                 url: $("#campuses-graph-emission-report").attr("data-route"),
@@ -341,44 +373,21 @@
                     end_date:$('#dashboard_end_date').val(),
                 },
                 success: function (result) {
-                    $(campusEmissionSelector).html(''); //remove old divs before chart
+                    // $(campusEmissionSelector).html(''); //remove old divs before chart
                     var statRes = result.emit_stats;
                     var graphLabels = result.labels;
                     var graphPercentage = result.percentages;
-                
+                    
                     $('.total_carbon_emission').text(statRes.total_carbon_emission != null ? statRes.total_carbon_emission.toFixed(2) : 0);
                     $('.total_records_stat').text(statRes.total_records ?? 0);
                     $('.total_distance').text(statRes.total_distance != null ? statRes.total_distance.toFixed(2) : 0);
                     
-                    var campusChartOptions = {
-                        series: graphPercentage,
-                        chart: {
-                            type: 'donut',
-                        },
-                        dataLabels: {
-                            enabled: false
-                        },
-                        labels: graphLabels,
-                        responsive: [{
-                            breakpoint: 480,
-                            options: {
-                                chart: {
-                                width: 200
-                                },
-                                legend: {
-                                show: false
-                                }
-                            }
-                        }],
-                        legend: {
-                            position: 'right',
-                            offsetY: 0,
-                            height: 230,
-                        }
-                    };
-            
-                    var campusChart = new ApexCharts(document.querySelector(campusEmissionSelector), campusChartOptions);
-                    campusChart.render();  
+                    setTimeout(() => {
+                        campusChart.updateOptions({
+                            labels: graphLabels
+                        });    
+                        campusChart.updateSeries(graphPercentage);
+                    }, 500);
                 }
             });
         }
