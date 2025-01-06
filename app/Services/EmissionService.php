@@ -9,6 +9,7 @@ use App\Lib\TripJourney;
 use App\Lib\UserRole;
 use App\Models\CarbonEmission;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class EmissionService
 {
@@ -38,16 +39,25 @@ class EmissionService
         return $this->emissionStatQuery()->first();
     }
 
-    public function getEmissionStatsByUser()
+    public function getEmissionStatsByUser($request=null)
     {
         $user = auth()->user();
+        $format = 'Y-m-d';
+        $startDate =   ($request && $request->start_date) ? Carbon::parse($request->start_date)->format($format) : null;
+        $endDate = ($request && $request->end_date) ? Carbon::parse($request->end_date)->format($format) : null;
 
-        return $this->emissionStatQuery()
-                ->when($user, function ($query) use ($user) {
-                    if ($user->user_role != UserRole::ADMIN_ROLE) {
-                        $query->where('user_id', $user->id);
-                    }
-                })->first();
+        $statQuery = $this->emissionStatQuery()
+        ->when($user, function ($query) use ($user) {
+            if ($user->user_role != UserRole::ADMIN_ROLE) {
+                $query->where('user_id', $user->id);
+            }
+        });
+
+        if ($startDate && $endDate) {
+            $statQuery->whereBetween(DB::raw('DATE(created_at)'), [$startDate, $endDate]);
+        }
+
+        return $statQuery->first();
     }
 
     public function emissionExists()

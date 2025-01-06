@@ -19,10 +19,8 @@ class DashboardController extends Controller
     }
     
     public function index()
-    {
-        $emitStats = (new EmissionService())->getEmissionStatsByUser();
-       
-        return view('dashboard.emission.index', compact('emitStats'));
+    {       
+        return view('dashboard.emission.index');
     }
 
     public function getGraphData(Request $request)
@@ -155,6 +153,7 @@ class DashboardController extends Controller
             'message' => "Data Listed Successfully.",
             'labels' => $resultWithCampus->pluck('campus_name') ?? [],
             'percentages' => $resultWithCampus->pluck('percentage') ?? [],
+            'emit_stats' => (new EmissionService())->getEmissionStatsByUser($request),
         ]);
     }
 }
