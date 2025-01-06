@@ -31,7 +31,7 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Carbon Emission</h5>
-                    <p class="card-text">{{ $emitStats->total_carbon_emission ?? 0 }}</p>                
+                    <p class="card-text total_carbon_emission">0</p>                
                 </div>
             </div>
         </div>
@@ -39,7 +39,7 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Total Records</h5>
-                    <p class="card-text">{{ $emitStats->total_records ?? 0 }}</p>
+                    <p class="card-text total_records_stat">0</p>
                     
                 </div>
             </div>
@@ -48,12 +48,12 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Total Distance</h5>
-                    <p class="card-text">{{ $emitStats->total_distance ?? 0 }}</p>
-                    
+                    <p class="card-text total_distance">0</p>                    
                 </div>
             </div>
         </div>
     </div>
+
     <div class="row">   
         <div class="col-lg-8 grid-margin stretch-card">
             <div class="card">
@@ -87,6 +87,7 @@
             </div>           
         </div>
     </div>
+
     <div class="row">   
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
@@ -338,9 +339,14 @@
                 },
                 success: function (result) {
                     $(campusEmissionSelector).html(''); //remove old divs before chart
-
+                    var statRes = result.emit_stats;
                     var graphLabels = result.labels;
                     var graphPercentage = result.percentages;
+
+                    $('.total_carbon_emission').text(statRes.total_carbon_emission.toFixed(2) ?? 0);
+                    $('.total_records_stat').text(statRes.total_records ?? 0);
+                    $('.total_distance').text(statRes.total_distance.toFixed(2) ?? 0);
+
 
                     var options = {
                         series: graphPercentage,
