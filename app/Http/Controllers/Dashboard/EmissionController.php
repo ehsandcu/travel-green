@@ -205,6 +205,8 @@ class EmissionController extends Controller
         $columnName = $columnName_arr[$columnIndex]['data'];
         
         $order_arr = $request->input('order');
+        $start_date = $request->start_date ?? null;
+        $end_date = $request->end_date ?? null;
 
         $draw = $request->input('draw');
         $limit = $request->input('length');
@@ -256,6 +258,10 @@ class EmissionController extends Controller
             });
         }
 
+        if($start_date && $end_date) {
+            $emissionQuery->whereBetween(DB::raw('DATE(created_at)'), [$start_date, $end_date]);
+        }
+        
         $totalRecords = $emissionQuery->count();
         $carbonEmissions = $emissionQuery->skip($offset)->take($limit)->get();
         

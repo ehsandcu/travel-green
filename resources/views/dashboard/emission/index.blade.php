@@ -136,8 +136,7 @@
                 var endDate = $('#dashboard_end_date').val();
 
                 if (startDate && endDate) {
-                    emissionGraph();
-                    emissionCampusGraph();
+                    initializeProcess();
                 }
             });
 
@@ -199,10 +198,14 @@
                 }); 
             });
 
+            initializeProcess();
+        });
+
+        function initializeProcess() {
             loadEmissionList();
             emissionGraph();
             emissionCampusGraph();
-        });
+        }
 
         function loadEmissionList() {
             $("#emission_data_table").DataTable().destroy();
@@ -213,7 +216,12 @@
                     "url": "{{ route('load.emissions') }}",
                     "contentType": "application/json",
                     "type": "POST",
-                    "data": function (d) { return JSON.stringify(d); },
+                    "data": function (d) {
+                        d.start_date = $('#dashboard_start_date').val();
+                        d.end_date = $('#dashboard_end_date').val();
+
+                        return JSON.stringify(d); 
+                    },
                     complete: function (res) {
                         var response = res['responseJSON'];
                         var emissionStats = response.emissionStats;
