@@ -55,15 +55,15 @@
                     <div class="quick-contact-item d-flex align-items-center mb-4">
                         <span class="flaticon-phone-call"></span>
                         <address class="text">
-                            +353 22 333 4444
+                            +353 (1) 700 5000
                         </address>
                     </div>
-                    <div class="quick-contact-item d-flex align-items-center mb-4">
+                    {{-- <div class="quick-contact-item d-flex align-items-center mb-4">
                         <span class="flaticon-mail"></span>
                         <address class="text">
                             mail@example.com
                         </address>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
