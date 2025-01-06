@@ -35,8 +35,8 @@
                             <div class="widget">
                                 <h3 class="heading">Contact</h3>
                                 <ul class="list-unstyled quick-info links">
-                                    <li class="email"><a href="#">mail@example.com</a></li>
-                                    <li class="phone"><a href="#">+353 22 333 4444</a></li>
+                                    {{-- <li class="email"><a href="#">mail@example.com</a></li> --}}
+                                    <li class="phone"><a href="#">+353 (1) 700 5000</a></li>
                                     <li class="address"><a href="#">Dublin City University, Collins Ave Ext, Whitehall, Dublin 9</a></li>
                                 </ul>
                             </div>
