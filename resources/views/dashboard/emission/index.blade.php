@@ -145,8 +145,7 @@
                 var endDate = $(this).val();
                 
                 if (startDate && endDate) {
-                    emissionGraph();
-                    emissionCampusGraph();
+                    initializeProcess();
                 }
             });
 
