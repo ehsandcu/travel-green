@@ -343,9 +343,9 @@
                     var graphLabels = result.labels;
                     var graphPercentage = result.percentages;
 
-                    $('.total_carbon_emission').text(statRes.total_carbon_emission.toFixed(2) ?? 0);
+                    $('.total_carbon_emission').text(statRes.total_carbon_emission != null ? statRes.total_carbon_emission.toFixed(2) : 0);
                     $('.total_records_stat').text(statRes.total_records ?? 0);
-                    $('.total_distance').text(statRes.total_distance.toFixed(2) ?? 0);
+                    $('.total_distance').text(statRes.total_distance != null ? statRes.total_distance.toFixed(2) : 0);
 
 
                     var options = {
