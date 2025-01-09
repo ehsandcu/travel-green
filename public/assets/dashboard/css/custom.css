@@ -45,6 +45,10 @@
     top: 10px;
 }
 
+.btn-outline-dark:hover svg, .btn-outline-dark svg:hover {
+    fill: white;
+}
+
 /* .weekDays input {
     display: none !important;
 } */
@@ -91,4 +95,20 @@
 .typcn {
     font-size: 20px;
     cursor: pointer;
+}
+
+.fs-14 {
+    font-size : 14px;
+}
+
+.fs-15 {
+    font-size : 15px;
+}
+
+.fs-18 {
+    font-size : 18px;
+}
+
+.dt-container .top .dt-buttons {
+    display: none !important;
 }

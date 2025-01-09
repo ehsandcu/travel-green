@@ -4,6 +4,11 @@
         .apexcharts-legend {
             text-align: justify;
         }
+
+        .dt-container .top {
+            display: flex;
+            justify-content: space-between;
+        }
     </style>
 @stop
 @section('dashboard_content')
@@ -92,7 +97,25 @@
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Emissions</h4>                    
+                    <div class="d-flex justify-content-between mb-2">
+                        <div>
+                            <h4 class="card-title">Emissions</h4>
+                        </div>
+                        <div class="d-flex">                            
+                            <div class="dropdown mr-2">
+                                <a class="btn btn-outline-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Options
+                                </a>
+                              
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                  <a class="dropdown-item export_excel" href="#">Export Excel</a>
+                                  {{-- <a class="dropdown-item export_pdf" href="#">PDF</a> --}}
+                                </div>
+                              </div>
+                            <a href="{{ route('emission.index') }}" class="btn btn-info"><span class="typcn icon typcn-plus mr-2 fs-14"></span>Add Emission</a>                            
+                            
+                        </div>
+                    </div>
                     <div class="table-responsive">
                         <table class="table table-striped" id="emission_data_table">
                             <thead>
@@ -199,6 +222,14 @@
                 }); 
             });
 
+            $(document).on('click', '.export_excel', function() {
+                $('#emission_data_table_wrapper .buttons-excel').trigger('click');
+            });
+
+            $(document).on('click', '.export_pdf', function() {
+                $('#emission_data_table_wrapper .buttons-pdf').trigger('click');
+            });
+
             loadCampusEmissionGraph();
             initializeProcess();
         });
@@ -213,7 +244,20 @@
             $("#emission_data_table").DataTable().destroy();
             $('#emission_data_table').dataTable({
                 processing: true,
-                serverSide: true,
+                serverSide: true,              
+                dom: '<"top"lfB>rt<"bottom"ip>',
+                buttons: [
+                    {
+                        extend: 'excel',
+                        text: 'Export Excel',
+                        filename: 'Emission_Excel', 
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        text: 'Export PDF',
+                        filename: 'Emission_PDF',
+                    },
+                ],
                 ajax: {
                     "url": "{{ route('load.emissions') }}",
                     "contentType": "application/json",
