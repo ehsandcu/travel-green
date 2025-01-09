@@ -5,9 +5,10 @@
             text-align: justify;
         }
 
-        .dt-container .top {
+        .dt-container .top, .dt-container .bottom {
             display: flex;
             justify-content: space-between;
+            margin-top: 8px;
         }
     </style>
 @stop
@@ -243,6 +244,7 @@
         function loadEmissionList() {
             $("#emission_data_table").DataTable().destroy();
             $('#emission_data_table').dataTable({
+                lengthMenu: [10, 25, 50, 100, 150, 200],
                 processing: true,
                 serverSide: true,              
                 dom: '<"top"lfB>rt<"bottom"ip>',

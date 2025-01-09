@@ -16,6 +16,10 @@
     height: auto;
 }
 
+.dt-length .form-select {
+    padding: 0.5rem 1.52rem;
+}
+
 .typcn:before{
     height: unset;
 }
