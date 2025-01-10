@@ -75,8 +75,10 @@
                 <div class="col-lg-7">
                     <div class="intro-wrap">
                         <h1 class="mb-4"><span class="d-block">Calculate your commuting </span> carbon <span class="typed-words"></span></h1>
-                        <p class="mb-5 banner-text"><span class="d-block">Commuting is a daily routine, but the way you travel has a big impact on the environment. Driving, public transport, biking, or walking all contribute differently to carbon emissions.</span><span> Our calculator helps you measure your commute’s environmental impact and discover ways to reduce it. Make a difference with every journey you take!</span></p>
-                        
+                        <p class="banner-text">
+                            <span class="d-block">Commuting is a daily routine, but the way you travel has a big impact on the environment. Driving, public transport, biking, or walking all contribute differently to carbon emissions.</span><span> Our calculator helps you measure your commute’s environmental impact and discover ways to reduce it. Make a difference with every journey you take!</span>
+                            <span class="d-block mt-3">Would you like to <button class="btn btn-primary btn_carbon_calculator">Calculate</button> now?</span>
+                        </p>
                         {{-- <div class="row">
                             <div class="col-12">
                                 <form class="form" id="carbon_form">
@@ -123,7 +125,7 @@
             </div>
         </div>
     </div>
-    <div class="untree_co-section py-5">
+    <div class="untree_co-section py-5 carbon_calculator" style="display: none;">
 		<div class="container">
 			<div class="row">
                 <div class="card" style="background-color: #f8f9fa;">
@@ -384,6 +386,10 @@
                 }
 
             });
+        });
+
+        $(document).on('click', '.btn_carbon_calculator', function() {
+            $('.carbon_calculator').slideToggle("slow");
         });
 
         $('.destination_campus, #transport_method, #semester_year, #route_type').select2({
