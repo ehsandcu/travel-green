@@ -53,6 +53,16 @@
             border-radius: .375rem;
             transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
         }
+
+        .banner-text {
+            color: #f0f0f0;
+            font-size: 1rem;
+            font-weight: 500;
+            line-height: 1.5;
+            text-align: left;
+            letter-spacing: normal;
+            width: 80%;
+        }
     </style>
 @stop
 @section('content')
@@ -64,7 +74,9 @@
             <div class="row align-items-center">
                 <div class="col-lg-7">
                     <div class="intro-wrap">
-                        <h1 class="mb-5"><span class="d-block">Calculate your commuting </span> carbon <span class="typed-words"></span></h1>
+                        <h1 class="mb-4"><span class="d-block">Calculate your commuting </span> carbon <span class="typed-words"></span></h1>
+                        <p class="mb-5 banner-text"><span class="d-block">Commuting is a daily routine, but the way you travel has a big impact on the environment. Driving, public transport, biking, or walking all contribute differently to carbon emissions.</span><span> Our calculator helps you measure your commute’s environmental impact and discover ways to reduce it. Make a difference with every journey you take!</span></p>
+                        
                         {{-- <div class="row">
                             <div class="col-12">
                                 <form class="form" id="carbon_form">
@@ -312,6 +324,7 @@
     {{-- <div class="untree_co-section count-numbers py-5"> --}}
     <div class="untree_co-section py-5">
 		<div class="container">
+            {{-- <h3>Decemeber Emission</h3> --}}
 			<div class="row">
 				<div class="col-6 col-sm-6 col-md-6 col-lg-4">
 					<div class="counter-wrap">
