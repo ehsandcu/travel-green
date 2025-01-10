@@ -15,10 +15,11 @@ use Illuminate\Support\Facades\Validator;
 class HomeController extends Controller
 {
     public function index()
-    {   
+    {           
         $emissionsResult = (new EmissionService())->getEmissionStats();
+        $campusEmissionResult = (new EmissionService())->campusCarbonEmission();
 
-        return view('home', compact('emissionsResult'));
+        return view('home', compact('emissionsResult', 'campusEmissionResult'));
     }
 
     public function services()

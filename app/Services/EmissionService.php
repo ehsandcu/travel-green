@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Lib\DcuCampus;
 use App\Lib\RouteType;
 use App\Lib\SemesterType;
 use App\Lib\TransportMode;
@@ -63,6 +64,45 @@ class EmissionService
     public function emissionExists()
     {
         return CarbonEmission::where('user_id', auth()->user()->id)->where('journey_end_date', '>=', Carbon::today()->format('Y-m-d'))->exists();
+    }
+
+    public function campusCarbonEmission($start_date=null, $end_date=null)
+    {
+        $campuses = DcuCampus::CAMPUSES;
+        $format = 'Y-m-d';
+        $startDate =   ($start_date) ? Carbon::parse($start_date)->format($format) : null;
+        $endDate = ($end_date) ? Carbon::parse($end_date)->format($format) : null;
+        $latLngToCampus = [];
+
+        //format like '{"lat":"12.23","lng":"4.56"}' => 'Campus A',
+        foreach ($campuses as $campusKey => $campus) {
+           $latLngToCampus['{"lat":"'.$campus['latitude'].'","lng":"'.$campus['longitude'].'"}'] = $campusKey;
+        }
+        
+        $latLngs = array_keys($latLngToCampus);
+
+        $campusQuery = CarbonEmission::select('destination_latlng')
+            ->selectRaw('
+                COUNT(*) as total_records,              
+                SUM(distance) as total_distance, 
+                SUM(carbon_emission) as total_carbon_emission
+            ')
+            ->whereIn('destination_latlng', $latLngs);
+        
+        if ($startDate && $endDate) {
+            $campusQuery->whereBetween(DB::raw('DATE(created_at)'), [$startDate, $endDate]);
+        }
+
+        $campusResult = $campusQuery->groupBy('destination_latlng')->get();
+        
+        $resultWithCampus = $campusResult->map(function ($item) use ($latLngToCampus) {
+            if (isset($item->destination_latlng)) {
+                $item->campus_name = DcuCampus::CAMPUSES[$latLngToCampus[$item->getRawOriginal('destination_latlng')]]['label'] ?? 'Unknown Campus';
+                return $item;
+            }
+        });
+
+        return $resultWithCampus;
     }
 
     public function getEmissionQuery()
