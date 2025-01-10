@@ -113,7 +113,7 @@
                 </div>
                 <div class="col-lg-5">
                     <div class="slides">
-                        <img src="{{ asset('images/hero-slider-1.jpg') }}" alt="Image" class="img-fluid active">
+                        <img src="{{ asset('images/helix.jpg') }}" alt="Image" class="img-fluid active">
                         <img src="{{ asset('images/hero-slider-2.jpg') }}" alt="Image" class="img-fluid">
                         <img src="{{ asset('images/hero-slider-3.jpg') }}" alt="Image" class="img-fluid">
                         <img src="{{ asset('images/hero-slider-4.jpg') }}" alt="Image" class="img-fluid">
