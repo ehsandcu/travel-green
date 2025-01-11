@@ -204,7 +204,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="emission_value" class="form-label">
-                                            CO2 (kg)
+                                            CO2 (g)
                                         </label>
                                         <input type="text" id="emission_value" class="form-control" value="" placeholder="CO2" readonly>                                    
                                     </div>
@@ -357,7 +357,7 @@
                                     formData.delete('get_emission');
 
                                     swal({
-                                        title: "Carbon Emission Estimate: "+ emissionVal +"(kg)",
+                                        title: "Carbon Emission Estimate: "+ emissionVal +"(g)",
                                         icon: "warning",
                                         text: "Do you want to store it?",
                                         buttons: {
