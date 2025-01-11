@@ -305,7 +305,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="emission_value" class="form-label">
-                                            CO2 (kg)
+                                            CO2 (g)
                                         </label>
                                         <input type="text" id="carbon_emission_value" class="form-control" value="" placeholder="CO2" readonly>                                    
                                     </div>
@@ -415,7 +415,7 @@
 
             if (workDays > 0 && workDistance > 0 && transportMethod >= 0) {
                 const co2eEmissions = (transportMethod * workDistance * 2 * workDays * weeksPerYear).toFixed(2);
-                $('#emission_value').text(co2eEmissions + 'kg');                
+                $('#emission_value').text(co2eEmissions + 'g');                
             }
         });
 
@@ -482,7 +482,7 @@
                                 formData.delete('get_emission');
 
                                 swal({
-                                    title: "Carbon Emission Estimate: "+ emissionVal +"(kg)",
+                                    title: "Carbon Emission Estimate: "+ emissionVal +"(g)",
                                     icon: "success",
                                     text: "Great job on your calculation! Want to save your results and explore more features? Log in to your account now and unlock personalized insights, history tracking, and more!",
                                     buttons: {
