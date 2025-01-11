@@ -440,12 +440,12 @@
         });        
 
         function drawMap() {
-            var zoomLatitude = 53.3498053;  // centered dublin
-            var zoomLongitude = -6.2603097;  // centered dublin
+            var zoomLatitude = 53.38543088444176;  // centered DCU Glasnevin
+            var zoomLongitude = -6.2587973846566864;  // centered DCU Glasnevin
 
             var mapOptions = {
                 zoom: 14,
-                center: new google.maps.LatLng(zoomLatitude, zoomLongitude), // centered Dublin
+                center: new google.maps.LatLng(zoomLatitude, zoomLongitude), // centered DCU Glasnevin
                 mapTypeId: google.maps.MapTypeId.ROADMAP,
             };
 
