@@ -57,6 +57,16 @@
               </a>              
             </li>
             <li class="nav-item nav-profile">
+              <a class="nav-link dropdown-toggle  pl-0 pr-0" href="{{ route('carbon.emission') }}">
+                <span class="nav-profile-name">CO2 Emission</span>
+              </a>              
+            </li>
+            <li class="nav-item nav-profile">
+              <a class="nav-link dropdown-toggle  pl-0 pr-0" href="{{ route('about.us') }}">
+                <span class="nav-profile-name">About</span>
+              </a>              
+            </li>
+            <li class="nav-item nav-profile">
               <a class="nav-link dropdown-toggle  pl-0 pr-0" href="{{ route('contact.us') }}">
                 <span class="nav-profile-name">Contact Us</span>
               </a>              

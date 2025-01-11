@@ -387,9 +387,18 @@
 
             });
         });
-
+        
+        let isCalculatorOpen = false;
         $(document).on('click', '.btn_carbon_calculator', function() {
-            $('.carbon_calculator').slideToggle("slow");
+            $(".carbon_calculator").slideToggle("slow", function() {
+                isCalculatorOpen = !isCalculatorOpen;
+
+                if (isCalculatorOpen) {
+                    $("html, body").animate({
+                        scrollTop: $(".carbon_calculator").offset().top
+                    }, 300, "swing");                    
+                }
+            });
         });
 
         $('.destination_campus, #transport_method, #semester_year, #route_type').select2({
