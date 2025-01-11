@@ -23,6 +23,7 @@ Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('check.login');
 Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('carbon/emission', [HomeController::class, 'carbonEmission'])->name('carbon.emission');
 Route::get('services', [HomeController::class, 'services'])->name('service.index');
 Route::get('about-us', [HomeController::class, 'about'])->name('about.us');
 Route::get('contact-us', [HomeController::class, 'contactUs'])->name('contact.us');

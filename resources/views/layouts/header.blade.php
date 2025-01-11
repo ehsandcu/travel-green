@@ -58,9 +58,12 @@
                             {{-- <li class="{{ request()->routeIs('service.index') ? 'active' : '' }}">
                                 <a href="{{ route('service.index') }}">Services</a>
                             </li> --}}
-                            {{-- <li class="{{ request()->routeIs('about.us') ? 'active' : '' }}">
+                            <li class="{{ request()->routeIs('carbon.emission') ? 'active' : '' }}">
+                                <a href="{{ route('carbon.emission') }}">CO2 Emission</a>
+                            </li>
+                            <li class="{{ request()->routeIs('about.us') ? 'active' : '' }}">
                                 <a href="{{ route('about.us') }}">About</a>
-                            </li> --}}
+                            </li>
                             <li class="{{ request()->routeIs('contact.us') ? 'active' : '' }}">
                                 <a href="{{ route('contact.us') }}">Contact Us</a>
                             </li>

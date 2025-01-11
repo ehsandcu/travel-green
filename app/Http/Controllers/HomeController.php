@@ -15,11 +15,20 @@ use Illuminate\Support\Facades\Validator;
 class HomeController extends Controller
 {
     public function index()
-    {           
+    {
+        //add glasnevin image on landing page
+        // $startMonth = Carbon::now()->startOfMonth()->format('Y-m-d'); 
+        // $endMonth = Carbon::now()->endOfMonth()->format('Y-m-d');
+        // dd($startMonth, $endMonth);
         $emissionsResult = (new EmissionService())->getEmissionStats();
         $campusEmissionResult = (new EmissionService())->campusCarbonEmission();
-
+        
         return view('home', compact('emissionsResult', 'campusEmissionResult'));
+    }
+
+    public function carbonEmission()
+    {
+        return view('emission.index');
     }
 
     public function services()

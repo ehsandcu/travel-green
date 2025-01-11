@@ -25,8 +25,9 @@
                                 <h3 class="heading">Pages</h3>
                                 <ul class="links list-unstyled">
                                     <li><a href="{{ route('home') }}">Home</a></li>
+                                    <li><a href="{{ route('carbon.emission') }}">CO2 Emission</a></li>
                                     {{-- <li><a href="{{ route('service.index') }}">Services</a></li> --}}
-                                    {{-- <li><a href="{{ route('about.us') }}">About</a></li> --}}
+                                    <li><a href="{{ route('about.us') }}">About</a></li>
                                     <li><a href="{{ route('contact.us') }}">Contact</a></li>
                                 </ul>
                             </div>
