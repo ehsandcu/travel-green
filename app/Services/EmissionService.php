@@ -66,7 +66,7 @@ class EmissionService
         return CarbonEmission::where('user_id', auth()->user()->id)->where('journey_end_date', '>=', Carbon::today()->format('Y-m-d'))->exists();
     }
 
-    public function campusCarbonEmission($start_date=null, $end_date=null)
+    public function campusCarbonEmission($tripJourney=null, $start_date=null, $end_date=null)
     {
         $campuses = DcuCampus::CAMPUSES;
         $format = 'Y-m-d';
@@ -88,7 +88,11 @@ class EmissionService
                 SUM(carbon_emission) as total_carbon_emission
             ')
             ->whereIn('destination_latlng', $latLngs);
-        
+
+        if($tripJourney) {
+            $campusQuery->where('trip_journey', $tripJourney);
+        }
+            
         if ($startDate && $endDate) {
             $campusQuery->whereBetween(DB::raw('DATE(created_at)'), [$startDate, $endDate]);
         }
