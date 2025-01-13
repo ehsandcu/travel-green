@@ -16,14 +16,12 @@ class HomeController extends Controller
 {
     public function index()
     {
-        //add glasnevin image on landing page
-        // $startMonth = Carbon::now()->startOfMonth()->format('Y-m-d'); 
-        // $endMonth = Carbon::now()->endOfMonth()->format('Y-m-d');
-        // dd($startMonth, $endMonth);
-        $emissionsResult = (new EmissionService())->getEmissionStats();
-        $campusEmissionResult = (new EmissionService())->campusCarbonEmission();
+        $todayDate = Carbon::now()->format('Y-m-d');
         
-        return view('home', compact('emissionsResult', 'campusEmissionResult'));
+        // $emissionsResult = (new EmissionService())->getEmissionStats();
+        $todayCampusEmissionResult = (new EmissionService())->campusCarbonEmission(TripJourney::DAILY, $todayDate, $todayDate);
+        
+        return view('home', compact('todayCampusEmissionResult'));
     }
 
     public function carbonEmission()

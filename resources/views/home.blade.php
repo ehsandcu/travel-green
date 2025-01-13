@@ -325,36 +325,49 @@
     </div>
     {{-- <div class="untree_co-section count-numbers py-5"> --}}
     <div class="untree_co-section py-5">
-		<div class="container">
-            {{-- <h3>Decemeber Emission</h3> --}}
-			<div class="row">
-				<div class="col-6 col-sm-6 col-md-6 col-lg-4">
-					<div class="counter-wrap">
-						<div class="counter">
-							<span class="" data-number="">{{ convertInInteger($emissionsResult->total_records) ?? 0 }}</span>
-						</div>
-						<span class="caption">No. of Vehicles</span>
-					</div>
-				</div>
-				<div class="col-6 col-sm-6 col-md-6 col-lg-4">
-					<div class="counter-wrap">
-						<div class="counter">
-							<span class="" data-number="">{{ convertInInteger($emissionsResult->total_distance) ?? 0}}</span>
-						</div>
-						<span class="caption">Total Distance</span>
-					</div>
-				</div>
-				<div class="col-6 col-sm-6 col-md-6 col-lg-4">
-					<div class="counter-wrap">
-						<div class="counter">
-							<span class="" data-number="">{{ convertInInteger($emissionsResult->total_carbon_emission) ?? 0 }}</span>
-						</div>
-						<span class="caption">Quantity of Carbon Emissions</span>
-					</div>
-				</div>				
-			</div>
-		</div>
-	</div>
+        <div class="container">
+            <h2 class="mb-3">Today Campuses Emission</h2>
+            @if($todayCampusEmissionResult)
+                @foreach($todayCampusEmissionResult as $campusEmission)
+                    <div class="row shadow p-3 mb-5 bg-white rounded">
+                        <div class="col-6 col-sm-6 col-md-6 col-lg-3 m-auto">
+                            <div class="counter-wrap">
+                                <div class="">
+                                    <span class="fs-2" data-number="">{{ $campusEmission->campus_name }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-sm-6 col-md-6 col-lg-3">
+                            <div class="counter-wrap">
+                                <div class="counter">
+                                    <span class="" data-number="">{{ convertInInteger($campusEmission->total_records) ?? 0 }}</span>
+                                </div>
+                                <span class="caption">No. of Vehicles</span>
+                            </div>
+                        </div>
+                        <div class="col-6 col-sm-6 col-md-6 col-lg-3">
+                            <div class="counter-wrap">
+                                <div class="counter">
+                                    <span class="" data-number="">{{ convertInInteger($campusEmission->total_distance) ?? 0}}</span>
+                                </div>
+                                <span class="caption">Total Distance</span>
+                            </div>
+                        </div>
+                        <div class="col-6 col-sm-6 col-md-6 col-lg-3">
+                            <div class="counter-wrap">
+                                <div class="counter">
+                                    <span class="" data-number="">{{ convertInInteger($campusEmission->total_carbon_emission) ?? 0 }}</span>
+                                </div>
+                                <span class="caption">Quantity of Carbon Emissions</span>
+                            </div>
+                        </div>				
+                    </div>
+                @endforeach
+            @else
+                    <p class="text-secondary shadow p-3 mb-5 bg-white rounded">Sorry, No record found</p>
+            @endif
+        </div>
+    </div>
 @stop
 
 @section('script')
