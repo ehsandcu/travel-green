@@ -327,7 +327,7 @@
     <div class="untree_co-section py-5">
         <div class="container">
             <h2 class="mb-3">Today Campuses Emission</h2>
-            @if($todayCampusEmissionResult)
+            @if(count($todayCampusEmissionResult))
                 @foreach($todayCampusEmissionResult as $campusEmission)
                     <div class="row shadow p-3 mb-5 bg-white rounded">
                         <div class="col-6 col-sm-6 col-md-6 col-lg-3 m-auto">
@@ -350,7 +350,7 @@
                                 <div class="counter">
                                     <span class="" data-number="">{{ convertInInteger($campusEmission->total_distance) ?? 0}}</span>
                                 </div>
-                                <span class="caption">Total Distance</span>
+                                <span class="caption">Total Distance(km)</span>
                             </div>
                         </div>
                         <div class="col-6 col-sm-6 col-md-6 col-lg-3">
@@ -358,13 +358,13 @@
                                 <div class="counter">
                                     <span class="" data-number="">{{ convertInInteger($campusEmission->total_carbon_emission) ?? 0 }}</span>
                                 </div>
-                                <span class="caption">Quantity of Carbon Emissions</span>
+                                <span class="caption">Quantity of Carbon Emissions(g)</span>
                             </div>
                         </div>				
                     </div>
                 @endforeach
             @else
-                    <p class="text-secondary shadow p-3 mb-5 bg-white rounded">Sorry, No record found</p>
+                <p class="text-secondary shadow p-3 mb-5 bg-white rounded">Sorry, No record found</p>
             @endif
         </div>
     </div>
