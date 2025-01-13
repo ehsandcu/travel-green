@@ -230,7 +230,7 @@ class EmissionController extends Controller
         ];
 
         // $emissionQuery = CarbonEmission::whereUserId(auth()->user()->id)->orderBy($alterColumn[$columnName], $columnSortOrder);
-        $emissionQuery = (new EmissionService())->getEmissionQuery()->orderBy($alterColumn[$columnName], $columnSortOrder);
+        $emissionQuery = (new EmissionService())->getEmissionQuery()->orderBy($alterColumn[$columnName], $columnSortOrder)->orderBy('created_at', 'desc');
 
         if (!empty($searchKey)) {
             $searchKey = trim($searchKey);
