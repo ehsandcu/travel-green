@@ -29,7 +29,7 @@ class EmissionService
             'destination_latitude' => ['required'],
             'destination_longitude' => ['required'],
             'transport_method' => ['required', 'in:'.implode(',', array_keys(TransportMode::MODES))],
-            'work_days' => ['required_unless:trip_journey,'. TripJourney::DAILY .'', 'between:1,5'],
+            'work_days' => ['required_unless:trip_journey,'. TripJourney::DAILY .'', 'between:1,7'],
             'route_type' => ['required', 'in:'.implode(',', array_keys(RouteType::TYPES))],
             'route_distance' => ['required', 'gt:0'],
         ];
