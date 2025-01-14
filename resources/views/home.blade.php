@@ -314,9 +314,9 @@
                             <div class="col-md-12 text-right">
                                 <button type="submit" class="btn btn-primary btn-block">Calculate</button>
                             </div>
-                            <div class="text-secondary">
+                            {{-- <div class="text-secondary">
                                 <strong>Note:</strong> Weekdays are not currently included in the carbon emission calculation.
-                            </div>
+                            </div> --}}
                         </form>
                     </div>
                 </div>

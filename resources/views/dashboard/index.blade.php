@@ -214,9 +214,9 @@
                                 <button type="submit" class="btn btn-info btn-rounded btn-fw">Calculate</button>
                             </div>
                         </form>
-                        <div class="text-info">
+                        {{-- <div class="text-info">
                             <strong>Note:</strong> Weekdays are not currently included in the carbon emission calculation.
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>
