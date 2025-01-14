@@ -110,9 +110,11 @@ function calculateDaysForDateRange($startDate, $endDate, $workDay=null) {
 
     while ($start <= $end) {
         // Only count weekdays (Monday to Friday)
-        if ($start->isWeekday()) {
-            $weekDays++;
-        }
+        // if ($start->isWeekday()) {
+        //     $weekDays++;
+        // }
+
+        $weekDays++;
 
         // Move to the next day
         $start->addDay();
@@ -120,7 +122,8 @@ function calculateDaysForDateRange($startDate, $endDate, $workDay=null) {
 
     if ($workDay) {
         // Apply the "given work days per week" rule
-        $weekDays = intdiv($weekDays, 5) * $workDay + min($workDay, $weekDays % 5);
+        // $weekDays = intdiv($weekDays, 5) * $workDay + min($workDay, $weekDays % 5);  //excluded weekend days
+        $weekDays = intdiv($weekDays, 7) * $workDay + min($workDay, $weekDays % 7);  //included weekend days
     }
     
     return $weekDays;
