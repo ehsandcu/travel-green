@@ -128,7 +128,7 @@
     <div class="untree_co-section py-5 carbon_calculator" style="display: none;">
 		<div class="container">
 			<div class="row">
-                <div class="card" style="background-color: #f8f9fa;">
+                <div class="card shadow rounded" style="background-color: #f8f9fa;">
                     <div class="card-body">
                         <h4 class="card-title mt-2">Calculate Carbon Emission</h4>                  
                         <form id="carbon_calculate_form" method="POST" action="{{ route('calculate_carbon.home') }}">                         

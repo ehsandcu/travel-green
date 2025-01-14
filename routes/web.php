@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Dashboard\ContactUsController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\EmissionController;
+use App\Http\Controllers\Dashboard\TeamController;
 use App\Http\Controllers\GoogleLoginController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
@@ -39,13 +40,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('update/user/info', [UserController::class, 'updateUserInfo'])->name('update.user.info');
     Route::group(['middleware' => ['check.user.info']], function () {
         Route::group(['prefix' => 'dashboard'], function () {
-            Route::get('/show', [DashboardController::class, 'index'])->name('dashboard');
-            
-            Route::group(['prefix' => 'contact-us'], function () {
-                Route::get('/', [ContactUsController::class, 'index'])->name('dashboard.contact.us');
-                Route::get('/show/{id}', [ContactUsController::class, 'showContact'])->name("contact_us.show");
-                Route::post('/load/contact/list', [ContactUsController::class, 'loadContactUsList'])->name("load.contact_us.list");
-            });
+            Route::get('/show', [DashboardController::class, 'index'])->name('dashboard');           
 
             Route::group(['prefix' => 'emission'], function () {
                 Route::get('/calculate', [EmissionController::class, 'index'])->name("emission.index");
@@ -54,6 +49,19 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::post('/store', [EmissionController::class, 'storeEmission'])->name("emission.store");
                 Route::post('/delete/{id}', [EmissionController::class, 'deleteEmission'])->name("emission.delete");
                 Route::post('/load/emission', [EmissionController::class, 'loadEmission'])->name("load.emissions");
+            });
+
+            Route::group(['middleware' => ['check.admin']], function () {
+                Route::group(['prefix' => 'team'], function () {
+                    Route::get('/', [TeamController::class, 'index'])->name('dashboard.team');
+                    Route::post('/load/team/list', [TeamController::class, 'loadTeamList'])->name("load.team.list");
+                });
+
+                Route::group(['prefix' => 'contact-us'], function () {
+                    Route::get('/', [ContactUsController::class, 'index'])->name('dashboard.contact.us');
+                    Route::get('/show/{id}', [ContactUsController::class, 'showContact'])->name("contact_us.show");
+                    Route::post('/load/contact/list', [ContactUsController::class, 'loadContactUsList'])->name("load.contact_us.list");
+                });
             });
         });
     });
