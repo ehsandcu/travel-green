@@ -288,7 +288,7 @@
                                             Work Days per week
                                             <span class="text-danger">*</span>
                                         </label>
-                                        <input type="number" name="work_days" id="work_days" class="form-control" min="1" value="1" placeholder="Work Days">
+                                        <input type="number" name="work_days" id="work_days" class="form-control" min="1" max="7" value="1" placeholder="Work Days">
                                     </div>
                                 </div>
                             </div> 
