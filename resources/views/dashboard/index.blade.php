@@ -10,7 +10,7 @@
     @if($emissionExists)
         <div class="row">
             <div class="col-12 grid-margin">
-                <div class="card">
+                <div class="card shadow rounded">
                     <div class="card-body">
                         <p>Form already submitted. You cannot submit another one at this time.</p>
                     </div>
@@ -20,7 +20,7 @@
     @else
         <div class="row">
             <div class="col-12 grid-margin">
-                <div class="card">
+                <div class="card shadow rounded">
                     <div class="card-body">
                         <h4 class="card-title">Calculate Carbon Emission</h4>                  
                         <form id="carbon_form" method="POST" action="{{ route('emission.store') }}">                         
@@ -223,7 +223,7 @@
         </div>
         <div class="row">    
             <div class="col-lg-12 d-flex grid-margin stretch-card">
-                <div class="card">
+                <div class="card shadow rounded">
                     <div class="card-body">
                         <div class="d-flex flex-wrap justify-content-between">
                             <h4 class="card-title mb-3">Carbon Emission</h4>
