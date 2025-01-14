@@ -13,18 +13,18 @@
     </style>
 @stop
 @section('dashboard_content')
-    <div class="row">
+    <div class="row mb-2">
         <div class="col-md-12">
             <div class="d-flex flex-wrap justify-content-between align-items-center">
                 <h4 class="font-weight-bold"><span class="greeting"></span> 👋</h4>
-                <div class="form-group mb-0 vanila-daterangepicker d-flex flex-row">
-                    <div class="date-icon-set">
+                <div class="form-group mb-0 vanila-daterangepicker d-flex flex-row ">
+                    <div class="date-icon-set shadow rounded">
                        <input type="date" id="dashboard_start_date" name="dashboard_start_date" class="form-control" value="" placeholder="From Date">                       
                     </div>
-                       <span class="flex-grow-0">
+                    <span class="flex-grow-0">
                        <span class="btn">To</span>
                     </span>
-                    <div class="date-icon-set">
+                    <div class="date-icon-set shadow rounded">
                        <input type="date" id="dashboard_end_date" name="dashboard_end_date" class="form-control" value="" placeholder="To Date">                       
                     </div>
               </div>
@@ -34,7 +34,7 @@
    
     <div class="row grid-margin stretch-card">
         <div class="col-sm-4">
-            <div class="card">
+            <div class="card shadow rounded">
                 <div class="card-body">
                     <h5 class="card-title">Carbon Emission</h5>
                     <p class="card-text total_carbon_emission">0</p>                
@@ -42,7 +42,7 @@
             </div>
         </div>
         <div class="col-sm-4">
-            <div class="card">
+            <div class="card shadow rounded">
                 <div class="card-body">
                     <h5 class="card-title">Total Records</h5>
                     <p class="card-text total_records_stat">0</p>
@@ -51,7 +51,7 @@
             </div>
         </div>
         <div class="col-sm-4">
-            <div class="card">
+            <div class="card shadow rounded">
                 <div class="card-body">
                     <h5 class="card-title">Total Distance</h5>
                     <p class="card-text total_distance">0</p>                    
@@ -62,7 +62,7 @@
 
     <div class="row">   
         <div class="col-lg-8 grid-margin stretch-card">
-            <div class="card">
+            <div class="card shadow rounded">
                 <div class="card-body" id="dashboard-graph-emission-report" data-route="{{ route('emission.graph.data') }}">
                     <div class="d-flex justify-content-between align-items-center flex-wrap">
                         <h4 class="font-weight-bold">Emission Report</h4>
@@ -86,7 +86,7 @@
             </div>           
         </div>
         <div class="col-lg-4 grid-margin stretch-card">
-            <div class="card">
+            <div class="card shadow rounded">
                 <div class="card-body m-auto" id="campuses-graph-emission-report" data-route="{{ route('emission.campus_graph.data') }}">                    
                     <div id="chart-apex-campus-report" class="text-center"></div>
                 </div>
@@ -96,7 +96,7 @@
 
     <div class="row">   
         <div class="col-lg-12 grid-margin stretch-card">
-            <div class="card">
+            <div class="card shadow rounded">
                 <div class="card-body">
                     <div class="d-flex justify-content-between mb-2">
                         <div>
