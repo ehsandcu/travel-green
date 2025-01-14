@@ -36,6 +36,12 @@
       </li> 
       @if($user->user_role == \App\Lib\UserRole::ADMIN_ROLE)
         <li class="nav-item">
+          <a class="nav-link {{ Route::currentRouteNamed('dashboard.team') ? 'active' : '' }}" href="{{ route('dashboard.team') }}">
+            <i class="typcn typcn-group-outline menu-icon"></i>
+            <span class="menu-title">Team</span>
+          </a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link {{ Route::currentRouteNamed('dashboard.contact.us') ? 'active' : '' }}" href="{{ route('dashboard.contact.us') }}">
             <i class="typcn typcn-mail menu-icon"></i>
             <span class="menu-title">Contact Us</span>

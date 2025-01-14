@@ -50,10 +50,10 @@
                         <a href="{{ $member->link }}" target="_blank" class="text-decoration-none">
                             <div class="team">
                                 <img src="{{ asset( $member->image ) }}" alt="Image" class="img-fluid mb-4 rounded-20 h-250 w-100">
-                                    <div class="px-3">
-                                        <h3 class="mb-0">{{ $member->name }}</h3>
-                                        <p>{{ $member->position }}</p>
-                                    </div>
+                                <div class="px-3">
+                                    <h3 class="mb-0">{{ $member->name }}</h3>
+                                    <p>{{ $member->position }}</p>
+                                </div>
                             </div>
                         </a>
                     </div>
