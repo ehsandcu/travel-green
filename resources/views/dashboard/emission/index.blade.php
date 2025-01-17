@@ -85,9 +85,9 @@
                 </div>
             </div>           
         </div>
-        <div class="col-lg-4 grid-margin stretch-card">
+        <div class="col-lg-4 grid-margin stretch-card" style="height: 400px;">
             <div class="card shadow rounded">
-                <div class="card-body m-auto" id="campuses-graph-emission-report" data-route="{{ route('emission.campus_graph.data') }}">                    
+                <div class="card-body m-auto" id="campuses-graph-emission-report" data-route="{{ route('emission.campus_graph.data') }}" style="top: 50px;">                    
                     <div id="chart-apex-campus-report" class="text-center"></div>
                 </div>
             </div>           
