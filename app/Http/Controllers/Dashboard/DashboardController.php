@@ -168,7 +168,7 @@ class DashboardController extends Controller
             $carbonEmissions = CarbonEmission::select(
                 'destination_latlng',
                 DB::raw('MONTH(created_at) as month'),
-                DB::raw('SUM(carbon_emission) as total_emission')
+                DB::raw('ROUND(SUM(carbon_emission), 2) as total_emission')
             )
             ->whereIn('destination_latlng', $latLngs)
             ->whereBetween(DB::raw('DATE(created_at)'), [$startDate, $endDate])

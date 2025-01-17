@@ -50,7 +50,6 @@
                         var monthList = result.month_list;
                         var currentYear = result.year;
 
-                        console.log(result);
                         var options = {
                             series: graphData,
                             chart: {
