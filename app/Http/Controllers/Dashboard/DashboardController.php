@@ -15,7 +15,7 @@ class DashboardController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth')->except('getAllCampusesGraphData');
     }
     
     public function index()
@@ -111,17 +111,11 @@ class DashboardController extends Controller
     public function getGraphDataByCampuses(Request $request)
     {
         $user = auth()->user();
-        $campuses = DcuCampus::CAMPUSES;
         $format = 'Y-m-d';
-        $startDate =   ($request && $request->start_date) ? Carbon::parse($request->start_date)->format($format) : null;
+        $startDate = ($request && $request->start_date) ? Carbon::parse($request->start_date)->format($format) : null;
         $endDate = ($request && $request->end_date) ? Carbon::parse($request->end_date)->format($format) : null;
-        $latLngToCampus = [];
+        $latLngToCampus = getCampusesLatLng();
 
-        //format like '{"lat":"12.23","lng":"4.56"}' => 'Campus A',
-        foreach ($campuses as $campusKey => $campus) {
-           $latLngToCampus['{"lat":"'.$campus['latitude'].'","lng":"'.$campus['longitude'].'"}'] = $campusKey;
-        }
-        
         $latLngs = array_keys($latLngToCampus);
 
         $campusQuery = CarbonEmission::select('destination_latlng')
@@ -147,7 +141,7 @@ class DashboardController extends Controller
                 return $item;
             }
         });
-        
+
         return $this->sendResponse([
             'success' => 1,
             'message' => "Data Listed Successfully.",
@@ -155,5 +149,64 @@ class DashboardController extends Controller
             'percentages' => $resultWithCampus->pluck('percentage') ?? [],
             'emit_stats' => (new EmissionService())->getEmissionStatsByUser($request),
         ]);
+    }
+
+    public function getAllCampusesGraphData(Request $request)
+    {
+        try {
+            $campuses = DcuCampus::CAMPUSES;
+            $format = 'Y-m-d';
+            $now = Carbon::now();
+            $currentYear = $now->copy()->year;
+            $startDate = $now->copy()->startOfYear()->format($format); // start date of current year
+            $endDate = $now->copy()->endOfYear()->format($format); // end date of current year
+            
+            $latLngToCampus = getCampusesLatLng();
+
+            $latLngs = array_keys($latLngToCampus);
+
+            $carbonEmissions = CarbonEmission::select(
+                'destination_latlng',
+                DB::raw('MONTH(created_at) as month'),
+                DB::raw('SUM(carbon_emission) as total_emission')
+            )
+            ->whereIn('destination_latlng', $latLngs)
+            ->whereBetween(DB::raw('DATE(created_at)'), [$startDate, $endDate])
+            ->groupBy('month')
+            ->groupBy('destination_latlng', 'month')
+            ->get();
+            
+            $monthsList = [];
+            $chartData = collect($campuses)->map(function ($campus) use ($carbonEmissions, &$monthsList) {
+                return [
+                    'name' => $campus['label'],
+                    'data' => collect(range(1, 12))->map(function ($month) use ($carbonEmissions, $campus, &$monthsList) {
+                        // Add month name to the list if not already added
+                        if (!in_array(Carbon::create()->month($month)->format('M'), $monthsList)) {
+                            $monthsList[] = Carbon::create()->month($month)->format('M');
+                        }
+
+                        return  $carbonEmissions->filter(function ($record) use ($month, $campus) {
+                                    return  $record->month === $month && 
+                                            $record->destination_latlng === json_decode('{"lat":"'.$campus['latitude'].'","lng":"'.$campus['longitude'].'"}', true);
+                                })
+                                ->sum('total_emission') ?? 0; // Default to 0 if no data
+                    })->toArray()
+                ];
+            })->toArray();
+           
+            return $this->sendResponse([
+                'success' => 1,
+                'message' => "Data Listed Successfully.",
+                'data' => array_values($chartData),
+                'year' => $currentYear,
+                'month_list' => $monthsList
+            ]);
+        } catch (\Throwable $th) {
+            return $this->sendResponse([
+                'success' => 0,
+                'message' => $th->getMessage()
+            ]);
+        }
     }
 }

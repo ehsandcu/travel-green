@@ -1,4 +1,6 @@
 <?php
+
+use App\Lib\DcuCampus;
 use Carbon\Carbon;
 
 function getInitialNameWordImage($name=null)
@@ -127,4 +129,18 @@ function calculateDaysForDateRange($startDate, $endDate, $workDay=null) {
     }
     
     return $weekDays;
+}
+
+function getCampusesLatLng()
+{
+    $campuses = DcuCampus::CAMPUSES;
+
+    $latLngToCampus = [];
+
+    //format like '{"lat":"12.23","lng":"4.56"}' => 'Campus A',
+    foreach ($campuses as $campusKey => $campus) {
+        $latLngToCampus['{"lat":"'.$campus['latitude'].'","lng":"'.$campus['longitude'].'"}'] = $campusKey;
+    }
+
+    return $latLngToCampus;
 }

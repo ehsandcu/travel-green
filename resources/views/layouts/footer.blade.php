@@ -83,6 +83,13 @@
         <script src="{{ asset('assets/dashboard/vendors/select2/select2.min.js') }}"></script>
         <script src="{{ asset('assets/dashboard/js/jquery.validate.js') }}"></script>
         <script src="{{ asset('js/custom.js') }}"></script>
+        <script>
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+                }
+            });
+        </script>
         @yield('script')
     </body>
 </html>

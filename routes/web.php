@@ -30,6 +30,7 @@ Route::get('about-us', [HomeController::class, 'about'])->name('about.us');
 Route::get('contact-us', [HomeController::class, 'contactUs'])->name('contact.us');
 Route::post('contact-us/info/store', [HomeController::class, 'storeContactUsInfo'])->name('contact.us.store');
 Route::post('calculate/carbon', [HomeController::class, 'getCarbonCalculation'])->name('calculate_carbon.home');
+Route::post('/all/campuses/graphData', [DashboardController::class, 'getAllCampusesGraphData'])->name("all.campuses_graph.data");
 
 Route::get('/google/redirect', [GoogleLoginController::class, 'redirectToGoogle'])->name('google.redirect');
 Route::get('/google/callback', [GoogleLoginController::class, 'handleGoogleCallback'])->name('google.callback');
