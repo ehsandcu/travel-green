@@ -12,54 +12,92 @@
             </div>
         </div>
     </div>
-    {{-- <div class="untree_co-section">
+    <div class="untree_co-section">
         <div class="container">
             <div class="row">
-                <div class="col-6 col-md-6 col-lg-3">
-                    <div class="media-1">
-                        <a href="#" class="d-block mb-3"><img src="{{ asset('images/hallow.jpg') }}" alt="Image" class="img-fluid"></a>
-                        <div class="d-flex">
-                        <div>
-                            <h3><a href="#">Lorem ipsum</a></h3>
-                            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Est cum molestiae accusantium reiciendis commodi ab hic maxime sequi, accusamus provident, nulla iure! Rem reprehenderit reiciendis porro incidunt veritatis similique illo.</p>
+                <div class="col-6 col-md-6 col-lg-12">
+                    <div class="card shadow rounded">
+                        <div class="card-body" id="carbon-emission-report" data-route="{{ route('all.campuses_graph.data') }}">
+                            <div id="campuses_chart" class="custom-chart text-center"></div>
                         </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-6 col-md-6 col-lg-3">
-                    <div class="media-1">
-                        <a href="#" class="d-block mb-3"><img src="{{ asset('images/hero-slider-2.jpg') }}" alt="Image" class="img-fluid"></a>
-                        <div class="d-flex">
-                        <div>
-                            <h3><a href="#">Lorem ipsum</a></h3>
-                            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Est cum molestiae accusantium reiciendis commodi ab hic maxime sequi, accusamus provident, nulla iure! Rem reprehenderit reiciendis porro incidunt veritatis similique illo.</p>
-                        </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-6 col-md-6 col-lg-3">
-                    <div class="media-1">
-                        <a href="#" class="d-block mb-3"><img src="{{ asset('images/hero-slider-1.jpg') }}" alt="Image" class="img-fluid"></a>
-                        <div class="d-flex">
-                        <div>
-                            <h3><a href="#">Lorem ipsum</a></h3>
-                            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Est cum molestiae accusantium reiciendis commodi ab hic maxime sequi, accusamus provident, nulla iure! Rem reprehenderit reiciendis porro incidunt veritatis similique illo.</p>
-                        </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-6 col-md-6 col-lg-3">
-                    <div class="media-1">
-                        <a href="#" class="d-block mb-3"><img src="{{ asset('images/hero-slider-2.jpg') }}" alt="Image" class="img-fluid"></a>
-                        <div class="d-flex">
-                        <div>
-                            <h3><a href="#">Lorem ipsum</a></h3>
-                            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Est cum molestiae accusantium reiciendis commodi ab hic maxime sequi, accusamus provident, nulla iure! Rem reprehenderit reiciendis porro incidunt veritatis similique illo.</p>
-                        </div>
-                        </div>
-                    </div>
-                </div>
+                    </div>  
+                </div>                
             </div>
         </div>
-    </div> --}}
+    </div>
+@stop
+@section('script')
+    <script src="{{ asset('js/apexcharts.min.js') }}"></script>
+
+    <script>        
+        var emissionSelector = "#campuses_chart";
+        
+        $(document).ready(function() {
+            emissionGraph();
+        });
+        
+        function emissionGraph() {
+            $.ajax({
+                url: $("#carbon-emission-report").attr("data-route"),
+                type: "POST",
+                cache: false,
+                data: {},
+                success: function (result) {
+                    $(emissionSelector).html(''); //remove old divs before chart    
+
+                    if (result.success) {
+                        var graphData = result.data;
+                        var monthList = result.month_list;
+                        var currentYear = result.year;
+                        var options = {
+                            series: graphData,
+                            chart: {
+                                height: 450,
+                                type: 'line',
+                                zoom: {
+                                    enabled: false
+                                },
+                            },
+                            dataLabels: {
+                                enabled: false
+                            },
+                            stroke: {
+                                width: [5, 7, 5],
+                                curve: 'straight',
+                                dashArray: [0, 8, 5]
+                            },
+                            title: {
+                                text: 'CO2 Emission: '+ currentYear,
+                                align: 'left'
+                            },
+                            legend: {
+                                tooltipHoverFormatter: function(val, opts) {
+                                    return val + ' - <strong>' + opts.w.globals.series[opts.seriesIndex][opts.dataPointIndex] + '</strong>'
+                                }
+                            },
+                            markers: {
+                                size: 0,
+                            hover: {
+                                sizeOffset: 6
+                            }
+                            },
+                            xaxis: {
+                                categories: monthList,
+                            },
+                            grid: {
+                                borderColor: '#f1f1f1',
+                            }
+                        };
+    
+                        var chart = new ApexCharts(document.querySelector(emissionSelector), options);
+                        chart.render();
+                        
+                    } else {
+                        console.log(result);
+                        $(emissionSelector).html('<img class="h-280" src="../images/icon/statistic-transparent.png">');
+                    }
+                }
+            });
+        }
+    </script>
 @stop
