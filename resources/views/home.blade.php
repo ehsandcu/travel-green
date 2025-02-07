@@ -368,6 +368,39 @@
             @endif
         </div>
     </div>
+    <div class="untree_co-section py-2">
+        <div class="container">
+            <div class="shadow p-4 mb-5 bg-white rounded text-secondary lh-base fs-5">
+                <p>
+                    Transportation accounts for 17% of global greenhouse gas emissions, with commuting to work being a major contributor. While one person’s daily trip may seem small, millions of commutes happening every day add up quickly. The combined impact results in a significant amount of carbon emissions, affecting our planet. Reducing these emissions can make a big difference in fighting climate change.
+                </p>
+                <div>
+                    <p>Fortunately, there are many eco-friendly options instead of driving alone to work:</p>
+                    <div class="">
+                        <h5>Electric or Hybrid Cars:</h5>
+                        <span>If you have to drive to work, think about using an electric or hybrid car. Electric cars create about 70% less pollution than regular cars. Also, with more charging stations being set up worldwide, it’s getting easier to find a place to charge your electric car.</span>
+                    </div>
+                    <div class=" mt-3">
+                        <h5>Local Bus</h5>
+                        <span>Taking the bus instead of driving can greatly reduce your carbon emissions. On average, a bus trip produces about 43% less pollution than driving a car.</span>
+                    </div>
+                    <div class=" mt-3">
+                        <h5>Trains</h5>
+                        <span>Taking the train is a great way to lower your carbon footprint. It creates almost 80% less pollution than driving a regular car.</span>
+                    </div>
+                    <div class=" mt-3">
+                        <h5>Waling/Cycling</h5>
+                        <span>Walking or cycling to work is the best way to commute for the environment, as they produce no carbon emissions. These options are not only good for the planet, but they can also boost your health and overall well-being.</span>
+                    </div>
+                </div>
+                <hr>
+                <p class="mt-3">
+                    It’s important to recognize that not everyone can easily choose eco-friendly transportation. Factors like where people live, their income, and available options can limit their choices. Some may live in areas with little access to public transport, while others may need to travel long distances or at odd hours, making carpooling or public transport not possible. The cost of options like electric cars or bikes can also be too high for some.
+                    Understanding these challenges is key to making real changes. Talking with employers about these issues can lead to policies and programs that support safer, fairer, and more sustainable transportation for everyone.
+                </p>
+            </div>
+        </div>
+    </div>
 @stop
 
 @section('script')
